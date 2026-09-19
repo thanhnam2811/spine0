@@ -1,0 +1,185 @@
+[
+  {
+    "id": "test-a",
+    "name": "Male Sword Cultivator (Test-A)",
+    "envelopeIssues": [],
+    "metrics": {
+      "override_count": 2,
+      "material_override_count": 0,
+      "material_override_ratio": 0,
+      "mean_length_deviation": 0.5882352941176471,
+      "max_length_deviation": 5,
+      "mean_rest_rotation_deviation": 0,
+      "max_rest_rotation_deviation": 0,
+      "pivot_edits": 0,
+      "anchor_edits": 0,
+      "length_overrides": 2,
+      "rest_rotation_overrides": 0,
+      "position_overrides": 0,
+      "slot_remaps": 0,
+      "part_transform_edits": 0,
+      "validation_iterations": 1,
+      "art_regeneration_count": 0
+    },
+    "clips": {
+      "idle": {
+        "status": "PASS"
+      },
+      "run": {
+        "status": "PASS"
+      },
+      "slash": {
+        "status": "PASS"
+      }
+    }
+  },
+  {
+    "id": "test-b",
+    "name": "Female Sword Cultivator (Test-B)",
+    "envelopeIssues": [],
+    "metrics": {
+      "override_count": 2,
+      "material_override_count": 0,
+      "material_override_ratio": 0,
+      "mean_length_deviation": 0,
+      "max_length_deviation": 0,
+      "mean_rest_rotation_deviation": 0,
+      "max_rest_rotation_deviation": 0,
+      "pivot_edits": 0,
+      "anchor_edits": 0,
+      "length_overrides": 0,
+      "rest_rotation_overrides": 0,
+      "position_overrides": 2,
+      "slot_remaps": 0,
+      "part_transform_edits": 0,
+      "validation_iterations": 1,
+      "art_regeneration_count": 0
+    },
+    "clips": {
+      "idle": {
+        "status": "PASS"
+      },
+      "run": {
+        "status": "PASS"
+      },
+      "slash": {
+        "status": "PASS"
+      }
+    }
+  },
+  {
+    "id": "test-c",
+    "name": "Wide Armored Warrior (Test-C)",
+    "envelopeIssues": [
+      "Anatomy ratio 'shoulder_span_to_height' = 0.078 is outside permitted envelope [0.025, 0.07]."
+    ],
+    "metrics": {
+      "override_count": 5,
+      "material_override_count": 1,
+      "material_override_ratio": 0.058823529411764705,
+      "mean_length_deviation": 1.7647058823529411,
+      "max_length_deviation": 30,
+      "mean_rest_rotation_deviation": 0,
+      "max_rest_rotation_deviation": 0,
+      "pivot_edits": 0,
+      "anchor_edits": 0,
+      "length_overrides": 1,
+      "rest_rotation_overrides": 0,
+      "position_overrides": 4,
+      "slot_remaps": 0,
+      "part_transform_edits": 0,
+      "validation_iterations": 1,
+      "art_regeneration_count": 0
+    },
+    "clips": {
+      "idle": {
+        "status": "PASS"
+      },
+      "run": {
+        "status": "PASS"
+      },
+      "slash": {
+        "status": "FAIL",
+        "failureClass": "RETARGET",
+        "reason": "Shoulder span (ratio 0.078 > 0.070) causes arm trajectory to penetrate heavy shoulder pauldrons and distorts two-handed sword silhouette"
+      }
+    }
+  },
+  {
+    "id": "test-d",
+    "name": "High-Volume Robe Elder (Test-D)",
+    "envelopeIssues": [],
+    "metrics": {
+      "override_count": 1,
+      "material_override_count": 0,
+      "material_override_ratio": 0,
+      "mean_length_deviation": 0.29411764705882354,
+      "max_length_deviation": 5,
+      "mean_rest_rotation_deviation": 0,
+      "max_rest_rotation_deviation": 0,
+      "pivot_edits": 0,
+      "anchor_edits": 0,
+      "length_overrides": 1,
+      "rest_rotation_overrides": 0,
+      "position_overrides": 0,
+      "slot_remaps": 0,
+      "part_transform_edits": 0,
+      "validation_iterations": 1,
+      "art_regeneration_count": 0
+    },
+    "clips": {
+      "idle": {
+        "status": "PASS"
+      },
+      "run": {
+        "status": "PASS"
+      },
+      "slash": {
+        "status": "PASS"
+      }
+    }
+  },
+  {
+    "id": "test-e",
+    "name": "Semi-Chibi Goblin Fighter (Test-E)",
+    "envelopeIssues": [
+      "Anatomy ratio 'head_to_height' = 0.260 is outside permitted envelope [0.14, 0.22].",
+      "Anatomy ratio 'upper_arm_to_height' = 0.085 is outside permitted envelope [0.1, 0.15].",
+      "Anatomy ratio 'thigh_to_height' = 0.140 is outside permitted envelope [0.18, 0.26].",
+      "Anatomy ratio 'total_leg_to_height' = 0.270 is outside permitted envelope [0.38, 0.48]."
+    ],
+    "metrics": {
+      "override_count": 9,
+      "material_override_count": 9,
+      "material_override_ratio": 0.5294117647058824,
+      "mean_length_deviation": 32.94117647058823,
+      "max_length_deviation": 120,
+      "mean_rest_rotation_deviation": 0,
+      "max_rest_rotation_deviation": 0,
+      "pivot_edits": 0,
+      "anchor_edits": 0,
+      "length_overrides": 9,
+      "rest_rotation_overrides": 0,
+      "position_overrides": 0,
+      "slot_remaps": 0,
+      "part_transform_edits": 0,
+      "validation_iterations": 1,
+      "art_regeneration_count": 0
+    },
+    "clips": {
+      "idle": {
+        "status": "PASS"
+      },
+      "run": {
+        "status": "FAIL",
+        "failureClass": "RETARGET",
+        "reason": "Chibi leg proportions (ratio 0.27 < 0.38) cause severe stride float and foot misplacement during canonical run cycle"
+      },
+      "slash": {
+        "status": "FAIL",
+        "failureClass": "RETARGET",
+        "reason": "Shortened arms (ratio 0.085 < 0.10) combined with oversized head causes sword slash arc to collide through skull"
+      }
+    }
+  }
+]

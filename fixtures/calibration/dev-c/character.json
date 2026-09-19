@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "id": "dev-c",
+  "name": "Broader Humanoid Warrior (Dev-C)",
+  "rig": "humanoid-normal-v1",
+  "referenceHeight": 1000.0,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/dev-c/head.png",
+      "width": 150,
+      "height": 185,
+      "pivot": [0.5, 0.85]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/dev-c/torso.png",
+      "width": 140,
+      "height": 205,
+      "pivot": [0.5, 0.90],
+      "distalAnchor": [0.5, 0.10]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/dev-c/pelvis.png",
+      "width": 125,
+      "height": 85,
+      "pivot": [0.5, 0.50]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/dev-c/upper_arm_r.png",
+      "width": 70,
+      "height": 135,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/dev-c/forearm_r.png",
+      "width": 60,
+      "height": 120,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/dev-c/hand_r.png",
+      "width": 45,
+      "height": 55,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/dev-c/upper_arm_l.png",
+      "width": 70,
+      "height": 135,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/dev-c/forearm_l.png",
+      "width": 60,
+      "height": 120,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/dev-c/hand_l.png",
+      "width": 45,
+      "height": 55,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/dev-c/thigh_r.png",
+      "width": 80,
+      "height": 230,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/dev-c/shin_r.png",
+      "width": 70,
+      "height": 210,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/dev-c/foot_r.png",
+      "width": 80,
+      "height": 55,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/dev-c/thigh_l.png",
+      "width": 80,
+      "height": 230,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/dev-c/shin_l.png",
+      "width": 70,
+      "height": 210,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/dev-c/foot_l.png",
+      "width": 80,
+      "height": 55,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/dev-c/broad_saber.png",
+      "width": 80,
+      "height": 280,
+      "pivot": [0.5, 0.85],
+      "distalAnchor": [0.5, 0.15]
+    }
+  },
+  "boneOverrides": {
+    "upper_arm_L": {
+      "x": 3.0
+    },
+    "upper_arm_R": {
+      "x": -3.0
+    }
+  }
+}

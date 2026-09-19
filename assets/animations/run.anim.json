@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "id": "run",
+  "name": "Standard Humanoid Run Cycle",
+  "duration": 0.8,
+  "loop": true,
+  "frameRate": 60,
+  "boneTracks": {
+    "pelvis": {
+      "translation": [
+        { "time": 0.0, "deltaX": 0.0, "deltaY": 0.0, "basis": "characterHeight", "curve": "linear" },
+        { "time": 0.2, "deltaX": 0.0, "deltaY": -0.03, "basis": "characterHeight", "curve": "linear" },
+        { "time": 0.4, "deltaX": 0.0, "deltaY": 0.0, "basis": "characterHeight", "curve": "linear" },
+        { "time": 0.6, "deltaX": 0.0, "deltaY": -0.03, "basis": "characterHeight", "curve": "linear" },
+        { "time": 0.8, "deltaX": 0.0, "deltaY": 0.0, "basis": "characterHeight", "curve": "linear" }
+      ],
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 0.0, "curve": "linear" },
+        { "time": 0.2, "rotationDelta": 3.0, "curve": "linear" },
+        { "time": 0.4, "rotationDelta": 0.0, "curve": "linear" },
+        { "time": 0.6, "rotationDelta": -3.0, "curve": "linear" },
+        { "time": 0.8, "rotationDelta": 0.0, "curve": "linear" }
+      ]
+    },
+    "torso": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 10.0, "curve": "linear" },
+        { "time": 0.4, "rotationDelta": 12.0, "curve": "linear" },
+        { "time": 0.8, "rotationDelta": 10.0, "curve": "linear" }
+      ]
+    },
+    "thigh_R": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": -35.0, "curve": "linear" },
+        { "time": 0.2, "rotationDelta": 5.0, "curve": "linear" },
+        { "time": 0.4, "rotationDelta": 40.0, "curve": "linear" },
+        { "time": 0.6, "rotationDelta": 10.0, "curve": "linear" },
+        { "time": 0.8, "rotationDelta": -35.0, "curve": "linear" }
+      ]
+    },
+    "shin_R": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 15.0, "curve": "linear" },
+        { "time": 0.2, "rotationDelta": 45.0, "curve": "linear" },
+        { "time": 0.4, "rotationDelta": 10.0, "curve": "linear" },
+        { "time": 0.6, "rotationDelta": 5.0, "curve": "linear" },
+        { "time": 0.8, "rotationDelta": 15.0, "curve": "linear" }
+      ]
+    },
+    "thigh_L": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 40.0, "curve": "linear" },
+        { "time": 0.2, "rotationDelta": 10.0, "curve": "linear" },
+        { "time": 0.4, "rotationDelta": -35.0, "curve": "linear" },
+        { "time": 0.6, "rotationDelta": 5.0, "curve": "linear" },
+        { "time": 0.8, "rotationDelta": 40.0, "curve": "linear" }
+      ]
+    },
+    "shin_L": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 10.0, "curve": "linear" },
+        { "time": 0.2, "rotationDelta": 5.0, "curve": "linear" },
+        { "time": 0.4, "rotationDelta": 15.0, "curve": "linear" },
+        { "time": 0.6, "rotationDelta": 45.0, "curve": "linear" },
+        { "time": 0.8, "rotationDelta": 10.0, "curve": "linear" }
+      ]
+    },
+    "upper_arm_R": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 35.0, "curve": "linear" },
+        { "time": 0.4, "rotationDelta": -35.0, "curve": "linear" },
+        { "time": 0.8, "rotationDelta": 35.0, "curve": "linear" }
+      ]
+    },
+    "forearm_R": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 20.0, "curve": "linear" },
+        { "time": 0.4, "rotationDelta": 50.0, "curve": "linear" },
+        { "time": 0.8, "rotationDelta": 20.0, "curve": "linear" }
+      ]
+    },
+    "upper_arm_L": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": -35.0, "curve": "linear" },
+        { "time": 0.4, "rotationDelta": 35.0, "curve": "linear" },
+        { "time": 0.8, "rotationDelta": -35.0, "curve": "linear" }
+      ]
+    },
+    "forearm_L": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 50.0, "curve": "linear" },
+        { "time": 0.4, "rotationDelta": 20.0, "curve": "linear" },
+        { "time": 0.8, "rotationDelta": 50.0, "curve": "linear" }
+      ]
+    }
+  },
+  "drawOrderKeys": [
+    { "time": 0.0, "slot": "slot_weapon", "drawOrder": 110 }
+  ]
+}

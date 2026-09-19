@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "id": "idle",
+  "name": "Standard Idle Breathing",
+  "duration": 2.0,
+  "loop": true,
+  "frameRate": 60,
+  "boneTracks": {
+    "pelvis": {
+      "translation": [
+        { "time": 0.0, "deltaX": 0.0, "deltaY": 0.0, "basis": "characterHeight", "curve": "linear" },
+        { "time": 1.0, "deltaX": 0.0, "deltaY": 0.015, "basis": "characterHeight", "curve": "linear" },
+        { "time": 2.0, "deltaX": 0.0, "deltaY": 0.0, "basis": "characterHeight", "curve": "linear" }
+      ]
+    },
+    "torso": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 0.0, "curve": "linear" },
+        { "time": 1.0, "rotationDelta": -2.0, "curve": "linear" },
+        { "time": 2.0, "rotationDelta": 0.0, "curve": "linear" }
+      ]
+    },
+    "head": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 0.0, "curve": "linear" },
+        { "time": 1.0, "rotationDelta": 1.5, "curve": "linear" },
+        { "time": 2.0, "rotationDelta": 0.0, "curve": "linear" }
+      ]
+    },
+    "upper_arm_R": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 0.0, "curve": "linear" },
+        { "time": 1.0, "rotationDelta": 3.0, "curve": "linear" },
+        { "time": 2.0, "rotationDelta": 0.0, "curve": "linear" }
+      ]
+    },
+    "forearm_R": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 0.0, "curve": "linear" },
+        { "time": 1.0, "rotationDelta": 2.0, "curve": "linear" },
+        { "time": 2.0, "rotationDelta": 0.0, "curve": "linear" }
+      ]
+    },
+    "upper_arm_L": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 0.0, "curve": "linear" },
+        { "time": 1.0, "rotationDelta": -3.0, "curve": "linear" },
+        { "time": 2.0, "rotationDelta": 0.0, "curve": "linear" }
+      ]
+    },
+    "forearm_L": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 0.0, "curve": "linear" },
+        { "time": 1.0, "rotationDelta": -2.0, "curve": "linear" },
+        { "time": 2.0, "rotationDelta": 0.0, "curve": "linear" }
+      ]
+    }
+  },
+  "drawOrderKeys": [
+    { "time": 0.0, "slot": "slot_weapon", "drawOrder": 110 }
+  ]
+}

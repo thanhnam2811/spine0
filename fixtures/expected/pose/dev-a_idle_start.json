@@ -1,0 +1,106 @@
+{
+  "name": "idle_start",
+  "clipId": "idle",
+  "time": 0,
+  "drawOrder": [
+    "slot_weapon_back",
+    "slot_robe_back",
+    "slot_arm_far",
+    "slot_leg_far",
+    "slot_pelvis",
+    "slot_leg_near",
+    "slot_robe_front",
+    "slot_torso",
+    "slot_head",
+    "slot_arm_near",
+    "slot_weapon"
+  ],
+  "bones": {
+    "root": {
+      "worldX": 0,
+      "worldY": 1000,
+      "worldRotation": 0
+    },
+    "pelvis": {
+      "worldX": 0,
+      "worldY": 500,
+      "worldRotation": 0
+    },
+    "torso": {
+      "worldX": 0,
+      "worldY": 440,
+      "worldRotation": 0
+    },
+    "neck": {
+      "worldX": 0,
+      "worldY": 260,
+      "worldRotation": 0
+    },
+    "head": {
+      "worldX": 0,
+      "worldY": 220,
+      "worldRotation": 0
+    },
+    "upper_arm_L": {
+      "worldX": 20,
+      "worldY": 280,
+      "worldRotation": 15
+    },
+    "forearm_L": {
+      "worldX": -11.058,
+      "worldY": 395.911,
+      "worldRotation": 25
+    },
+    "hand_L": {
+      "worldX": -57.546,
+      "worldY": 495.605,
+      "worldRotation": 30
+    },
+    "upper_arm_R": {
+      "worldX": -20,
+      "worldY": 280,
+      "worldRotation": 345
+    },
+    "forearm_R": {
+      "worldX": 11.058,
+      "worldY": 395.911,
+      "worldRotation": 335
+    },
+    "hand_R": {
+      "worldX": 57.546,
+      "worldY": 495.605,
+      "worldRotation": 330
+    },
+    "thigh_L": {
+      "worldX": 30,
+      "worldY": 520,
+      "worldRotation": 5
+    },
+    "shin_L": {
+      "worldX": 10.826,
+      "worldY": 739.163,
+      "worldRotation": 0
+    },
+    "foot_L": {
+      "worldX": 10.826,
+      "worldY": 939.163,
+      "worldRotation": 0
+    },
+    "thigh_R": {
+      "worldX": -30,
+      "worldY": 520,
+      "worldRotation": 355
+    },
+    "shin_R": {
+      "worldX": -10.826,
+      "worldY": 739.163,
+      "worldRotation": 0
+    },
+    "foot_R": {
+      "worldX": -10.826,
+      "worldY": 939.163,
+      "worldRotation": 0
+    }
+  },
+  "weaponDrawOrder": 110
+}

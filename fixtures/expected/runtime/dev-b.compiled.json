@@ -1,0 +1,1263 @@
+{
+  "formatVersion": "0.1.0",
+  "id": "dev-b",
+  "rigId": "humanoid-normal-v1",
+  "referenceHeight": 1000,
+  "bones": [
+    {
+      "id": "root",
+      "parentIndex": -1,
+      "restLocalX": 0,
+      "restLocalY": 1000,
+      "restLocalRotation": 0,
+      "length": 0
+    },
+    {
+      "id": "pelvis",
+      "parentIndex": 0,
+      "restLocalX": 0,
+      "restLocalY": -500,
+      "restLocalRotation": 0,
+      "length": 60
+    },
+    {
+      "id": "torso",
+      "parentIndex": 1,
+      "restLocalX": 0,
+      "restLocalY": -60,
+      "restLocalRotation": 0,
+      "length": 175
+    },
+    {
+      "id": "neck",
+      "parentIndex": 2,
+      "restLocalX": 0,
+      "restLocalY": -180,
+      "restLocalRotation": 0,
+      "length": 40
+    },
+    {
+      "id": "head",
+      "parentIndex": 3,
+      "restLocalX": 0,
+      "restLocalY": -40,
+      "restLocalRotation": 0,
+      "length": 140
+    },
+    {
+      "id": "upper_arm_L",
+      "parentIndex": 2,
+      "restLocalX": 20,
+      "restLocalY": -160,
+      "restLocalRotation": 15,
+      "length": 120
+    },
+    {
+      "id": "forearm_L",
+      "parentIndex": 5,
+      "restLocalX": 0,
+      "restLocalY": 120,
+      "restLocalRotation": 10,
+      "length": 110
+    },
+    {
+      "id": "hand_L",
+      "parentIndex": 6,
+      "restLocalX": 0,
+      "restLocalY": 110,
+      "restLocalRotation": 5,
+      "length": 50
+    },
+    {
+      "id": "upper_arm_R",
+      "parentIndex": 2,
+      "restLocalX": -20,
+      "restLocalY": -160,
+      "restLocalRotation": -15,
+      "length": 120
+    },
+    {
+      "id": "forearm_R",
+      "parentIndex": 8,
+      "restLocalX": 0,
+      "restLocalY": 120,
+      "restLocalRotation": -10,
+      "length": 110
+    },
+    {
+      "id": "hand_R",
+      "parentIndex": 9,
+      "restLocalX": 0,
+      "restLocalY": 110,
+      "restLocalRotation": -5,
+      "length": 50
+    },
+    {
+      "id": "thigh_L",
+      "parentIndex": 1,
+      "restLocalX": 30,
+      "restLocalY": 20,
+      "restLocalRotation": 5,
+      "length": 220
+    },
+    {
+      "id": "shin_L",
+      "parentIndex": 11,
+      "restLocalX": 0,
+      "restLocalY": 220,
+      "restLocalRotation": -5,
+      "length": 200
+    },
+    {
+      "id": "foot_L",
+      "parentIndex": 12,
+      "restLocalX": 0,
+      "restLocalY": 200,
+      "restLocalRotation": 0,
+      "length": 60
+    },
+    {
+      "id": "thigh_R",
+      "parentIndex": 1,
+      "restLocalX": -30,
+      "restLocalY": 20,
+      "restLocalRotation": -5,
+      "length": 220
+    },
+    {
+      "id": "shin_R",
+      "parentIndex": 14,
+      "restLocalX": 0,
+      "restLocalY": 220,
+      "restLocalRotation": 5,
+      "length": 200
+    },
+    {
+      "id": "foot_R",
+      "parentIndex": 15,
+      "restLocalX": 0,
+      "restLocalY": 200,
+      "restLocalRotation": 0,
+      "length": 60
+    }
+  ],
+  "slots": [
+    {
+      "id": "slot_weapon_back",
+      "boneIndex": 2,
+      "defaultDrawOrder": 10
+    },
+    {
+      "id": "slot_robe_back",
+      "boneIndex": 1,
+      "defaultDrawOrder": 20
+    },
+    {
+      "id": "slot_arm_far",
+      "boneIndex": 5,
+      "defaultDrawOrder": 30
+    },
+    {
+      "id": "slot_leg_far",
+      "boneIndex": 11,
+      "defaultDrawOrder": 40
+    },
+    {
+      "id": "slot_pelvis",
+      "boneIndex": 1,
+      "defaultDrawOrder": 50
+    },
+    {
+      "id": "slot_leg_near",
+      "boneIndex": 14,
+      "defaultDrawOrder": 60
+    },
+    {
+      "id": "slot_robe_front",
+      "boneIndex": 1,
+      "defaultDrawOrder": 70
+    },
+    {
+      "id": "slot_torso",
+      "boneIndex": 2,
+      "defaultDrawOrder": 80
+    },
+    {
+      "id": "slot_head",
+      "boneIndex": 4,
+      "defaultDrawOrder": 90
+    },
+    {
+      "id": "slot_arm_near",
+      "boneIndex": 8,
+      "defaultDrawOrder": 100
+    },
+    {
+      "id": "slot_weapon",
+      "boneIndex": 10,
+      "defaultDrawOrder": 110
+    }
+  ],
+  "parts": [
+    {
+      "key": "foot_L",
+      "slotIndex": 3,
+      "boneIndex": 11,
+      "texture": "textures/dev-b/foot_l.png",
+      "width": 65,
+      "height": 48,
+      "pivot": [
+        0.3,
+        0.3
+      ],
+      "distalAnchor": [
+        0.8,
+        0.8
+      ]
+    },
+    {
+      "key": "foot_R",
+      "slotIndex": 5,
+      "boneIndex": 14,
+      "texture": "textures/dev-b/foot_r.png",
+      "width": 65,
+      "height": 48,
+      "pivot": [
+        0.3,
+        0.3
+      ],
+      "distalAnchor": [
+        0.8,
+        0.8
+      ]
+    },
+    {
+      "key": "forearm_L",
+      "slotIndex": 2,
+      "boneIndex": 5,
+      "texture": "textures/dev-b/forearm_l.png",
+      "width": 55,
+      "height": 125,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    {
+      "key": "forearm_R",
+      "slotIndex": 9,
+      "boneIndex": 8,
+      "texture": "textures/dev-b/forearm_r.png",
+      "width": 55,
+      "height": 125,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    {
+      "key": "hand_L",
+      "slotIndex": 2,
+      "boneIndex": 5,
+      "texture": "textures/dev-b/hand_l.png",
+      "width": 38,
+      "height": 48,
+      "pivot": [
+        0.5,
+        0.2
+      ],
+      "distalAnchor": [
+        0.5,
+        0.8
+      ]
+    },
+    {
+      "key": "hand_R",
+      "slotIndex": 9,
+      "boneIndex": 8,
+      "texture": "textures/dev-b/hand_r.png",
+      "width": 38,
+      "height": 48,
+      "pivot": [
+        0.5,
+        0.2
+      ],
+      "distalAnchor": [
+        0.5,
+        0.8
+      ]
+    },
+    {
+      "key": "head",
+      "slotIndex": 8,
+      "boneIndex": 4,
+      "texture": "textures/dev-b/head.png",
+      "width": 130,
+      "height": 175,
+      "pivot": [
+        0.5,
+        0.85
+      ]
+    },
+    {
+      "key": "pelvis",
+      "slotIndex": 4,
+      "boneIndex": 1,
+      "texture": "textures/dev-b/pelvis.png",
+      "width": 100,
+      "height": 75,
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "key": "robe_back",
+      "slotIndex": 1,
+      "boneIndex": 1,
+      "texture": "textures/dev-b/robe_back.png",
+      "width": 130,
+      "height": 300,
+      "pivot": [
+        0.5,
+        0.1
+      ]
+    },
+    {
+      "key": "robe_front",
+      "slotIndex": 6,
+      "boneIndex": 1,
+      "texture": "textures/dev-b/robe_front.png",
+      "width": 120,
+      "height": 280,
+      "pivot": [
+        0.5,
+        0.1
+      ]
+    },
+    {
+      "key": "shin_L",
+      "slotIndex": 3,
+      "boneIndex": 11,
+      "texture": "textures/dev-b/shin_l.png",
+      "width": 55,
+      "height": 205,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    {
+      "key": "shin_R",
+      "slotIndex": 5,
+      "boneIndex": 14,
+      "texture": "textures/dev-b/shin_r.png",
+      "width": 55,
+      "height": 205,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    {
+      "key": "thigh_L",
+      "slotIndex": 3,
+      "boneIndex": 11,
+      "texture": "textures/dev-b/thigh_l.png",
+      "width": 65,
+      "height": 225,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    {
+      "key": "thigh_R",
+      "slotIndex": 5,
+      "boneIndex": 14,
+      "texture": "textures/dev-b/thigh_r.png",
+      "width": 65,
+      "height": 225,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    {
+      "key": "torso",
+      "slotIndex": 7,
+      "boneIndex": 2,
+      "texture": "textures/dev-b/torso.png",
+      "width": 110,
+      "height": 190,
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "distalAnchor": [
+        0.5,
+        0.1
+      ]
+    },
+    {
+      "key": "upper_arm_L",
+      "slotIndex": 2,
+      "boneIndex": 5,
+      "texture": "textures/dev-b/upper_arm_l.png",
+      "width": 55,
+      "height": 135,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    {
+      "key": "upper_arm_R",
+      "slotIndex": 9,
+      "boneIndex": 8,
+      "texture": "textures/dev-b/upper_arm_r.png",
+      "width": 55,
+      "height": 135,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    {
+      "key": "weapon",
+      "slotIndex": 10,
+      "boneIndex": 10,
+      "texture": "textures/dev-b/jade_staff.png",
+      "width": 45,
+      "height": 320,
+      "pivot": [
+        0.5,
+        0.8
+      ],
+      "distalAnchor": [
+        0.5,
+        0.1
+      ]
+    }
+  ],
+  "clips": {
+    "idle": {
+      "id": "idle",
+      "duration": 2,
+      "loop": true,
+      "boneTracks": {
+        "pelvis": {
+          "translation": [
+            {
+              "time": 0,
+              "deltaX": 0,
+              "deltaY": 0,
+              "basis": "characterHeight",
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "deltaX": 0,
+              "deltaY": 0.015,
+              "basis": "characterHeight",
+              "curve": "linear"
+            },
+            {
+              "time": 2,
+              "deltaX": 0,
+              "deltaY": 0,
+              "basis": "characterHeight",
+              "curve": "linear"
+            }
+          ]
+        },
+        "torso": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "rotationDelta": -2,
+              "curve": "linear"
+            },
+            {
+              "time": 2,
+              "rotationDelta": 0,
+              "curve": "linear"
+            }
+          ]
+        },
+        "head": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "rotationDelta": 1.5,
+              "curve": "linear"
+            },
+            {
+              "time": 2,
+              "rotationDelta": 0,
+              "curve": "linear"
+            }
+          ]
+        },
+        "upper_arm_R": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "rotationDelta": 3,
+              "curve": "linear"
+            },
+            {
+              "time": 2,
+              "rotationDelta": 0,
+              "curve": "linear"
+            }
+          ]
+        },
+        "forearm_R": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "rotationDelta": 2,
+              "curve": "linear"
+            },
+            {
+              "time": 2,
+              "rotationDelta": 0,
+              "curve": "linear"
+            }
+          ]
+        },
+        "upper_arm_L": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "rotationDelta": -3,
+              "curve": "linear"
+            },
+            {
+              "time": 2,
+              "rotationDelta": 0,
+              "curve": "linear"
+            }
+          ]
+        },
+        "forearm_L": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "rotationDelta": -2,
+              "curve": "linear"
+            },
+            {
+              "time": 2,
+              "rotationDelta": 0,
+              "curve": "linear"
+            }
+          ]
+        }
+      },
+      "drawOrderKeys": [
+        {
+          "time": 0,
+          "slot": "slot_weapon",
+          "drawOrder": 110
+        }
+      ]
+    },
+    "run": {
+      "id": "run",
+      "duration": 0.8,
+      "loop": true,
+      "boneTracks": {
+        "pelvis": {
+          "translation": [
+            {
+              "time": 0,
+              "deltaX": 0,
+              "deltaY": 0,
+              "basis": "characterHeight",
+              "curve": "linear"
+            },
+            {
+              "time": 0.2,
+              "deltaX": 0,
+              "deltaY": -0.03,
+              "basis": "characterHeight",
+              "curve": "linear"
+            },
+            {
+              "time": 0.4,
+              "deltaX": 0,
+              "deltaY": 0,
+              "basis": "characterHeight",
+              "curve": "linear"
+            },
+            {
+              "time": 0.6,
+              "deltaX": 0,
+              "deltaY": -0.03,
+              "basis": "characterHeight",
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "deltaX": 0,
+              "deltaY": 0,
+              "basis": "characterHeight",
+              "curve": "linear"
+            }
+          ],
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 0.2,
+              "rotationDelta": 3,
+              "curve": "linear"
+            },
+            {
+              "time": 0.4,
+              "rotationDelta": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 0.6,
+              "rotationDelta": -3,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 0,
+              "curve": "linear"
+            }
+          ]
+        },
+        "torso": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 10,
+              "curve": "linear"
+            },
+            {
+              "time": 0.4,
+              "rotationDelta": 12,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 10,
+              "curve": "linear"
+            }
+          ]
+        },
+        "thigh_R": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": -35,
+              "curve": "linear"
+            },
+            {
+              "time": 0.2,
+              "rotationDelta": 5,
+              "curve": "linear"
+            },
+            {
+              "time": 0.4,
+              "rotationDelta": 40,
+              "curve": "linear"
+            },
+            {
+              "time": 0.6,
+              "rotationDelta": 10,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": -35,
+              "curve": "linear"
+            }
+          ]
+        },
+        "shin_R": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 15,
+              "curve": "linear"
+            },
+            {
+              "time": 0.2,
+              "rotationDelta": 45,
+              "curve": "linear"
+            },
+            {
+              "time": 0.4,
+              "rotationDelta": 10,
+              "curve": "linear"
+            },
+            {
+              "time": 0.6,
+              "rotationDelta": 5,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 15,
+              "curve": "linear"
+            }
+          ]
+        },
+        "thigh_L": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 40,
+              "curve": "linear"
+            },
+            {
+              "time": 0.2,
+              "rotationDelta": 10,
+              "curve": "linear"
+            },
+            {
+              "time": 0.4,
+              "rotationDelta": -35,
+              "curve": "linear"
+            },
+            {
+              "time": 0.6,
+              "rotationDelta": 5,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 40,
+              "curve": "linear"
+            }
+          ]
+        },
+        "shin_L": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 10,
+              "curve": "linear"
+            },
+            {
+              "time": 0.2,
+              "rotationDelta": 5,
+              "curve": "linear"
+            },
+            {
+              "time": 0.4,
+              "rotationDelta": 15,
+              "curve": "linear"
+            },
+            {
+              "time": 0.6,
+              "rotationDelta": 45,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 10,
+              "curve": "linear"
+            }
+          ]
+        },
+        "upper_arm_R": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 35,
+              "curve": "linear"
+            },
+            {
+              "time": 0.4,
+              "rotationDelta": -35,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 35,
+              "curve": "linear"
+            }
+          ]
+        },
+        "forearm_R": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 20,
+              "curve": "linear"
+            },
+            {
+              "time": 0.4,
+              "rotationDelta": 50,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 20,
+              "curve": "linear"
+            }
+          ]
+        },
+        "upper_arm_L": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": -35,
+              "curve": "linear"
+            },
+            {
+              "time": 0.4,
+              "rotationDelta": 35,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": -35,
+              "curve": "linear"
+            }
+          ]
+        },
+        "forearm_L": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 50,
+              "curve": "linear"
+            },
+            {
+              "time": 0.4,
+              "rotationDelta": 20,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 50,
+              "curve": "linear"
+            }
+          ]
+        }
+      },
+      "drawOrderKeys": [
+        {
+          "time": 0,
+          "slot": "slot_weapon",
+          "drawOrder": 110
+        }
+      ]
+    },
+    "slash": {
+      "id": "slash",
+      "duration": 0.8,
+      "loop": true,
+      "boneTracks": {
+        "pelvis": {
+          "translation": [
+            {
+              "time": 0,
+              "deltaX": -0.02,
+              "deltaY": 0.01,
+              "basis": "characterHeight",
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "deltaX": 0.06,
+              "deltaY": 0.04,
+              "basis": "characterHeight",
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "deltaX": 0.02,
+              "deltaY": 0.02,
+              "basis": "characterHeight",
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "deltaX": -0.02,
+              "deltaY": 0.01,
+              "basis": "characterHeight",
+              "curve": "linear"
+            }
+          ],
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": -8,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": 12,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": 4,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": -8,
+              "curve": "linear"
+            }
+          ]
+        },
+        "torso": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": -18,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": 26,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": 10,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": -18,
+              "curve": "linear"
+            }
+          ]
+        },
+        "head": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 10,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": -15,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": -5,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 10,
+              "curve": "linear"
+            }
+          ]
+        },
+        "upper_arm_R": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": -75,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": 65,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": 20,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": -75,
+              "curve": "linear"
+            }
+          ]
+        },
+        "forearm_R": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 65,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": 15,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": 25,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 65,
+              "curve": "linear"
+            }
+          ]
+        },
+        "hand_R": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": -30,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": 20,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": -30,
+              "curve": "linear"
+            }
+          ]
+        },
+        "upper_arm_L": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 45,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": -40,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": -15,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 45,
+              "curve": "linear"
+            }
+          ]
+        },
+        "forearm_L": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 35,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": 25,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": 10,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 35,
+              "curve": "linear"
+            }
+          ]
+        },
+        "thigh_R": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": -15,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": 25,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": 10,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": -15,
+              "curve": "linear"
+            }
+          ]
+        },
+        "shin_R": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 20,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": 35,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": 15,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 20,
+              "curve": "linear"
+            }
+          ]
+        },
+        "thigh_L": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 20,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": -20,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": -5,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 20,
+              "curve": "linear"
+            }
+          ]
+        },
+        "shin_L": {
+          "rotation": [
+            {
+              "time": 0,
+              "rotationDelta": 10,
+              "curve": "linear"
+            },
+            {
+              "time": 0.25,
+              "rotationDelta": 15,
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "rotationDelta": 10,
+              "curve": "linear"
+            },
+            {
+              "time": 0.8,
+              "rotationDelta": 10,
+              "curve": "linear"
+            }
+          ]
+        }
+      },
+      "drawOrderKeys": [
+        {
+          "time": 0,
+          "slot": "slot_weapon",
+          "drawOrder": 15
+        },
+        {
+          "time": 0.25,
+          "slot": "slot_weapon",
+          "drawOrder": 110
+        },
+        {
+          "time": 0.55,
+          "slot": "slot_weapon",
+          "drawOrder": 15
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "id": "slash",
+  "name": "Heavy Martial Sword Slash",
+  "duration": 0.8,
+  "loop": true,
+  "frameRate": 60,
+  "boneTracks": {
+    "pelvis": {
+      "translation": [
+        { "time": 0.0, "deltaX": -0.02, "deltaY": 0.01, "basis": "characterHeight", "curve": "linear" },
+        { "time": 0.25, "deltaX": 0.06, "deltaY": 0.04, "basis": "characterHeight", "curve": "linear" },
+        { "time": 0.50, "deltaX": 0.02, "deltaY": 0.02, "basis": "characterHeight", "curve": "linear" },
+        { "time": 0.80, "deltaX": -0.02, "deltaY": 0.01, "basis": "characterHeight", "curve": "linear" }
+      ],
+      "rotation": [
+        { "time": 0.0, "rotationDelta": -8.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": 12.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": 4.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": -8.0, "curve": "linear" }
+      ]
+    },
+    "torso": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": -18.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": 26.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": 10.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": -18.0, "curve": "linear" }
+      ]
+    },
+    "head": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 10.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": -15.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": -5.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": 10.0, "curve": "linear" }
+      ]
+    },
+    "upper_arm_R": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": -75.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": 65.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": 20.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": -75.0, "curve": "linear" }
+      ]
+    },
+    "forearm_R": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 65.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": 15.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": 25.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": 65.0, "curve": "linear" }
+      ]
+    },
+    "hand_R": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": -30.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": 20.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": 0.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": -30.0, "curve": "linear" }
+      ]
+    },
+    "upper_arm_L": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 45.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": -40.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": -15.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": 45.0, "curve": "linear" }
+      ]
+    },
+    "forearm_L": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 35.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": 25.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": 10.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": 35.0, "curve": "linear" }
+      ]
+    },
+    "thigh_R": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": -15.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": 25.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": 10.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": -15.0, "curve": "linear" }
+      ]
+    },
+    "shin_R": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 20.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": 35.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": 15.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": 20.0, "curve": "linear" }
+      ]
+    },
+    "thigh_L": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 20.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": -20.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": -5.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": 20.0, "curve": "linear" }
+      ]
+    },
+    "shin_L": {
+      "rotation": [
+        { "time": 0.0, "rotationDelta": 10.0, "curve": "linear" },
+        { "time": 0.25, "rotationDelta": 15.0, "curve": "linear" },
+        { "time": 0.50, "rotationDelta": 10.0, "curve": "linear" },
+        { "time": 0.80, "rotationDelta": 10.0, "curve": "linear" }
+      ]
+    }
+  },
+  "drawOrderKeys": [
+    { "time": 0.0, "slot": "slot_weapon", "drawOrder": 15 },
+    { "time": 0.25, "slot": "slot_weapon", "drawOrder": 110 },
+    { "time": 0.55, "slot": "slot_weapon", "drawOrder": 15 }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "id": "test-e",
+  "name": "Semi-Chibi Goblin Fighter (Test-E)",
+  "rig": "humanoid-normal-v1",
+  "referenceHeight": 1000.0,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/test-e/large_goblin_head.png",
+      "width": 240,
+      "height": 280,
+      "pivot": [0.5, 0.85]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/test-e/leather_vest.png",
+      "width": 140,
+      "height": 180,
+      "pivot": [0.5, 0.90],
+      "distalAnchor": [0.5, 0.10]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/test-e/loincloth.png",
+      "width": 120,
+      "height": 80,
+      "pivot": [0.5, 0.50]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/test-e/arm_near.png",
+      "width": 55,
+      "height": 100,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/test-e/forearm_near.png",
+      "width": 50,
+      "height": 90,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/test-e/claw_r.png",
+      "width": 45,
+      "height": 45,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/test-e/arm_far.png",
+      "width": 55,
+      "height": 100,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/test-e/forearm_far.png",
+      "width": 50,
+      "height": 90,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/test-e/claw_l.png",
+      "width": 45,
+      "height": 45,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/test-e/stumpy_thigh_r.png",
+      "width": 70,
+      "height": 160,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/test-e/stumpy_shin_r.png",
+      "width": 65,
+      "height": 150,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/test-e/claw_foot_r.png",
+      "width": 75,
+      "height": 55,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/test-e/stumpy_thigh_l.png",
+      "width": 70,
+      "height": 160,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/test-e/stumpy_shin_l.png",
+      "width": 65,
+      "height": 150,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/test-e/claw_foot_l.png",
+      "width": 75,
+      "height": 55,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/test-e/bone_dagger.png",
+      "width": 50,
+      "height": 160,
+      "pivot": [0.5, 0.85],
+      "distalAnchor": [0.5, 0.10]
+    }
+  },
+  "boneOverrides": {
+    "head": { "length": 260.0 },
+    "upper_arm_L": { "length": 85.0 },
+    "upper_arm_R": { "length": 85.0 },
+    "forearm_L": { "length": 75.0 },
+    "forearm_R": { "length": 75.0 },
+    "thigh_L": { "length": 140.0 },
+    "thigh_R": { "length": 140.0 },
+    "shin_L": { "length": 130.0 },
+    "shin_R": { "length": 130.0 }
+  }
+}

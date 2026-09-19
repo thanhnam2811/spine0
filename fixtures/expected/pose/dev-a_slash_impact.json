@@ -1,0 +1,106 @@
+{
+  "name": "slash_impact",
+  "clipId": "slash",
+  "time": 0.35,
+  "drawOrder": [
+    "slot_weapon_back",
+    "slot_robe_back",
+    "slot_arm_far",
+    "slot_leg_far",
+    "slot_pelvis",
+    "slot_leg_near",
+    "slot_robe_front",
+    "slot_torso",
+    "slot_head",
+    "slot_arm_near",
+    "slot_weapon"
+  ],
+  "bones": {
+    "root": {
+      "worldX": 0,
+      "worldY": 1000,
+      "worldRotation": 0
+    },
+    "pelvis": {
+      "worldX": 44,
+      "worldY": 532,
+      "worldRotation": 8.8
+    },
+    "torso": {
+      "worldX": 53.179,
+      "worldY": 472.706,
+      "worldRotation": 28.4
+    },
+    "neck": {
+      "worldX": 138.792,
+      "worldY": 314.37,
+      "worldRotation": 28.4
+    },
+    "head": {
+      "worldX": 157.816,
+      "worldY": 279.184,
+      "worldRotation": 17.4
+    },
+    "upper_arm_L": {
+      "worldX": 146.872,
+      "worldY": 341.475,
+      "worldRotation": 13.4
+    },
+    "forearm_L": {
+      "worldX": 119.062,
+      "worldY": 458.208,
+      "worldRotation": 42.4
+    },
+    "hand_L": {
+      "worldX": 44.889,
+      "worldY": 539.438,
+      "worldRotation": 47.4
+    },
+    "upper_arm_R": {
+      "worldX": 111.686,
+      "worldY": 322.45,
+      "worldRotation": 60.4
+    },
+    "forearm_R": {
+      "worldX": 7.347,
+      "worldY": 381.723,
+      "worldRotation": 69.4
+    },
+    "hand_R": {
+      "worldX": -95.62,
+      "worldY": 420.426,
+      "worldRotation": 76.4
+    },
+    "thigh_L": {
+      "worldX": 70.587,
+      "worldY": 556.354,
+      "worldRotation": 359.8
+    },
+    "shin_L": {
+      "worldX": 71.355,
+      "worldY": 776.353,
+      "worldRotation": 7.8
+    },
+    "foot_L": {
+      "worldX": 44.212,
+      "worldY": 974.502,
+      "worldRotation": 7.8
+    },
+    "thigh_R": {
+      "worldX": 11.293,
+      "worldY": 547.175,
+      "worldRotation": 22.8
+    },
+    "shin_R": {
+      "worldX": -73.96,
+      "worldY": 749.985,
+      "worldRotation": 54.8
+    },
+    "foot_R": {
+      "worldX": -237.389,
+      "worldY": 865.271,
+      "worldRotation": 54.8
+    }
+  },
+  "weaponDrawOrder": 110
+}

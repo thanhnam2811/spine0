@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "id": "test-d",
+  "name": "High-Volume Robe Elder (Test-D)",
+  "rig": "humanoid-normal-v1",
+  "referenceHeight": 1000.0,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/test-d/head.png",
+      "width": 140,
+      "height": 180,
+      "pivot": [0.5, 0.85]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/test-d/inner_robe.png",
+      "width": 125,
+      "height": 195,
+      "pivot": [0.5, 0.90],
+      "distalAnchor": [0.5, 0.10]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/test-d/sash_belt.png",
+      "width": 115,
+      "height": 80,
+      "pivot": [0.5, 0.50]
+    },
+    "robe_front": {
+      "slot": "slot_robe_front",
+      "texture": "textures/test-d/layered_skirt.png",
+      "width": 160,
+      "height": 340,
+      "pivot": [0.5, 0.08]
+    },
+    "robe_back": {
+      "slot": "slot_robe_back",
+      "texture": "textures/test-d/sweeping_cloak.png",
+      "width": 180,
+      "height": 360,
+      "pivot": [0.5, 0.08]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/test-d/flowing_sleeve_upper_r.png",
+      "width": 80,
+      "height": 150,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/test-d/flowing_sleeve_lower_r.png",
+      "width": 90,
+      "height": 160,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/test-d/hand_r.png",
+      "width": 40,
+      "height": 50,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/test-d/flowing_sleeve_upper_l.png",
+      "width": 80,
+      "height": 150,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/test-d/flowing_sleeve_lower_l.png",
+      "width": 90,
+      "height": 160,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/test-d/hand_l.png",
+      "width": 40,
+      "height": 50,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/test-d/thigh_r.png",
+      "width": 70,
+      "height": 230,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/test-d/shin_r.png",
+      "width": 60,
+      "height": 210,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/test-d/foot_r.png",
+      "width": 70,
+      "height": 50,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/test-d/thigh_l.png",
+      "width": 70,
+      "height": 230,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/test-d/shin_l.png",
+      "width": 60,
+      "height": 210,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/test-d/foot_l.png",
+      "width": 70,
+      "height": 50,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/test-d/taoist_banner.png",
+      "width": 90,
+      "height": 330,
+      "pivot": [0.5, 0.85],
+      "distalAnchor": [0.5, 0.05]
+    }
+  },
+  "boneOverrides": {
+    "torso": { "length": 185.0 }
+  }
+}

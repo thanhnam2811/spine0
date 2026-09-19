@@ -1,0 +1,32 @@
+{
+  "freezeTimestamp": "2026-09-18T23:55:09.403Z",
+  "schemaVersion": "0.1.0",
+  "rigVersion": 1,
+  "retargetVersion": "0.1.0",
+  "envelopeVersion": "0.1.0",
+  "rigId": "humanoid-normal-v1",
+  "rigHash": "bbcaeed1844e17d8b093efb04864fa8e5445254a1d0e05c28a39da46bf276b26",
+  "envelopeHash": "5eb49e6b26aea0c384b43819f72deb15206068f07100448888e2157af9cb9493",
+  "animationHashes": {
+    "idle": "41916334fcead2ef0157e8cbdf03f8aa4dde864a96d374d34bc02d1806727409",
+    "run": "a877fa33cdcaa4c74cdb460ccb57ff76debc7fd573c776d911d28c4960c57eb1",
+    "slash": "d9e4937bb68f94efdfe4db7714a1dea76d4ab66377b02430831a609709210f7c"
+  },
+  "specHashes": {
+    "coordinateSemantics": "6d39c52197805ff312285eaf72bb6ae03edf574042cce4e7e76d7d694c0155b0",
+    "rigSpecification": "54aae722b3fe35dc9d8d6cdbae8bfa2ffc0bc329f0d4e59c0582a1005eb334bd",
+    "artContract": "a5d774847f14099ac01eb21f811a7cf5b328d359ad336c8491b0eeeec24f0775",
+    "anatomyEnvelope": "44a31db06b10ea3183e29734d34390cee9c17ac0dfb0d2b68979ead5522e2abe",
+    "characterFormat": "cb004c570360d0f12bf284a9a561eb90d56688143b24d0b2c13e95e06be8801c",
+    "animationFormat": "5728f71c71b61b16cdb084b5badf16bdc467f1ae3fa9294f67f5b2da2361e0bc"
+  },
+  "frozenRules": {
+    "canonicalBonesCount": 17,
+    "canonicalSlotsCount": 11,
+    "coordinateSystem": "X+ right, Y+ down, clockwise positive",
+    "facingDirection": "Right (+X)",
+    "scaleOverridesForbidden": true,
+    "hierarchyMutationForbidden": true,
+    "materialOverrideRatioThreshold": 0.4
+  }
+}
