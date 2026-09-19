@@ -40,7 +40,7 @@ animation-factory/
    - 17-bone topology + Rig Families (`HumanoidNormal`, `HumanoidHeavy`, `HumanoidSmall`) delivered high-efficiency animation reuse.
    - Phase B (Minimal Rig Adjuster) is authorized and recommended.
 
-*For detailed data and analysis, see [docs/spike-results/results.md](file:///G:/PERSONAL/spine0/docs/spike-results/results.md).*
+*For detailed data and analysis, see [docs/spike-results/results.md](file:///G:/PERSONAL/spine0/docs/spike-results/results.md) and [docs/spike-results/phase-a-supervisor-report.md](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a-supervisor-report.md).*
 
 ---
 
