@@ -75,9 +75,9 @@ export function compileCharacter(
 
   // 4. Compile slots
   const slotIdToIndex = new Map<string, number>();
-  rig.slots.forEach((s, idx) => slotIdToIndex.set(s.id, idx));
+  skeleton.slots.forEach((s, idx) => slotIdToIndex.set(s.id, idx));
 
-  const compiledSlots: CompiledSlot[] = rig.slots.map((s) => ({
+  const compiledSlots: CompiledSlot[] = skeleton.slots.map((s) => ({
     id: s.id,
     boneIndex: boneIdToIndex.get(s.bone) ?? 0,
     defaultDrawOrder: s.defaultDrawOrder
@@ -88,7 +88,7 @@ export function compileCharacter(
     .sort(([k1], [k2]) => k1.localeCompare(k2))
     .map(([key, partDef]) => {
       const slotIndex = slotIdToIndex.get(partDef.slot) ?? 0;
-      const slot = rig.slots[slotIndex];
+      const slot = skeleton.slots[slotIndex];
       const boneIndex = slot ? (boneIdToIndex.get(slot.bone) ?? 0) : 0;
 
       return {

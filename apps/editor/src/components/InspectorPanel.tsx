@@ -3,7 +3,7 @@ import type { EditorDocument } from "../model/document.js";
 import type { HistoryManager } from "../model/history.js";
 import {
   SetBoneOverrideCommand,
-  SetSlotBoneCommand,
+  SetPartSlotBindingCommand,
   SetSetupDrawOrderCommand
 } from "../model/commands.js";
 import { resolveCharacterSetup } from "@animation-factory/anim-core";
@@ -180,6 +180,10 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
       ([_, p]) => p.slot === slotId
     );
 
+    const setupOrderOverride = doc.character.setupDrawOrderOverrides?.[slotId];
+    const currentDrawOrder =
+      setupOrderOverride !== undefined ? setupOrderOverride : slot.defaultDrawOrder;
+
     return (
       <div className="p-3 text-xs space-y-4 select-none">
         <div className="border-b border-gray-800 pb-2">
@@ -187,31 +191,33 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
           <p className="text-[10px] text-gray-400">{slot.description}</p>
         </div>
 
-        {/* Rebind Bone */}
+        {/* Canonical Parent Bone (Immutable) */}
         <div className="space-y-1">
-          <label className="text-gray-400 text-[11px]">Parent Bone:</label>
-          <select
-            value={slot.bone}
-            onChange={(e) => history.execute(new SetSlotBoneCommand(slotId, e.target.value))}
-            className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-gray-200 focus:outline-none focus:border-cyan-500"
-          >
-            {doc.targetRig.bones.map((b) => (
-              <option key={b.id} value={b.id}>
-                {b.id}
-              </option>
-            ))}
-          </select>
+          <label className="text-gray-400 text-[11px]">Parent Bone (Canonical):</label>
+          <div className="bg-gray-800/80 border border-gray-700/60 rounded px-2 py-1 text-xs text-cyan-400 font-mono flex items-center justify-between">
+            <span>{slot.bone}</span>
+            <span className="text-[9px] bg-gray-700/60 text-gray-400 px-1 rounded uppercase">
+              Immutable
+            </span>
+          </div>
         </div>
 
         {/* Setup Draw Order */}
         <div className="space-y-1">
-          <label className="text-gray-400 text-[11px]">Setup Draw Order:</label>
+          <div className="flex justify-between items-center">
+            <label className="text-gray-400 text-[11px]">Setup Draw Order:</label>
+            {setupOrderOverride !== undefined && (
+              <span className="text-[9px] bg-amber-950 text-amber-400 border border-amber-800/80 px-1 rounded font-mono">
+                OVERRIDE (Nominal: {slot.defaultDrawOrder})
+              </span>
+            )}
+          </div>
           <input
             type="number"
             min={0}
             max={200}
             step={5}
-            value={slot.defaultDrawOrder}
+            value={currentDrawOrder}
             onChange={(e) => {
               const val = parseInt(e.target.value, 10);
               if (!isNaN(val)) {
@@ -222,13 +228,35 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
           />
         </div>
 
-        {/* Bound Part Info */}
+        {/* Attached Part Binding (Character Owned) */}
+        <div className="space-y-1">
+          <label className="text-gray-400 text-[11px]">Attached Part:</label>
+          <select
+            value={boundPart ? boundPart[0] : ""}
+            onChange={(e) => {
+              const partKey = e.target.value;
+              if (partKey) {
+                history.execute(new SetPartSlotBindingCommand(partKey, slotId));
+              }
+            }}
+            className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-gray-200 focus:outline-none focus:border-cyan-500"
+          >
+            <option value="">(None)</option>
+            {Object.keys(doc.character.parts).map((pk) => (
+              <option key={pk} value={pk}>
+                {pk} ({doc.character.parts[pk].texture})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Bound Part Details */}
         {boundPart && (
           <div className="bg-gray-800/50 p-2 rounded border border-gray-800 space-y-1">
-            <span className="text-[10px] text-gray-400 font-bold uppercase">Attached Part</span>
-            <div className="text-emerald-400 font-mono text-[11px]">{boundPart[0]}</div>
-            <div className="text-[10px] text-gray-500">
-              Texture: <span className="font-mono text-gray-400">{boundPart[1].texture}</span>
+            <span className="text-[10px] text-gray-400 font-bold uppercase">Part Texture</span>
+            <div className="text-[10px] text-gray-400 font-mono">{boundPart[1].texture}</div>
+            <div className="text-[9px] text-gray-500">
+              Pivot: [{boundPart[1].pivot.join(", ")}]
             </div>
           </div>
         )}

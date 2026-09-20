@@ -57,6 +57,7 @@ export interface CharacterDefinition {
   referenceHeight: number;
   parts: Record<string, PartDefinition>;
   boneOverrides?: Record<string, BoneOverride>;
+  setupDrawOrderOverrides?: Record<string, number>;
 }
 
 /* -------------------------------------------------------------------------- */

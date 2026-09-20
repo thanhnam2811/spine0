@@ -99,9 +99,16 @@ export const HierarchyPanel: React.FC<HierarchyPanelProps> = ({
                 </div>
 
                 <div className="text-right">
-                  <span className="text-[10px] text-gray-400 font-mono">
-                    #{slot.defaultDrawOrder}
-                  </span>
+                  <div className="flex items-center gap-1 justify-end">
+                    {doc.character.setupDrawOrderOverrides?.[slot.id] !== undefined && (
+                      <span className="text-[8px] bg-amber-950 text-amber-400 border border-amber-800/80 px-0.5 rounded font-mono">
+                        MOD
+                      </span>
+                    )}
+                    <span className="text-[10px] text-gray-400 font-mono">
+                      #{doc.character.setupDrawOrderOverrides?.[slot.id] ?? slot.defaultDrawOrder}
+                    </span>
+                  </div>
                   {boundPart && (
                     <div className="text-[9px] text-emerald-400 font-mono truncate">
                       {boundPart[0]}

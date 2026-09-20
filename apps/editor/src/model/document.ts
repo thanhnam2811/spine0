@@ -175,3 +175,21 @@ export class EditorDocument {
     return JSON.stringify(this.character, null, 2);
   }
 }
+
+/**
+ * Deep freezes an object and its nested properties.
+ * Useful for development and test assertions to guarantee canonical data immutability.
+ */
+export function deepFreeze<T>(obj: T): Readonly<T> {
+  if (obj === null || typeof obj !== "object") {
+    return obj;
+  }
+  Object.freeze(obj);
+  for (const key of Object.keys(obj)) {
+    const val = (obj as any)[key];
+    if (val !== null && typeof val === "object" && !Object.isFrozen(val)) {
+      deepFreeze(val);
+    }
+  }
+  return obj;
+}

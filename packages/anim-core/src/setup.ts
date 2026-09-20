@@ -5,6 +5,13 @@ import type {
   RigDefinition,
   SlotDefinition
 } from "@animation-factory/schema";
+import {
+  createTransformMatrix,
+  extractRotationDeg,
+  multiplyMatrices,
+  transformPoint,
+  type TransformMatrix
+} from "./math.js";
 
 export interface ResolvedBone {
   id: string;
@@ -103,12 +110,71 @@ export function resolveCharacterSetup(
 
   const boneOrder = computeTopologicalOrder(rig.bones);
 
+  const drawOrderOverrides = character.setupDrawOrderOverrides ?? {};
+  const resolvedSlots: SlotDefinition[] = rig.slots.map((s) => ({
+    ...s,
+    defaultDrawOrder:
+      drawOrderOverrides[s.id] !== undefined ? drawOrderOverrides[s.id] : s.defaultDrawOrder
+  }));
+
   return {
     characterId: character.id,
     rigId: rig.id,
     referenceHeight: character.referenceHeight,
     bones: resolvedBones,
     boneOrder,
-    slots: rig.slots
+    slots: resolvedSlots
   };
+}
+
+export interface SetupBoneWorldTransform {
+  boneId: string;
+  worldMatrix: TransformMatrix;
+  worldX: number;
+  worldY: number;
+  worldRotation: number;
+  distalEndpoint: [number, number];
+}
+
+/**
+ * Evaluates world affine transforms and distal endpoints for all bones in the setup pose
+ * using forward kinematics in topological order.
+ */
+export function evaluateSetupWorldTransforms(
+  rig: RigDefinition,
+  character: CharacterDefinition
+): Record<string, SetupBoneWorldTransform> {
+  const skeleton = resolveCharacterSetup(rig, character);
+  const worldMatrices: Record<string, TransformMatrix> = {};
+  const result: Record<string, SetupBoneWorldTransform> = {};
+
+  for (const boneId of skeleton.boneOrder) {
+    const bone = skeleton.bones[boneId];
+    if (!bone) continue;
+
+    const localMatrix = createTransformMatrix(bone.localX, bone.localY, bone.localRotation);
+    let worldMatrix: TransformMatrix;
+
+    if (!bone.parent || !worldMatrices[bone.parent]) {
+      worldMatrix = localMatrix;
+    } else {
+      const parentWorld = worldMatrices[bone.parent];
+      worldMatrix = multiplyMatrices(parentWorld, localMatrix);
+    }
+
+    worldMatrices[boneId] = worldMatrix;
+    const worldRotation = extractRotationDeg(worldMatrix);
+    const distalEndpoint = transformPoint(worldMatrix, 0, bone.length);
+
+    result[boneId] = {
+      boneId,
+      worldMatrix,
+      worldX: worldMatrix.tx,
+      worldY: worldMatrix.ty,
+      worldRotation,
+      distalEndpoint
+    };
+  }
+
+  return result;
 }

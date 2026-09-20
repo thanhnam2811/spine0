@@ -1,8 +1,15 @@
 import type {
-  BoneOverride,
-  PartDefinition
+  BoneOverride
 } from "@animation-factory/schema";
-import { resolveCharacterSetup, degToRad, radToDeg, normalizeAngle } from "@animation-factory/anim-core";
+import {
+  resolveCharacterSetup,
+  evaluateSetupWorldTransforms,
+  createIdentityMatrix,
+  invertMatrix,
+  transformPoint,
+  radToDeg,
+  normalizeAngle
+} from "@animation-factory/anim-core";
 import type { EditorDocument } from "./document.js";
 
 export interface Command {
@@ -14,6 +21,7 @@ export interface Command {
 
 /**
  * Updates a bone's bounded setup overrides (x, y, rotation, length).
+ * Mutates CHARACTER state only (character.boneOverrides).
  */
 export class SetBoneOverrideCommand implements Command {
   public readonly id = "SET_BONE_OVERRIDE";
@@ -59,6 +67,8 @@ export class SetBoneOverrideCommand implements Command {
 
 /**
  * Repositions distal tip of a bone by updating its rotation and length.
+ * Uses exact anim-core forward kinematics world transforms and parent matrix inversion.
+ * Mutates CHARACTER state only (character.boneOverrides).
  */
 export class SetDistalAnchorCommand implements Command {
   public readonly id = "SET_DISTAL_ANCHOR";
@@ -81,39 +91,35 @@ export class SetDistalAnchorCommand implements Command {
       : undefined;
 
     const skeleton = resolveCharacterSetup(doc.targetRig, doc.character);
+    const worldTransforms = evaluateSetupWorldTransforms(doc.targetRig, doc.character);
     const bone = skeleton.bones[this.boneId];
     const canonical = doc.targetRig.bones.find((b) => b.id === this.boneId);
     if (!bone || !canonical) return;
 
-    // Calculate parent world rotation to convert target delta into local delta
-    let parentRotation = 0.0;
-    if (bone.parent && skeleton.bones[bone.parent]) {
-      let curr: string | null = bone.parent;
-      while (curr && skeleton.bones[curr]) {
-        parentRotation += skeleton.bones[curr].localRotation;
-        curr = skeleton.bones[curr].parent;
-      }
+    // Get parent world matrix (identity if root bone)
+    let parentWorldMatrix = createIdentityMatrix();
+    if (bone.parent && worldTransforms[bone.parent]) {
+      parentWorldMatrix = worldTransforms[bone.parent].worldMatrix;
     }
 
-    // Bone origin world pos
-    let boneOriginX = 0.0;
-    let boneOriginY = 0.0;
-    let curr: string | null = this.boneId;
-    while (curr && skeleton.bones[curr]) {
-      boneOriginX += skeleton.bones[curr].localX;
-      boneOriginY += skeleton.bones[curr].localY;
-      curr = skeleton.bones[curr].parent;
-    }
+    // Convert world target point into parent-local space via parent's inverse world matrix
+    const parentInvMatrix = invertMatrix(parentWorldMatrix);
+    const [targetParentX, targetParentY] = transformPoint(
+      parentInvMatrix,
+      this.worldTarget.x,
+      this.worldTarget.y
+    );
 
-    const dx = this.worldTarget.x - boneOriginX;
-    const dy = this.worldTarget.y - boneOriginY;
+    // Delta from bone local origin to target in parent frame
+    const dx = targetParentX - bone.localX;
+    const dy = targetParentY - bone.localY;
     const targetLength = Math.sqrt(dx * dx + dy * dy);
 
-    // Local angle from +Y axis (downward screen space):
-    // In our coordinate system, local (0, L) points down (+Y)
+    // Coordinate system: X+ right, Y+ down, CW positive.
+    // Local (0, L) points straight down (+Y).
     // Angle in degrees clockwise from +Y: atan2(-dx, dy)
     const angleFromDown = radToDeg(Math.atan2(-dx, dy));
-    const targetLocalRotation = normalizeAngle(angleFromDown - parentRotation);
+    const targetLocalRotation = normalizeAngle(angleFromDown);
 
     const overrideDeltaRot = targetLocalRotation - canonical.rotation;
     const overrideLength = Math.max(10.0, targetLength);
@@ -141,67 +147,76 @@ export class SetDistalAnchorCommand implements Command {
 }
 
 /**
- * Rebinds a slot or part to a different parent bone.
+ * Rebinds a character's part to a target slot.
+ * Mutates CHARACTER state only (character.parts[partKey].slot).
+ * RigDefinition remains strictly read-only and immutable.
  */
-export class SetSlotBoneCommand implements Command {
-  public readonly id = "SET_SLOT_BONE";
+export class SetPartSlotBindingCommand implements Command {
+  public readonly id = "SET_PART_SLOT_BINDING";
   public readonly description: string;
-  private prevBoneId: string;
+  private prevSlotId: string = "";
 
   constructor(
-    public readonly slotId: string,
-    public readonly nextBoneId: string
+    public readonly partKey: string,
+    public readonly nextSlotId: string
   ) {
-    this.description = `Rebind slot '${slotId}' to bone '${nextBoneId}'`;
-    this.prevBoneId = "";
+    this.description = `Rebind part '${partKey}' to slot '${nextSlotId}'`;
   }
 
   execute(doc: EditorDocument): void {
-    const slot = doc.targetRig.slots.find((s) => s.id === this.slotId);
-    if (!slot) return;
-    this.prevBoneId = slot.bone;
-    slot.bone = this.nextBoneId;
+    const part = doc.character.parts[this.partKey];
+    if (!part) return;
+    this.prevSlotId = part.slot;
+    part.slot = this.nextSlotId;
     doc.notify();
   }
 
   undo(doc: EditorDocument): void {
-    const slot = doc.targetRig.slots.find((s) => s.id === this.slotId);
-    if (!slot) return;
-    slot.bone = this.prevBoneId;
+    const part = doc.character.parts[this.partKey];
+    if (!part) return;
+    part.slot = this.prevSlotId;
     doc.notify();
   }
 }
 
 /**
- * Reorders setup draw orders for slots.
+ * Sets character-specific setup draw order overrides.
+ * Mutates CHARACTER state only (character.setupDrawOrderOverrides).
+ * RigDefinition remains strictly read-only and immutable.
  */
 export class SetSetupDrawOrderCommand implements Command {
   public readonly id = "SET_SETUP_DRAW_ORDER";
   public readonly description: string;
-  private prevOrders: Record<string, number> = {};
+  private prevOverrides: Record<string, number | undefined> = {};
 
   constructor(
     public readonly nextOrders: Record<string, number>,
     desc?: string
   ) {
-    this.description = desc ?? "Update setup draw order";
+    this.description = desc ?? "Update setup draw order override";
   }
 
   execute(doc: EditorDocument): void {
-    this.prevOrders = {};
-    for (const slot of doc.targetRig.slots) {
-      this.prevOrders[slot.id] = slot.defaultDrawOrder;
-      if (this.nextOrders[slot.id] !== undefined) {
-        slot.defaultDrawOrder = this.nextOrders[slot.id];
-      }
+    if (!doc.character.setupDrawOrderOverrides) {
+      doc.character.setupDrawOrderOverrides = {};
+    }
+    this.prevOverrides = {};
+    for (const [slotId, order] of Object.entries(this.nextOrders)) {
+      this.prevOverrides[slotId] = doc.character.setupDrawOrderOverrides[slotId];
+      doc.character.setupDrawOrderOverrides[slotId] = order;
     }
     doc.notify();
   }
 
   undo(doc: EditorDocument): void {
-    for (const slot of doc.targetRig.slots) {
-      if (this.prevOrders[slot.id] !== undefined) {
-        slot.defaultDrawOrder = this.prevOrders[slot.id];
+    if (!doc.character.setupDrawOrderOverrides) {
+      doc.character.setupDrawOrderOverrides = {};
+    }
+    for (const [slotId, prevOrder] of Object.entries(this.prevOverrides)) {
+      if (prevOrder === undefined) {
+        delete doc.character.setupDrawOrderOverrides[slotId];
+      } else {
+        doc.character.setupDrawOrderOverrides[slotId] = prevOrder;
       }
     }
     doc.notify();
@@ -210,6 +225,8 @@ export class SetSetupDrawOrderCommand implements Command {
 
 /**
  * Switches the character's target rig family.
+ * Mutates CHARACTER state (character.rig) and EDITOR selection references.
+ * RigDefinition and AnatomyEnvelope remain strictly read-only and immutable.
  */
 export class ChangeFamilyCommand implements Command {
   public readonly id = "CHANGE_FAMILY";

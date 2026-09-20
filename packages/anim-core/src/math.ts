@@ -115,6 +115,30 @@ export function transformPoint(matrix: TransformMatrix, x: number, y: number): [
 }
 
 /**
+ * Inverts an affine 2D transform matrix.
+ * Throws if the determinant is degenerate (near zero).
+ */
+export function invertMatrix(matrix: TransformMatrix): TransformMatrix {
+  const det = matrix.a * matrix.d - matrix.b * matrix.c;
+  if (Math.abs(det) < 1e-12) {
+    throw new Error("Cannot invert degenerate affine matrix with determinant near 0");
+  }
+  const invDet = 1.0 / det;
+  const invA = matrix.d * invDet;
+  const invB = -matrix.b * invDet;
+  const invC = -matrix.c * invDet;
+  const invD = matrix.a * invDet;
+  return {
+    a: invA,
+    b: invB,
+    c: invC,
+    d: invD,
+    tx: -(invA * matrix.tx + invC * matrix.ty),
+    ty: -(invB * matrix.tx + invD * matrix.ty)
+  };
+}
+
+/**
  * Extracts rotation in degrees (clockwise) from an affine matrix.
  */
 export function extractRotationDeg(matrix: TransformMatrix): number {
