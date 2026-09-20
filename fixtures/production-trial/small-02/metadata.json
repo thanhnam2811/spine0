@@ -1,0 +1,11 @@
+{
+  "id": "small-02",
+  "name": "Clockwork Tinkerer",
+  "targetRigFamily": "humanoid-small-v1",
+  "archetype": "Gnome engineer with large cranial goggles and spanner",
+  "artComplexity": "High",
+  "generationAttemptCount": 2,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T10:00:00.000Z"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "normal-01",
+  "name": "Imperial Guard Captain",
+  "targetRigFamily": "humanoid-normal-v1",
+  "archetype": "Balanced Knight with tabard and standard longsword",
+  "artComplexity": "Standard",
+  "generationAttemptCount": 1,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T10:00:00.000Z"
+}

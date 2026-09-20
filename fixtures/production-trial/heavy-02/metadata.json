@@ -1,0 +1,11 @@
+{
+  "id": "heavy-02",
+  "name": "Obsidian Berserker",
+  "targetRigFamily": "humanoid-heavy-v1",
+  "archetype": "Broad muscular raider with twin bearded battleaxes",
+  "artComplexity": "Standard",
+  "generationAttemptCount": 1,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T10:00:00.000Z"
+}

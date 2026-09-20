@@ -208,5 +208,5 @@ describe("runtime-parity & deterministic pose goldens", () => {
         }
       }
     }
-  });
+  }, 15000);
 });

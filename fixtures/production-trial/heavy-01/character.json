@@ -1,0 +1,250 @@
+{
+  "version": 1,
+  "id": "heavy-01",
+  "name": "Ironclad Bulwark (Trial heavy-01)",
+  "rig": "humanoid-heavy-v1",
+  "referenceHeight": 1000,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/head.png",
+      "width": 155,
+      "height": 170,
+      "pivot": [
+        0.5,
+        0.85
+      ],
+      "distalAnchor": [
+        0.5,
+        0.15
+      ]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/torso.png",
+      "width": 165,
+      "height": 245,
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "distalAnchor": [
+        0.5,
+        0.1
+      ]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/pelvis.png",
+      "width": 145,
+      "height": 100,
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/upper_arm_R.png",
+      "width": 85,
+      "height": 145,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/forearm_R.png",
+      "width": 72,
+      "height": 135,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/hand_R.png",
+      "width": 58,
+      "height": 62,
+      "pivot": [
+        0.5,
+        0.2
+      ],
+      "distalAnchor": [
+        0.5,
+        0.8
+      ]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/upper_arm_L.png",
+      "width": 85,
+      "height": 145,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/forearm_L.png",
+      "width": 72,
+      "height": 135,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/hand_L.png",
+      "width": 58,
+      "height": 62,
+      "pivot": [
+        0.5,
+        0.2
+      ],
+      "distalAnchor": [
+        0.5,
+        0.8
+      ]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/thigh_R.png",
+      "width": 90,
+      "height": 160,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/shin_R.png",
+      "width": 78,
+      "height": 155,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/foot_R.png",
+      "width": 85,
+      "height": 65,
+      "pivot": [
+        0.3,
+        0.35
+      ],
+      "distalAnchor": [
+        0.85,
+        0.85
+      ]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/thigh_L.png",
+      "width": 90,
+      "height": 160,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/shin_L.png",
+      "width": 78,
+      "height": 155,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/foot_L.png",
+      "width": 85,
+      "height": 65,
+      "pivot": [
+        0.3,
+        0.35
+      ],
+      "distalAnchor": [
+        0.85,
+        0.85
+      ]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/weapon.png",
+      "width": 95,
+      "height": 260,
+      "pivot": [
+        0.5,
+        0.85
+      ],
+      "distalAnchor": [
+        0.5,
+        0.1
+      ]
+    }
+  },
+  "boneOverrides": {
+    "torso": {
+      "x": 0,
+      "y": -6,
+      "length": 220
+    },
+    "upper_arm_R": {
+      "x": 3,
+      "length": 130
+    },
+    "upper_arm_L": {
+      "x": -3,
+      "length": 130
+    },
+    "thigh_R": {
+      "length": 210
+    },
+    "thigh_L": {
+      "length": 210
+    }
+  }
+}

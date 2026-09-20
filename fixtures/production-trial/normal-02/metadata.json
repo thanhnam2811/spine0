@@ -1,0 +1,11 @@
+{
+  "id": "normal-02",
+  "name": "Wandering Blademaster",
+  "targetRigFamily": "humanoid-normal-v1",
+  "archetype": "Slender agile swordsman in silk with curved nodachi",
+  "artComplexity": "Standard",
+  "generationAttemptCount": 1,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T10:00:00.000Z"
+}

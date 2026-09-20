@@ -24,7 +24,7 @@ import heavySlash from "../../../assets/animations/heavy/slash.anim.json";
 import smallRun from "../../../assets/animations/small/run.anim.json";
 import smallSlash from "../../../assets/animations/small/slash.anim.json";
 
-// Preset Characters
+// Preset Characters - Phase A.1 Benchmarks
 import normal01 from "../../../fixtures/family-challenge/normal-01/character.json";
 import normal02 from "../../../fixtures/family-challenge/normal-02/character.json";
 import heavy01 from "../../../fixtures/family-challenge/heavy-01/character.json";
@@ -34,6 +34,17 @@ import small02 from "../../../fixtures/family-challenge/small-02/character.json"
 import devA from "../../../fixtures/calibration/dev-a/character.json";
 import testC from "../../../fixtures/challenge/test-c/character.json";
 import testE from "../../../fixtures/challenge/test-e/character.json";
+
+// Preset Characters - Phase C Production Trial (Real Style-B Art)
+import trialNormal01 from "../../../fixtures/production-trial/normal-01/character.json";
+import trialNormal02 from "../../../fixtures/production-trial/normal-02/character.json";
+import trialNormal03 from "../../../fixtures/production-trial/normal-03/character.json";
+import trialHeavy01 from "../../../fixtures/production-trial/heavy-01/character.json";
+import trialHeavy02 from "../../../fixtures/production-trial/heavy-02/character.json";
+import trialHeavy03 from "../../../fixtures/production-trial/heavy-03/character.json";
+import trialSmall01 from "../../../fixtures/production-trial/small-01/character.json";
+import trialSmall02 from "../../../fixtures/production-trial/small-02/character.json";
+import trialSmall03 from "../../../fixtures/production-trial/small-03/character.json";
 
 export const PRESET_RIGS: Record<string, RigDefinition> = {
   "humanoid-normal-v1": normalRig as unknown as RigDefinition,
@@ -66,6 +77,18 @@ export const PRESET_ANIMATIONS: Record<string, Record<string, AnimationTemplate>
 };
 
 export const PRESET_CHARACTERS: Record<string, CharacterDefinition> = {
+  // Phase C Production Trial
+  "trial-normal-01": trialNormal01 as unknown as CharacterDefinition,
+  "trial-normal-02": trialNormal02 as unknown as CharacterDefinition,
+  "trial-normal-03": trialNormal03 as unknown as CharacterDefinition,
+  "trial-heavy-01": trialHeavy01 as unknown as CharacterDefinition,
+  "trial-heavy-02": trialHeavy02 as unknown as CharacterDefinition,
+  "trial-heavy-03": trialHeavy03 as unknown as CharacterDefinition,
+  "trial-small-01": trialSmall01 as unknown as CharacterDefinition,
+  "trial-small-02": trialSmall02 as unknown as CharacterDefinition,
+  "trial-small-03": trialSmall03 as unknown as CharacterDefinition,
+
+  // Phase A.1 Benchmarks
   "normal-01": normal01 as unknown as CharacterDefinition,
   "normal-02": normal02 as unknown as CharacterDefinition,
   "heavy-01": heavy01 as unknown as CharacterDefinition,

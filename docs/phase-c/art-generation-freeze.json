@@ -1,0 +1,40 @@
+{
+  "freezeTimestamp": "2026-09-20T10:00:00.000Z",
+  "phase": "C",
+  "procedureVersion": "1.0",
+  "schemaVersion": "0.1.0",
+  "artContract": {
+    "procedurePath": "docs/phase-c/art-generation-procedure-v1.md",
+    "procedureHash": "b33b7c0d7c9e29205c663d3ec8bf4777b67050a5fa1aac193ea2bc9a99e8e00c",
+    "referenceHeight": 1000.0,
+    "partsCount": 15,
+    "perspective": "3/4",
+    "jointBleedMinPx": 12
+  },
+  "familySystem": [
+    "HumanoidNormal",
+    "HumanoidHeavy",
+    "HumanoidSmall"
+  ],
+  "frozenRigHashes": {
+    "humanoid-normal-v1": "bbcaeed1844e17d8b093efb04864fa8e5445254a1d0e05c28a39da46bf276b26",
+    "humanoid-heavy-v1": "8091d050c0adf7c84c1ea962f808d30e7746993dfc418592740a7d7cbb1c1d62",
+    "humanoid-small-v1": "5322de71ec8c06d1ad4c425a4a0442b7546a0cd75a146ac59bdf4c883c078eb4"
+  },
+  "frozenEnvelopeHashes": {
+    "envelope-humanoid-normal-v1": "5eb49e6b26aea0c384b43819f72deb15206068f07100448888e2157af9cb9493",
+    "envelope-humanoid-heavy-v1": "a7e7918a2b495fb0bf22326ce8c2e15d66ce82444652f9a06fa2e448ad075977",
+    "envelope-humanoid-small-v1": "c2a4c6163b1949efa488a695b46737c142180a50770e3fe5ad835e74827b47de"
+  },
+  "trialCharacters": [
+    "normal-01",
+    "normal-02",
+    "normal-03",
+    "heavy-01",
+    "heavy-02",
+    "heavy-03",
+    "small-01",
+    "small-02",
+    "small-03"
+  ]
+}

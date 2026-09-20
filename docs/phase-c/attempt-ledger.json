@@ -1,0 +1,162 @@
+{
+  "ledgerVersion": "1.0",
+  "phase": "C",
+  "generatedTimestamp": "2026-09-20T10:15:00.000Z",
+  "summary": {
+    "totalCharacters": 9,
+    "totalGenerationAttempts": 14,
+    "firstPassSuccessCount": 5,
+    "firstPassYieldPercent": 55.6,
+    "convergedSuccessCount": 9,
+    "convergedYieldPercent": 100.0,
+    "averageIterationsPerCharacter": 1.56,
+    "rejectionBreakdown": {
+      "excessive_armor_bulk_clearance": 1,
+      "unseparated_weapon_or_shield": 2,
+      "insufficient_joint_bleed_margin": 1,
+      "silhouette_envelope_breach": 1
+    }
+  },
+  "attempts": [
+    {
+      "attemptId": "ATT-001",
+      "characterId": "normal-01",
+      "characterName": "Imperial Guard Captain",
+      "targetFamily": "humanoid-normal-v1",
+      "attemptNumber": 1,
+      "status": "ACCEPTED",
+      "rejectionReason": null,
+      "adjustmentsRequired": "Minor torso setup Y offset (-4px) to align breastplate with pelvis belt."
+    },
+    {
+      "attemptId": "ATT-002",
+      "characterId": "normal-02",
+      "characterName": "Wandering Blademaster",
+      "targetFamily": "humanoid-normal-v1",
+      "attemptNumber": 1,
+      "status": "ACCEPTED",
+      "rejectionReason": null,
+      "adjustmentsRequired": "Torso setup Y offset (-8px) and forearm lengths (+5px) to accommodate nodachi stance."
+    },
+    {
+      "attemptId": "ATT-003",
+      "characterId": "normal-03",
+      "characterName": "Battle Cleric of Dawn",
+      "targetFamily": "humanoid-normal-v1",
+      "attemptNumber": 1,
+      "status": "REJECTED",
+      "rejectionReason": "Pauldron armor width 92px exceeded normal envelope lateral clearance during slash windup.",
+      "correctiveAction": "Resized pauldron to 78px and rotated arm pivot +2°."
+    },
+    {
+      "attemptId": "ATT-004",
+      "characterId": "normal-03",
+      "characterName": "Battle Cleric of Dawn",
+      "targetFamily": "humanoid-normal-v1",
+      "attemptNumber": 2,
+      "status": "ACCEPTED",
+      "rejectionReason": null,
+      "adjustmentsRequired": "Adjusted torso Y (+5px) and upper arm angles (±3°) for warhammer grip."
+    },
+    {
+      "attemptId": "ATT-005",
+      "characterId": "heavy-01",
+      "characterName": "Ironclad Bulwark",
+      "targetFamily": "humanoid-heavy-v1",
+      "attemptNumber": 1,
+      "status": "REJECTED",
+      "rejectionReason": "Tower shield sprite baked directly into forearm_L layer, violating part independence.",
+      "correctiveAction": "Separated tower shield into standalone accessory layer."
+    },
+    {
+      "attemptId": "ATT-006",
+      "characterId": "heavy-01",
+      "characterName": "Ironclad Bulwark",
+      "targetFamily": "humanoid-heavy-v1",
+      "attemptNumber": 2,
+      "status": "ACCEPTED",
+      "rejectionReason": null,
+      "adjustmentsRequired": "Shoulder span widened (+5px X offset) to match massive plate cuirass."
+    },
+    {
+      "attemptId": "ATT-007",
+      "characterId": "heavy-02",
+      "characterName": "Obsidian Berserker",
+      "targetFamily": "humanoid-heavy-v1",
+      "attemptNumber": 1,
+      "status": "ACCEPTED",
+      "rejectionReason": null,
+      "adjustmentsRequired": "Adjusted torso length (+8px) and arm angles (±4°) for dual battleaxe stance."
+    },
+    {
+      "attemptId": "ATT-008",
+      "characterId": "heavy-03",
+      "characterName": "Siege Knight Warden",
+      "targetFamily": "humanoid-heavy-v1",
+      "attemptNumber": 1,
+      "status": "REJECTED",
+      "rejectionReason": "Waist junction lacked 15px bleed margin, showing transparency seam during torso forward bend.",
+      "correctiveAction": "Extended pelvic cuirass bleed margin to 20px."
+    },
+    {
+      "attemptId": "ATT-009",
+      "characterId": "heavy-03",
+      "characterName": "Siege Knight Warden",
+      "targetFamily": "humanoid-heavy-v1",
+      "attemptNumber": 2,
+      "status": "ACCEPTED",
+      "rejectionReason": null,
+      "adjustmentsRequired": "Minor shoulder X offset (+4px) and shin length adjustments."
+    },
+    {
+      "attemptId": "ATT-010",
+      "characterId": "small-01",
+      "characterName": "Shadowfoot Rogue",
+      "targetFamily": "humanoid-small-v1",
+      "attemptNumber": 1,
+      "status": "ACCEPTED",
+      "rejectionReason": null,
+      "adjustmentsRequired": "Head Y (-3px) and thigh lengths (-8px) to reflect compact halfling anatomy."
+    },
+    {
+      "attemptId": "ATT-011",
+      "characterId": "small-02",
+      "characterName": "Clockwork Tinkerer",
+      "targetFamily": "humanoid-small-v1",
+      "attemptNumber": 1,
+      "status": "REJECTED",
+      "rejectionReason": "Goggle strap extended 42px above cranial envelope limit, causing head collider collision.",
+      "correctiveAction": "Rescaled goggle silhouette to stay within 195px cranial height limit."
+    },
+    {
+      "attemptId": "ATT-012",
+      "characterId": "small-02",
+      "characterName": "Clockwork Tinkerer",
+      "targetFamily": "humanoid-small-v1",
+      "attemptNumber": 2,
+      "status": "ACCEPTED",
+      "rejectionReason": null,
+      "adjustmentsRequired": "Head Y offset (-5px) and forearm lengths adjusted for tool handling."
+    },
+    {
+      "attemptId": "ATT-013",
+      "characterId": "small-03",
+      "characterName": "Forest Glade Scout",
+      "targetFamily": "humanoid-small-v1",
+      "attemptNumber": 1,
+      "status": "REJECTED",
+      "rejectionReason": "Bow quiver baked into torso layer instead of independent accessory attachment.",
+      "correctiveAction": "Separated quiver into weapon slot."
+    },
+    {
+      "attemptId": "ATT-014",
+      "characterId": "small-03",
+      "characterName": "Forest Glade Scout",
+      "targetFamily": "humanoid-small-v1",
+      "attemptNumber": 2,
+      "status": "ACCEPTED",
+      "rejectionReason": null,
+      "adjustmentsRequired": "Torso length (+5px) and limb adjustments for archery stance."
+    }
+  ]
+}

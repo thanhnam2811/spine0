@@ -1,0 +1,11 @@
+{
+  "id": "heavy-03",
+  "name": "Siege Knight Warden",
+  "targetRigFamily": "humanoid-heavy-v1",
+  "archetype": "Heavy plated polearm halberdier with reinforced armor",
+  "artComplexity": "Standard",
+  "generationAttemptCount": 1,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T10:00:00.000Z"
+}

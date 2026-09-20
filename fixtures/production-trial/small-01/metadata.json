@@ -1,0 +1,11 @@
+{
+  "id": "small-01",
+  "name": "Shadowfoot Rogue",
+  "targetRigFamily": "humanoid-small-v1",
+  "archetype": "Short nimble halfling assassin with dual daggers",
+  "artComplexity": "Standard",
+  "generationAttemptCount": 1,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T10:00:00.000Z"
+}

@@ -125,6 +125,7 @@ export const EditorApp: React.FC = () => {
         doc={doc}
         history={history}
         isDirty={isDirty}
+        selectedCharacterId={characterId}
         onSelectPreset={setCharacterId}
         onOpenMetrics={() => setShowMetricsModal(true)}
       />

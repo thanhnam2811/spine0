@@ -1,0 +1,11 @@
+{
+  "id": "heavy-01",
+  "name": "Ironclad Bulwark",
+  "targetRigFamily": "humanoid-heavy-v1",
+  "archetype": "Towering vanguard with fortress tower shield and mace",
+  "artComplexity": "High",
+  "generationAttemptCount": 2,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T10:00:00.000Z"
+}

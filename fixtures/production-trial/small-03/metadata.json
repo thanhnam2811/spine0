@@ -1,0 +1,11 @@
+{
+  "id": "small-03",
+  "name": "Forest Glade Scout",
+  "targetRigFamily": "humanoid-small-v1",
+  "archetype": "Nimble woodland tracker with recurve shortbow",
+  "artComplexity": "Standard",
+  "generationAttemptCount": 1,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T10:00:00.000Z"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "normal-03",
+  "name": "Battle Cleric of Dawn",
+  "targetRigFamily": "humanoid-normal-v1",
+  "archetype": "Robed priest-soldier with heavy two-handed warhammer",
+  "artComplexity": "High",
+  "generationAttemptCount": 2,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T10:00:00.000Z"
+}
