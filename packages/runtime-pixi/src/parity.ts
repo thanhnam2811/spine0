@@ -1,6 +1,7 @@
 import type {
   CompiledCharacter,
   EvaluatedBonePose,
+  EvaluatedPartPose,
   EvaluatedPose,
   EvaluatedSlotPose
 } from "@animation-factory/schema";
@@ -119,12 +120,42 @@ export function sampleCompiledCharacter(
 
   evaluatedSlots.sort((a, b) => a.drawOrder - b.drawOrder);
 
+  // 4. Construct evaluated part poses for all compiled parts
+  const evaluatedParts: EvaluatedPartPose[] = [];
+  for (const part of compiled.parts) {
+    const boundBone = compiled.bones[part.boneIndex];
+    const slot = compiled.slots[part.slotIndex];
+    const bonePose = boundBone ? bonePoses[boundBone.id] : undefined;
+    const slotDrawOrder = slot ? (activeOrders[slot.id] ?? slot.defaultDrawOrder) : 0;
+
+    evaluatedParts.push({
+      partKey: part.key,
+      slot: slot ? slot.id : "",
+      bone: boundBone ? boundBone.id : "",
+      texture: part.texture,
+      pivot: part.pivot,
+      distalAnchor: part.distalAnchor,
+      width: part.width,
+      height: part.height,
+      worldX: bonePose ? bonePose.worldX : 0.0,
+      worldY: bonePose ? bonePose.worldY : 0.0,
+      worldRotation: bonePose ? bonePose.worldRotation : 0.0,
+      drawOrder: slotDrawOrder
+    });
+  }
+  evaluatedParts.sort((a, b) =>
+    a.drawOrder !== b.drawOrder
+      ? a.drawOrder - b.drawOrder
+      : a.partKey.localeCompare(b.partKey)
+  );
+
   return {
     time: t,
     clipId,
     characterId: compiled.id,
     bones: bonePoses,
     slots: evaluatedSlots,
+    parts: evaluatedParts,
     drawOrder: sortedSlotIds
   };
 }

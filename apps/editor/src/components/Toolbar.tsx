@@ -11,6 +11,7 @@ export interface ToolbarProps {
   selectedCharacterId?: string;
   onSelectPreset: (id: string) => void;
   onOpenMetrics: () => void;
+  onExport?: () => void;
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
@@ -19,7 +20,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   isDirty = false,
   selectedCharacterId,
   onSelectPreset,
-  onOpenMetrics
+  onOpenMetrics,
+  onExport
 }) => {
   const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
 
@@ -37,6 +39,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     a.download = `${doc.character.id}.character.json`;
     a.click();
     URL.revokeObjectURL(url);
+    if (onExport) onExport();
   };
 
   const handleResetAll = () => {

@@ -42,6 +42,7 @@ export interface BoneOverride {
 
 export interface PartDefinition {
   slot: string;
+  bone?: string;
   texture: string;
   width?: number;
   height?: number;
@@ -154,12 +155,28 @@ export interface EvaluatedSlotPose {
   drawOrder: number;
 }
 
+export interface EvaluatedPartPose {
+  partKey: string;
+  slot: string;
+  bone: string;
+  texture: string;
+  pivot: [number, number];
+  distalAnchor?: [number, number];
+  width: number;
+  height: number;
+  worldX: number;
+  worldY: number;
+  worldRotation: number; // degrees
+  drawOrder: number;
+}
+
 export interface EvaluatedPose {
   time: number;
   clipId: string;
   characterId: string;
   bones: Record<string, EvaluatedBonePose>;
   slots: EvaluatedSlotPose[];
+  parts: EvaluatedPartPose[];
   drawOrder: string[]; // slot IDs sorted by active draw order ascending
 }
 

@@ -3,6 +3,8 @@ import type { EditorDocument } from "../model/document.js";
 import type { HistoryManager } from "../model/history.js";
 import {
   SetBoneOverrideCommand,
+  SetPartPivotCommand,
+  SetPartDistalAnchorCommand,
   SetPartSlotBindingCommand,
   SetSetupDrawOrderCommand
 } from "../model/commands.js";
@@ -420,6 +422,179 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
                 <span className="text-gray-300 font-mono">[{boundPart[1].pivot.join(", ")}]</span>
               </div>
             </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (selection.type === "part") {
+    const partKey = selection.id;
+    const partDef = doc.character.parts[partKey];
+    if (!partDef) return null;
+
+    const pivotU = partDef.pivot[0];
+    const pivotV = partDef.pivot[1];
+    const anchorU = partDef.distalAnchor ? partDef.distalAnchor[0] : 0.5;
+    const anchorV = partDef.distalAnchor ? partDef.distalAnchor[1] : 0.85;
+    const hasAnchor = partDef.distalAnchor !== undefined;
+
+    const handlePivotChange = (u: number, v: number) => {
+      history.execute(new SetPartPivotCommand(partKey, [u, v]));
+    };
+
+    const handleAnchorChange = (u: number, v: number) => {
+      history.execute(new SetPartDistalAnchorCommand(partKey, [u, v]));
+    };
+
+    const handleToggleAnchor = (enabled: boolean) => {
+      if (enabled) {
+        history.execute(new SetPartDistalAnchorCommand(partKey, [0.5, 0.85]));
+      } else {
+        history.execute(new SetPartDistalAnchorCommand(partKey, undefined));
+      }
+    };
+
+    return (
+      <div className="p-3 text-xs space-y-4 select-none">
+        {/* Header */}
+        <div className="border-b border-gray-800 pb-2.5">
+          <div className="flex items-center gap-1.5">
+            <span className="font-bold text-gray-100 font-mono text-sm">{partKey}</span>
+            <span className="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-800/80 px-1 rounded font-mono">
+              SPRITE PART
+            </span>
+          </div>
+          <p className="text-[10px] text-gray-400 mt-0.5 font-mono truncate">{partDef.texture}</p>
+        </div>
+
+        {/* Dimensions & Slot Binding */}
+        <div className="bg-gray-850/60 p-2.5 rounded border border-gray-800 space-y-2">
+          <div className="flex justify-between text-[11px]">
+            <span className="text-gray-400">Dimensions:</span>
+            <span className="text-gray-200 font-mono">
+              {partDef.width ?? 100} × {partDef.height ?? 100} px
+            </span>
+          </div>
+          <div className="space-y-1">
+            <label className="text-gray-400 text-[11px] font-medium">Assigned Layer Slot:</label>
+            <select
+              value={partDef.slot}
+              onChange={(e) => history.execute(new SetPartSlotBindingCommand(partKey, e.target.value))}
+              className="w-full bg-gray-900 border border-gray-750 rounded px-2.5 py-1 text-xs text-gray-200 focus:outline-none focus:border-cyan-500 font-mono"
+            >
+              {doc.targetRig.slots.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.id} ({s.bone})
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Sprite Pivot [U, V] Calibration */}
+        <div className="bg-gray-850/60 p-2.5 rounded border border-gray-800 space-y-2">
+          <div className="flex justify-between items-center text-[11px]">
+            <div className="flex items-center gap-1.5">
+              <span className="text-emerald-400 font-bold">Sprite Pivot [U, V]</span>
+              <span className="text-[9px] text-gray-500">(Socket)</span>
+            </div>
+            <button
+              onClick={() => handlePivotChange(0.5, 0.5)}
+              className="text-[10px] text-gray-400 hover:text-gray-200"
+              title="Reset Pivot to [0.5, 0.5]"
+            >
+              ↺ [0.5, 0.5]
+            </button>
+          </div>
+
+          <div className="space-y-1">
+            <div className="flex justify-between text-[10px] text-gray-400">
+              <span>Pivot U (Horizontal):</span>
+              <span className="font-mono text-cyan-400">{pivotU.toFixed(3)}</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.01}
+              value={pivotU}
+              onChange={(e) => handlePivotChange(parseFloat(e.target.value), pivotV)}
+              className="w-full accent-emerald-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <div className="flex justify-between text-[10px] text-gray-400">
+              <span>Pivot V (Vertical):</span>
+              <span className="font-mono text-cyan-400">{pivotV.toFixed(3)}</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.01}
+              value={pivotV}
+              onChange={(e) => handlePivotChange(pivotU, parseFloat(e.target.value))}
+              className="w-full accent-emerald-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
+            />
+          </div>
+        </div>
+
+        {/* Sprite Distal Anchor [U, V] Calibration */}
+        <div className="bg-gray-850/60 p-2.5 rounded border border-gray-800 space-y-2">
+          <div className="flex justify-between items-center text-[11px]">
+            <div className="flex items-center gap-1.5">
+              <span className="text-cyan-400 font-bold">Sprite Distal Anchor</span>
+              <span className="text-[9px] text-gray-500">(Terminus)</span>
+            </div>
+            <label className="flex items-center gap-1 text-[10px] text-gray-400 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={hasAnchor}
+                onChange={(e) => handleToggleAnchor(e.target.checked)}
+                className="accent-cyan-500"
+              />
+              <span>Enabled</span>
+            </label>
+          </div>
+
+          {hasAnchor ? (
+            <>
+              <div className="space-y-1">
+                <div className="flex justify-between text-[10px] text-gray-400">
+                  <span>Anchor U:</span>
+                  <span className="font-mono text-cyan-400">{anchorU.toFixed(3)}</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={anchorU}
+                  onChange={(e) => handleAnchorChange(parseFloat(e.target.value), anchorV)}
+                  className="w-full accent-cyan-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex justify-between text-[10px] text-gray-400">
+                  <span>Anchor V:</span>
+                  <span className="font-mono text-cyan-400">{anchorV.toFixed(3)}</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={anchorV}
+                  onChange={(e) => handleAnchorChange(anchorU, parseFloat(e.target.value))}
+                  className="w-full accent-cyan-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
+                />
+              </div>
+            </>
+          ) : (
+            <p className="text-[10px] text-gray-500 italic">No distal anchor defined for this part.</p>
           )}
         </div>
       </div>

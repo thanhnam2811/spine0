@@ -5,6 +5,8 @@ import { EditorDocument, deepFreeze } from "../src/model/document.js";
 import {
   SetBoneOverrideCommand,
   SetDistalAnchorCommand,
+  SetPartPivotCommand,
+  SetPartDistalAnchorCommand,
   SetPartSlotBindingCommand,
   SetSetupDrawOrderCommand,
   ChangeFamilyCommand
@@ -147,9 +149,10 @@ describe("Editor Document & Command History Unit Tests", () => {
   });
 
   it("tracks session metrics, timestamps, and validation iterations", () => {
-    const tracker = new SessionMetricsTracker(2);
-    tracker.recordAdjustment();
-    tracker.recordAdjustment();
+    const tracker = new SessionMetricsTracker(2, "dev-a");
+    tracker.startSession({ operatorId: "test-op", characterId: "dev-a", initialIssueCount: 2 });
+    tracker.recordAdjustment("pivot");
+    tracker.recordAdjustment("anchor");
     tracker.recordUndo();
     tracker.recordRedo();
 
@@ -157,14 +160,97 @@ describe("Editor Document & Command History Unit Tests", () => {
     const summary = tracker.getSummary();
 
     expect(summary.totalAdjustments).toBe(2);
+    expect(summary.pivotEditCount).toBe(1);
+    expect(summary.anchorEditCount).toBe(1);
     expect(summary.totalUndos).toBe(1);
     expect(summary.totalRedos).toBe(1);
+    expect(summary.undoCount).toBe(1);
+    expect(summary.redoCount).toBe(1);
     expect(summary.validationIterations).toBe(2);
-    expect(summary.isCompliant).toBe(true);
-    expect(summary.finalValidity).toBe(true);
+    expect(summary.engineeringCompliance).toBe(true);
+    expect(summary.finalValidity).toBe("PASS");
     expect(summary.sessionStartTimestamp).toBeDefined();
     expect(summary.sessionEndTimestamp).toBeDefined();
-    expect(summary.timeToComplianceSeconds).not.toBeNull();
+    expect(summary.timeToEngineeringComplianceSeconds).not.toBeNull();
+  });
+
+  it("verifies explicit session lifecycle: IDLE -> ACTIVE -> ENDED with frozen snapshot", () => {
+    const tracker = new SessionMetricsTracker(1, "real-normal-01");
+    expect(tracker.getStatus()).toBe("IDLE");
+    expect(tracker.isActive()).toBe(false);
+
+    // Start session
+    tracker.startSession({
+      operatorId: "human-01",
+      characterId: "real-normal-01",
+      initialIssueCount: 1,
+      baselineDigest: "sha256-test-digest"
+    });
+    expect(tracker.getStatus()).toBe("ACTIVE");
+    expect(tracker.isActive()).toBe(true);
+
+    tracker.recordAdjustment("pivot", "upper_arm_R", [0.5, 0.2]);
+    tracker.recordAdjustment("anchor", "upper_arm_R", [0.5, 0.85]);
+    tracker.recordAdjustment("position", "torso");
+    tracker.updateIssueCount(0);
+    tracker.markExported();
+
+    // End session
+    const ended = tracker.endSession("PASS");
+    expect(ended.status).toBe("ENDED");
+    expect(ended.totalAdjustments).toBe(3);
+    expect(ended.pivotEditCount).toBe(1);
+    expect(ended.anchorEditCount).toBe(1);
+    expect(ended.positionOverrideCount).toBe(1);
+    expect(ended.exported).toBe(true);
+    expect(ended.visualReviewStatus).toBe("PASS");
+    expect(ended.finalValidity).toBe("PASS");
+    expect(ended.timeToHumanVisualAcceptanceSeconds).not.toBeNull();
+
+    const frozenDuration = ended.sessionDurationSeconds;
+    const frozenEndTs = ended.sessionEndTimestamp;
+
+    // Mutating actions after ENDED must be ignored and not alter frozen record
+    tracker.recordAdjustment("pivot");
+    tracker.recordUndo();
+    const secondSummary = tracker.getSummary();
+
+    expect(secondSummary.totalAdjustments).toBe(3);
+    expect(secondSummary.totalUndos).toBe(0);
+    expect(secondSummary.sessionDurationSeconds).toBe(frozenDuration);
+    expect(secondSummary.sessionEndTimestamp).toBe(frozenEndTs);
+  });
+
+  it("applies, validates, and undoes SetPartPivotCommand and SetPartDistalAnchorCommand", () => {
+    const initialPivot = [...doc.character.parts["upper_arm_R"].pivot];
+    expect(initialPivot).toBeDefined();
+
+    // 1. Set part pivot
+    const pivotCmd = new SetPartPivotCommand("upper_arm_R", [0.45, 0.25]);
+    history.execute(pivotCmd);
+    expect(doc.character.parts["upper_arm_R"].pivot).toEqual([0.45, 0.25]);
+
+    // Undo pivot
+    history.undo();
+    expect(doc.character.parts["upper_arm_R"].pivot).toEqual(initialPivot);
+
+    // Redo pivot
+    history.redo();
+    expect(doc.character.parts["upper_arm_R"].pivot).toEqual([0.45, 0.25]);
+
+    // 2. Set part distal anchor
+    const anchorCmd = new SetPartDistalAnchorCommand("upper_arm_R", [0.55, 0.88]);
+    history.execute(anchorCmd);
+    expect(doc.character.parts["upper_arm_R"].distalAnchor).toEqual([0.55, 0.88]);
+
+    // Clamping test: out of bounds values are clamped to [0, 1]
+    const clampCmd = new SetPartPivotCommand("upper_arm_R", [-0.5, 1.8]);
+    history.execute(clampCmd);
+    expect(doc.character.parts["upper_arm_R"].pivot).toEqual([0.0, 1.0]);
+
+    // Undo clamp
+    history.undo();
+    expect(doc.character.parts["upper_arm_R"].pivot).toEqual([0.45, 0.25]);
   });
 
   it("Finding A: enforces canonical rig and envelope immutability via deep-freeze", () => {

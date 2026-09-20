@@ -9,7 +9,7 @@ import {
   type CompiledSlot,
   type RigDefinition
 } from "@animation-factory/schema";
-import { resolveCharacterSetup } from "@animation-factory/anim-core";
+import { resolveCharacterSetup, resolvePartBone } from "@animation-factory/anim-core";
 import { validateCharacter, validateRig, validateAnimation } from "@animation-factory/validator";
 
 export interface CompileResult {
@@ -88,8 +88,8 @@ export function compileCharacter(
     .sort(([k1], [k2]) => k1.localeCompare(k2))
     .map(([key, partDef]) => {
       const slotIndex = slotIdToIndex.get(partDef.slot) ?? 0;
-      const slot = skeleton.slots[slotIndex];
-      const boneIndex = slot ? (boneIdToIndex.get(slot.bone) ?? 0) : 0;
+      const boundBoneId = resolvePartBone(key, partDef, skeleton);
+      const boneIndex = boneIdToIndex.get(boundBoneId) ?? 0;
 
       return {
         key,

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-20T11:18:01.792Z",
+  "timestamp": "2026-09-20T13:57:48.773Z",
   "status": "PASS",
   "charactersChecked": 3,
   "partsChecked": 48,
@@ -16,6 +16,9 @@
           "bytes": 52564,
           "sha256": "bf874c5254388483118677f6e23898cf36e3e4ad82f5724cf302334d6ccae26b",
           "hasAlpha": true,
+          "transparentFraction": 0.361,
+          "opaqueFraction": 0.638,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.85
@@ -31,6 +34,9 @@
           "bytes": 88644,
           "sha256": "94837c4c0415f6d9912444895ce583328c3b627cbcbc4d43bdd7120841046f94",
           "hasAlpha": true,
+          "transparentFraction": 0.397,
+          "opaqueFraction": 0.603,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.9
@@ -46,6 +52,9 @@
           "bytes": 73351,
           "sha256": "216ee61e0e691f2ae494752b9c765fb7f174c59b36bb30acd588ef9d68d4ec96",
           "hasAlpha": true,
+          "transparentFraction": 0.424,
+          "opaqueFraction": 0.575,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.5
@@ -57,6 +66,9 @@
           "bytes": 21533,
           "sha256": "bf1da64f03a63319bc38db0cecda6b1fda664624c6e5ce50f8f6c7cb7d0cdc66",
           "hasAlpha": true,
+          "transparentFraction": 0.388,
+          "opaqueFraction": 0.611,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -72,6 +84,9 @@
           "bytes": 18807,
           "sha256": "8e472608ecedd3f419352472ce7aa09ffea119e3ce4fcce6fd61c575cb83b6f5",
           "hasAlpha": true,
+          "transparentFraction": 0.472,
+          "opaqueFraction": 0.527,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -87,6 +102,9 @@
           "bytes": 14908,
           "sha256": "438714a1878c89c9ab5048e4fd9b37d54a937a0ac198de84e9bd0caf490f7b06",
           "hasAlpha": true,
+          "transparentFraction": 0.504,
+          "opaqueFraction": 0.495,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.2
@@ -102,6 +120,9 @@
           "bytes": 19215,
           "sha256": "695286b5e54da4597630949708807ce958b951b4d88b040083b911b4c9c19e37",
           "hasAlpha": true,
+          "transparentFraction": 0.332,
+          "opaqueFraction": 0.666,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -117,6 +138,9 @@
           "bytes": 18534,
           "sha256": "5383282b129aa3b2a2e4b7409e7180438e59fca9cbed38e86c83e33a9b82e501",
           "hasAlpha": true,
+          "transparentFraction": 0.516,
+          "opaqueFraction": 0.483,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -132,6 +156,9 @@
           "bytes": 16121,
           "sha256": "2757bcddd168ebc9b1a91eee289278943055d3ba7ebb49c33866f1c7c720c78c",
           "hasAlpha": true,
+          "transparentFraction": 0.524,
+          "opaqueFraction": 0.475,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.2
@@ -147,6 +174,9 @@
           "bytes": 81644,
           "sha256": "d767587d11ffbd55ab338f897fc13c09c0daface1328cc1015d10b88d470bcd0",
           "hasAlpha": true,
+          "transparentFraction": 0.296,
+          "opaqueFraction": 0.703,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -162,6 +192,9 @@
           "bytes": 29755,
           "sha256": "975a50d3ca442d830eddad0cf8e82f2a944a77264d8e3044bcc1ad12440d14e9",
           "hasAlpha": true,
+          "transparentFraction": 0.42,
+          "opaqueFraction": 0.58,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -177,6 +210,9 @@
           "bytes": 13979,
           "sha256": "3ce83debf12215470f62c12f0954289231a4697581f866e0f234f29f3038569e",
           "hasAlpha": true,
+          "transparentFraction": 0.402,
+          "opaqueFraction": 0.596,
+          "cornersTransparent": true,
           "pivot": [
             0.3,
             0.35
@@ -192,6 +228,9 @@
           "bytes": 74874,
           "sha256": "18ee9a756c6f84eaf7f11c5cb6d5dd8906ae459cbd937c96fa4bc86cad9e66d6",
           "hasAlpha": true,
+          "transparentFraction": 0.324,
+          "opaqueFraction": 0.676,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -207,6 +246,9 @@
           "bytes": 17014,
           "sha256": "beb2dd05071e1745749bdc39af91a06e0e5e863237efa292e4c27dfb2de0c912",
           "hasAlpha": true,
+          "transparentFraction": 0.278,
+          "opaqueFraction": 0.72,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -222,6 +264,9 @@
           "bytes": 11980,
           "sha256": "b62a2d55bd719bacb95a515bd3d30b709cb314cebe8616214f498bf63a64d2a9",
           "hasAlpha": true,
+          "transparentFraction": 0.336,
+          "opaqueFraction": 0.663,
+          "cornersTransparent": true,
           "pivot": [
             0.3,
             0.35
@@ -237,6 +282,9 @@
           "bytes": 54648,
           "sha256": "d35b49ce5cf2f83660d47599ca99eaf5575e95efdc8c0139595864221307eefb",
           "hasAlpha": true,
+          "transparentFraction": 0.646,
+          "opaqueFraction": 0.353,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.85
@@ -260,6 +308,9 @@
           "bytes": 46856,
           "sha256": "18eb8e6508e10a0adafa8e8f2142d51960ccd56ebb6662e5a545e8c304abb978",
           "hasAlpha": true,
+          "transparentFraction": 0.436,
+          "opaqueFraction": 0.563,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.85
@@ -275,6 +326,9 @@
           "bytes": 138086,
           "sha256": "61144623f4941b324f91b9b6c823d65e4fd055279ec29d5026f5e4bfae01c243",
           "hasAlpha": true,
+          "transparentFraction": 0.246,
+          "opaqueFraction": 0.754,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.9
@@ -290,6 +344,9 @@
           "bytes": 103320,
           "sha256": "24404661a6dffdaa08965425f32b76eafce497d7545816962b0d2bd0e99f964d",
           "hasAlpha": true,
+          "transparentFraction": 0.288,
+          "opaqueFraction": 0.712,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.5
@@ -301,6 +358,9 @@
           "bytes": 67929,
           "sha256": "5bbdda3574827a86a8d3b2821dace53dd9988fc98581f65396a6b47f85ef2b73",
           "hasAlpha": true,
+          "transparentFraction": 0.342,
+          "opaqueFraction": 0.657,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -316,6 +376,9 @@
           "bytes": 44591,
           "sha256": "07c865ab7f24acb04e30beee28edb53883a499b2440266e85bbf5fffb67a0148",
           "hasAlpha": true,
+          "transparentFraction": 0.295,
+          "opaqueFraction": 0.704,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -331,6 +394,9 @@
           "bytes": 21936,
           "sha256": "700de5cdd5c018e54b83008e8a553a01890ec44cfd82ad724a50d32d33c281ef",
           "hasAlpha": true,
+          "transparentFraction": 0.241,
+          "opaqueFraction": 0.758,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.2
@@ -346,6 +412,9 @@
           "bytes": 68338,
           "sha256": "9b93f070a2739b43490fef2925115c6c7ab9f903e0e057b72df6171a8bed1e47",
           "hasAlpha": true,
+          "transparentFraction": 0.349,
+          "opaqueFraction": 0.651,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -361,6 +430,9 @@
           "bytes": 40446,
           "sha256": "18236123ffacaaa31dbac8b146f7c35185010e5ed6f6d1ac93c30fe54621ea25",
           "hasAlpha": true,
+          "transparentFraction": 0.294,
+          "opaqueFraction": 0.705,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -376,6 +448,9 @@
           "bytes": 22548,
           "sha256": "c494a9d7fb18ca0f568a4ce6dabf43b9987c462571257aca3f6a02ff4ef09201",
           "hasAlpha": true,
+          "transparentFraction": 0.256,
+          "opaqueFraction": 0.743,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.2
@@ -391,6 +466,9 @@
           "bytes": 51614,
           "sha256": "cad2d985da08ea3768922c79ad2db76fe901df74e8aece22dd615089a3550ff3",
           "hasAlpha": true,
+          "transparentFraction": 0.241,
+          "opaqueFraction": 0.758,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -406,6 +484,9 @@
           "bytes": 36652,
           "sha256": "be7cbf16f9a2df3bc8c6a7452bbd9c7e2f5725a90f92f30a2d5f9a3463e70821",
           "hasAlpha": true,
+          "transparentFraction": 0.258,
+          "opaqueFraction": 0.741,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -421,6 +502,9 @@
           "bytes": 52526,
           "sha256": "d580967386d109027d2437c0bce4be51ab9b980beb37210c7253d7caeff67c44",
           "hasAlpha": true,
+          "transparentFraction": 0.452,
+          "opaqueFraction": 0.547,
+          "cornersTransparent": true,
           "pivot": [
             0.3,
             0.35
@@ -436,6 +520,9 @@
           "bytes": 52070,
           "sha256": "b73ae804597e6d0a22c67f1c5240ee334617615ad8d69fa315acc350b9351f7b",
           "hasAlpha": true,
+          "transparentFraction": 0.245,
+          "opaqueFraction": 0.754,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -451,6 +538,9 @@
           "bytes": 36552,
           "sha256": "131af20181aed5b5f43af504adfd056baa8baff0ee45790fd14da4089d82f65b",
           "hasAlpha": true,
+          "transparentFraction": 0.258,
+          "opaqueFraction": 0.741,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -466,6 +556,9 @@
           "bytes": 52146,
           "sha256": "cb5332df61f7a7233be22d13f78689dd1759f0a673d6a9a7352b506ff54a463e",
           "hasAlpha": true,
+          "transparentFraction": 0.451,
+          "opaqueFraction": 0.548,
+          "cornersTransparent": true,
           "pivot": [
             0.3,
             0.35
@@ -481,6 +574,9 @@
           "bytes": 87803,
           "sha256": "cae0f9659b9544aacb72ace115da21516b958528f143ce7f0fead3cb3a27eac7",
           "hasAlpha": true,
+          "transparentFraction": 0.647,
+          "opaqueFraction": 0.353,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.85
@@ -504,6 +600,9 @@
           "bytes": 56822,
           "sha256": "1f22838ce5fa05f0369d0e33fa84a313bef82c22f449456aee60e19046ed4a44",
           "hasAlpha": true,
+          "transparentFraction": 0.354,
+          "opaqueFraction": 0.645,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.85
@@ -519,6 +618,9 @@
           "bytes": 63733,
           "sha256": "ab6a7b3abdb42a8385cc9b5e1e4fe37ad5e8f53128373cb3fdb5d1f9cdb76854",
           "hasAlpha": true,
+          "transparentFraction": 0.262,
+          "opaqueFraction": 0.737,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.9
@@ -534,6 +636,9 @@
           "bytes": 60711,
           "sha256": "55458d6ce29d2a396bd96ef40f097dffb1b6af4aaaf1aaf1578ea024b4843285",
           "hasAlpha": true,
+          "transparentFraction": 0.245,
+          "opaqueFraction": 0.754,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.5
@@ -545,6 +650,9 @@
           "bytes": 21911,
           "sha256": "f6d3ea4e86b6720eaf89696a9172fb0cd9033d23ff95931228dd2a80fb255a20",
           "hasAlpha": true,
+          "transparentFraction": 0.431,
+          "opaqueFraction": 0.568,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -560,6 +668,9 @@
           "bytes": 24199,
           "sha256": "9472f5469a7bdcfde37a1b9638d4b8addb8b089ace752b94a3c9edf9c7f0d323",
           "hasAlpha": true,
+          "transparentFraction": 0.401,
+          "opaqueFraction": 0.598,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -575,6 +686,9 @@
           "bytes": 13666,
           "sha256": "4ee10c760056fb0447193dd31bf352ff7535676c83bc80b8c2b656609aa61ad1",
           "hasAlpha": true,
+          "transparentFraction": 0.417,
+          "opaqueFraction": 0.582,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.2
@@ -590,6 +704,9 @@
           "bytes": 20852,
           "sha256": "f06ce4d7d72fcc2df1f62e2a8113edba83657ee7eb4c249b4ab80d9910f67150",
           "hasAlpha": true,
+          "transparentFraction": 0.368,
+          "opaqueFraction": 0.631,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -605,6 +722,9 @@
           "bytes": 25234,
           "sha256": "43f2ee633f69b82e9ca5b245e08d355894c68ae237bc9807ebe60c44dfe6558f",
           "hasAlpha": true,
+          "transparentFraction": 0.388,
+          "opaqueFraction": 0.61,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -620,6 +740,9 @@
           "bytes": 13911,
           "sha256": "897e23424d11c42c7afe090f258af14069d24cd97cdf2d8fb585deb9afca200b",
           "hasAlpha": true,
+          "transparentFraction": 0.298,
+          "opaqueFraction": 0.7,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.2
@@ -635,6 +758,9 @@
           "bytes": 30017,
           "sha256": "883faba5abab9fedb1c502d30772e5d7c0d2e6e457b4121e4e7d97cc98b756b9",
           "hasAlpha": true,
+          "transparentFraction": 0.199,
+          "opaqueFraction": 0.8,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -650,6 +776,9 @@
           "bytes": 14187,
           "sha256": "2fa35d996fe2eb7fd24e1bbe30a9e3e09a4ca0249f73dbcdb9cbc8874cf99f4b",
           "hasAlpha": true,
+          "transparentFraction": 0.309,
+          "opaqueFraction": 0.689,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -665,6 +794,9 @@
           "bytes": 15131,
           "sha256": "6d8bfc6befbf085af7325f2499ad7e9470e6f5f11388e3eb6d7de31c297cf786",
           "hasAlpha": true,
+          "transparentFraction": 0.376,
+          "opaqueFraction": 0.623,
+          "cornersTransparent": true,
           "pivot": [
             0.3,
             0.35
@@ -680,6 +812,9 @@
           "bytes": 29987,
           "sha256": "afcd84e3dc08e41aec6e136413d1ac8045172e21a940f24bca9bdab083878bc1",
           "hasAlpha": true,
+          "transparentFraction": 0.256,
+          "opaqueFraction": 0.743,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -695,6 +830,9 @@
           "bytes": 24495,
           "sha256": "b669d022e224d869b9889478472e5b8aa5a9b8017c566c2c5fa3cfe5836a8a82",
           "hasAlpha": true,
+          "transparentFraction": 0.331,
+          "opaqueFraction": 0.668,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.15
@@ -710,6 +848,9 @@
           "bytes": 34339,
           "sha256": "992b68ba486c6b9b32b107a19aa9ef522222df9cbd78afc99e808940669b0e45",
           "hasAlpha": true,
+          "transparentFraction": 0.435,
+          "opaqueFraction": 0.565,
+          "cornersTransparent": true,
           "pivot": [
             0.3,
             0.35
@@ -725,6 +866,9 @@
           "bytes": 24571,
           "sha256": "0e7df5c483389dcac2720bb70b786fadbdc90ab04cfb1e34bb4870d277a714ba",
           "hasAlpha": true,
+          "transparentFraction": 0.611,
+          "opaqueFraction": 0.387,
+          "cornersTransparent": true,
           "pivot": [
             0.5,
             0.85

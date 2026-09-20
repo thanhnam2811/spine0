@@ -178,3 +178,27 @@ export function evaluateSetupWorldTransforms(
 
   return result;
 }
+
+/**
+ * Resolves the anatomical bone that a character part is bound to.
+ * 1. Explicit partDef.bone (if specified and valid in skeleton)
+ * 2. Bone whose ID matches the partKey (e.g. upper_arm_R, forearm_R, thigh_R, head, torso)
+ * 3. Fallback to slot.bone (e.g. for weapon, slot_weapon binds to hand_R)
+ */
+export function resolvePartBone(
+  partKey: string,
+  partDef: { slot: string; bone?: string },
+  skeleton: ResolvedSkeleton
+): string {
+  if (partDef.bone && skeleton.bones[partDef.bone]) {
+    return partDef.bone;
+  }
+  if (skeleton.bones[partKey]) {
+    return partKey;
+  }
+  const slot = skeleton.slots.find((s) => s.id === partDef.slot);
+  if (slot && skeleton.bones[slot.bone]) {
+    return slot.bone;
+  }
+  return "root";
+}

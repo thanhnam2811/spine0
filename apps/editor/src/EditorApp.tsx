@@ -48,14 +48,46 @@ export const EditorApp: React.FC = () => {
     return { doc: newDoc, history: newHistory, tracker: newTracker };
   }, [characterId]);
 
-  // Subscribe to document updates
+  // Subscribe to document updates and command execution
   useEffect(() => {
-    return doc.subscribe(() => {
-      tracker.recordAdjustment();
+    const unsubDoc = doc.subscribe(() => {
       tracker.updateIssueCount(doc.validation.issues.length);
       setRerender((v) => v + 1);
     });
-  }, [doc, tracker]);
+
+    const unsubCmd = history.onCommandCommitted((cmd) => {
+      if (cmd.id === "SET_PART_PIVOT") {
+        tracker.recordAdjustment("pivot", (cmd as any).partKey, (cmd as any).nextPivot);
+      } else if (cmd.id === "SET_PART_DISTAL_ANCHOR") {
+        tracker.recordAdjustment("anchor", (cmd as any).partKey, (cmd as any).nextAnchor);
+      } else if (cmd.id === "SET_BONE_DISTAL_TIP") {
+        tracker.recordAdjustment("anchor", (cmd as any).boneId);
+      } else if (cmd.id === "SET_BONE_OVERRIDE") {
+        tracker.recordAdjustment("position", (cmd as any).boneId);
+      } else if (cmd.id === "SET_PART_SLOT_BINDING") {
+        tracker.recordAdjustment("slot", (cmd as any).partKey);
+      } else if (cmd.id === "SET_SETUP_DRAW_ORDER") {
+        tracker.recordAdjustment("drawOrder");
+      } else {
+        tracker.recordAdjustment();
+      }
+    });
+
+    const unsubUndo = history.onUndo(() => {
+      tracker.recordUndo();
+    });
+
+    const unsubRedo = history.onRedo(() => {
+      tracker.recordRedo();
+    });
+
+    return () => {
+      unsubDoc();
+      unsubCmd();
+      unsubUndo();
+      unsubRedo();
+    };
+  }, [doc, history, tracker]);
 
   // Calculate dirty state
   const isDirty = useMemo(() => {
@@ -87,13 +119,13 @@ export const EditorApp: React.FC = () => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
         e.preventDefault();
         if (e.shiftKey) {
-          if (history.redo()) tracker.recordRedo();
+          history.redo();
         } else {
-          if (history.undo()) tracker.recordUndo();
+          history.undo();
         }
       } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") {
         e.preventDefault();
-        if (history.redo()) tracker.recordRedo();
+        history.redo();
       } else if (e.code === "Space" && doc.mode === "preview") {
         e.preventDefault();
         doc.togglePlay();
@@ -106,7 +138,7 @@ export const EditorApp: React.FC = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [doc, history, tracker]);
+  }, [doc, history]);
 
   const handleSelectBone = (boneId: string) => {
     doc.setSelection({ type: "bone", id: boneId });
@@ -118,6 +150,20 @@ export const EditorApp: React.FC = () => {
     setRightTab("inspector");
   };
 
+  const handleSelectPart = (partKey: string) => {
+    doc.setSelection({ type: "part", id: partKey });
+    setRightTab("inspector");
+  };
+
+  const handleSelectPreset = (newCharId: string) => {
+    if (tracker.isActive() && isDirty) {
+      if (!confirm(`Switching character will discard current unsaved session for '${characterId}'. Continue?`)) {
+        return;
+      }
+    }
+    setCharacterId(newCharId);
+  };
+
   return (
     <div className="flex flex-col h-screen w-screen bg-[#090d16] overflow-hidden font-sans text-gray-200">
       {/* Top Toolbar */}
@@ -126,8 +172,9 @@ export const EditorApp: React.FC = () => {
         history={history}
         isDirty={isDirty}
         selectedCharacterId={characterId}
-        onSelectPreset={setCharacterId}
+        onSelectPreset={handleSelectPreset}
         onOpenMetrics={() => setShowMetricsModal(true)}
+        onExport={() => tracker.markExported()}
       />
 
       {/* Main Workspace Area (3 Columns) */}
@@ -137,6 +184,7 @@ export const EditorApp: React.FC = () => {
           doc={doc}
           onSelectBone={handleSelectBone}
           onSelectSlot={handleSelectSlot}
+          onSelectPart={handleSelectPart}
         />
 
         {/* Center: Interactive Pixi Viewport */}
@@ -145,6 +193,7 @@ export const EditorApp: React.FC = () => {
             doc={doc}
             history={history}
             onSelectBone={handleSelectBone}
+            onSelectPart={handleSelectPart}
           />
         </main>
 

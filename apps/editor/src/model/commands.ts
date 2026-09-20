@@ -70,8 +70,94 @@ export class SetBoneOverrideCommand implements Command {
  * Uses exact anim-core forward kinematics world transforms and parent matrix inversion.
  * Mutates CHARACTER state only (character.boneOverrides).
  */
-export class SetDistalAnchorCommand implements Command {
-  public readonly id = "SET_DISTAL_ANCHOR";
+/**
+ * Sets normalized pivot [0..1, 0..1] for a character part sprite.
+ * Mutates CHARACTER state only (character.parts[partKey].pivot).
+ */
+export class SetPartPivotCommand implements Command {
+  public readonly id = "SET_PART_PIVOT";
+  public readonly description: string;
+  private prevPivot: [number, number];
+
+  constructor(
+    public readonly partKey: string,
+    public readonly nextPivot: [number, number]
+  ) {
+    this.description = `Adjust sprite pivot for '${partKey}' to [${nextPivot[0].toFixed(3)}, ${nextPivot[1].toFixed(3)}]`;
+    this.prevPivot = [0.5, 0.5];
+  }
+
+  execute(doc: EditorDocument): void {
+    const part = doc.character.parts[this.partKey];
+    if (!part) return;
+    this.prevPivot = [part.pivot[0], part.pivot[1]];
+    part.pivot = [
+      Math.max(0, Math.min(1, Number(this.nextPivot[0].toFixed(4)))),
+      Math.max(0, Math.min(1, Number(this.nextPivot[1].toFixed(4))))
+    ];
+    doc.notify();
+  }
+
+  undo(doc: EditorDocument): void {
+    const part = doc.character.parts[this.partKey];
+    if (!part) return;
+    part.pivot = [this.prevPivot[0], this.prevPivot[1]];
+    doc.notify();
+  }
+}
+
+/**
+ * Sets normalized distal anchor [0..1, 0..1] for a character part sprite.
+ * Mutates CHARACTER state only (character.parts[partKey].distalAnchor).
+ */
+export class SetPartDistalAnchorCommand implements Command {
+  public readonly id = "SET_PART_DISTAL_ANCHOR";
+  public readonly description: string;
+  private prevAnchor: [number, number] | undefined;
+
+  constructor(
+    public readonly partKey: string,
+    public readonly nextAnchor: [number, number] | undefined
+  ) {
+    this.description = nextAnchor
+      ? `Adjust sprite distal anchor for '${partKey}' to [${nextAnchor[0].toFixed(3)}, ${nextAnchor[1].toFixed(3)}]`
+      : `Remove sprite distal anchor for '${partKey}'`;
+  }
+
+  execute(doc: EditorDocument): void {
+    const part = doc.character.parts[this.partKey];
+    if (!part) return;
+    this.prevAnchor = part.distalAnchor ? [part.distalAnchor[0], part.distalAnchor[1]] : undefined;
+    if (this.nextAnchor === undefined) {
+      delete part.distalAnchor;
+    } else {
+      part.distalAnchor = [
+        Math.max(0, Math.min(1, Number(this.nextAnchor[0].toFixed(4)))),
+        Math.max(0, Math.min(1, Number(this.nextAnchor[1].toFixed(4))))
+      ];
+    }
+    doc.notify();
+  }
+
+  undo(doc: EditorDocument): void {
+    const part = doc.character.parts[this.partKey];
+    if (!part) return;
+    if (this.prevAnchor === undefined) {
+      delete part.distalAnchor;
+    } else {
+      part.distalAnchor = [this.prevAnchor[0], this.prevAnchor[1]];
+    }
+    doc.notify();
+  }
+}
+
+/**
+ * Repositions distal tip of a bone by updating its rotation and length.
+ * Uses exact anim-core forward kinematics world transforms and parent matrix inversion.
+ * Mutates CHARACTER state only (character.boneOverrides).
+ */
+export class SetBoneDistalTipCommand implements Command {
+  public readonly id = "SET_BONE_DISTAL_TIP";
   public readonly description: string;
   private prevOverride: BoneOverride | undefined;
 
@@ -79,7 +165,7 @@ export class SetDistalAnchorCommand implements Command {
     public readonly boneId: string,
     public readonly worldTarget: { x: number; y: number }
   ) {
-    this.description = `Adjust distal anchor for '${boneId}'`;
+    this.description = `Adjust bone distal tip for '${boneId}'`;
   }
 
   execute(doc: EditorDocument): void {
@@ -145,6 +231,9 @@ export class SetDistalAnchorCommand implements Command {
     doc.notify();
   }
 }
+
+// Backward-compatible alias for existing callers
+export { SetBoneDistalTipCommand as SetDistalAnchorCommand };
 
 /**
  * Rebinds a character's part to a target slot.

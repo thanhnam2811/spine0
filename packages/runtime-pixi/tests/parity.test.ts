@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { evaluator } from "@animation-factory/anim-core";
 import { sampleCompiledCharacter } from "../src/parity.js";
+import { PixiCharacterInstance } from "../src/instance.js";
 import { compileCharacter } from "@animation-factory/compiler";
 import type {
   AnimationTemplate,
@@ -66,6 +67,20 @@ describe("runtime-parity & deterministic pose goldens", () => {
           expect(cSlot.worldX).toBeCloseTo(sSlot.worldX, 4);
           expect(cSlot.worldY).toBeCloseTo(sSlot.worldY, 4);
           expect(cSlot.worldRotation).toBeCloseTo(sSlot.worldRotation, 4);
+        }
+
+        // Check all parts (numerical parity across all parts)
+        expect(compiledPose.parts.length).toBe(sourcePose.parts.length);
+        for (let i = 0; i < sourcePose.parts.length; i++) {
+          const sPart = sourcePose.parts[i];
+          const cPart = compiledPose.parts[i];
+          expect(cPart.partKey).toBe(sPart.partKey);
+          expect(cPart.bone).toBe(sPart.bone);
+          expect(cPart.slot).toBe(sPart.slot);
+          expect(cPart.drawOrder).toBe(sPart.drawOrder);
+          expect(cPart.worldX).toBeCloseTo(sPart.worldX, 4);
+          expect(cPart.worldY).toBeCloseTo(sPart.worldY, 4);
+          expect(cPart.worldRotation).toBeCloseTo(sPart.worldRotation, 4);
         }
       }
     }
@@ -205,8 +220,58 @@ describe("runtime-parity & deterministic pose goldens", () => {
             expect(cSlot.worldY).toBeCloseTo(sSlot.worldY, 4);
             expect(cSlot.worldRotation).toBeCloseTo(sSlot.worldRotation, 4);
           }
+
+          expect(compiledPose.parts.length).toBe(sourcePose.parts.length);
+          for (let i = 0; i < sourcePose.parts.length; i++) {
+            const sPart = sourcePose.parts[i];
+            const cPart = compiledPose.parts[i];
+            expect(cPart.partKey).toBe(sPart.partKey);
+            expect(cPart.bone).toBe(sPart.bone);
+            expect(cPart.slot).toBe(sPart.slot);
+            expect(cPart.drawOrder).toBe(sPart.drawOrder);
+            expect(cPart.worldX).toBeCloseTo(sPart.worldX, 4);
+            expect(cPart.worldY).toBeCloseTo(sPart.worldY, 4);
+            expect(cPart.worldRotation).toBeCloseTo(sPart.worldRotation, 4);
+          }
         }
       }
     }
   }, 15000);
+
+  it("verifies PixiCharacterInstance constructs and renders all 16 part sprites simultaneously", () => {
+    const normalRig = loadJson<RigDefinition>("assets/rigs/humanoid-normal-v1.rig.json");
+    const realNormal = loadJson<CharacterDefinition>("fixtures/real-production/real-normal-01/character.json");
+    const idleClip = loadJson<AnimationTemplate>("assets/animations/shared/idle.anim.json");
+
+    const pose = evaluator.sample(normalRig, realNormal, idleClip, 0.5);
+    expect(pose.parts).toHaveLength(16);
+
+    const instance = new PixiCharacterInstance(normalRig);
+    instance.applyPose(pose, { showBones: true, showAnchors: true });
+
+    // Verify all 16 part sprites exist and are visible
+    for (const partKey of Object.keys(realNormal.parts)) {
+      const sprite = instance.getPartSprite(partKey);
+      expect(sprite, `Sprite for part '${partKey}' should exist`).toBeDefined();
+      expect(sprite!.visible).toBe(true);
+      expect(sprite!.width).toBe(realNormal.parts[partKey].width);
+      expect(sprite!.height).toBe(realNormal.parts[partKey].height);
+    }
+
+    // Verify limb parts that share slots are distinct sprites in the same slot container
+    const armNearSlot = instance.rootContainer.children[0]; // slotsContainer
+    const armNearSprite = instance.getPartSprite("upper_arm_R");
+    const forearmNearSprite = instance.getPartSprite("forearm_R");
+    const handNearSprite = instance.getPartSprite("hand_R");
+
+    expect(armNearSprite).toBeDefined();
+    expect(forearmNearSprite).toBeDefined();
+    expect(handNearSprite).toBeDefined();
+
+    // Must have different world positions
+    expect(armNearSprite!.position.y).not.toBe(forearmNearSprite!.position.y);
+    expect(forearmNearSprite!.position.y).not.toBe(handNearSprite!.position.y);
+
+    instance.destroy();
+  });
 });

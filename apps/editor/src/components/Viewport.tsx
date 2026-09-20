@@ -2,25 +2,39 @@ import React, { useEffect, useRef, useCallback } from "react";
 import { Application, Container, Graphics } from "pixi.js";
 import type { EditorDocument } from "../model/document.js";
 import type { HistoryManager } from "../model/history.js";
-import { SetBoneOverrideCommand, SetDistalAnchorCommand } from "../model/commands.js";
+import {
+  SetBoneOverrideCommand,
+  SetDistalAnchorCommand,
+  SetPartPivotCommand,
+  SetPartDistalAnchorCommand
+} from "../model/commands.js";
 import {
   evaluator,
   resolveCharacterSetup,
   evaluateSetupWorldTransforms
 } from "@animation-factory/anim-core";
+import { PixiCharacterInstance } from "@animation-factory/runtime-pixi";
+import { loadCharacterTextures } from "../textureResolver.js";
 
 export interface ViewportProps {
   doc: EditorDocument;
   history: HistoryManager;
   onSelectBone: (boneId: string) => void;
+  onSelectPart: (partKey: string) => void;
 }
 
-export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }) => {
+export const Viewport: React.FC<ViewportProps> = ({
+  doc,
+  history,
+  onSelectBone,
+  onSelectPart
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<Application | null>(null);
 
   // Scene root inside Pixi
   const cameraContainerRef = useRef<Container>(new Container());
+  const charInstanceRef = useRef<PixiCharacterInstance | null>(null);
   const overlayGraphicsRef = useRef<Graphics>(new Graphics());
   const handleGraphicsRef = useRef<Graphics>(new Graphics());
 
@@ -39,10 +53,18 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
   // Drag handle state
   const dragRef = useRef<{
     active: boolean;
-    boneId: string;
-    handleType: "pivot" | "distal";
+    targetId: string;
+    handleType: "bone-pivot" | "bone-distal" | "part-pivot" | "part-distal";
     startWorldPos: { x: number; y: number };
-    startOverride: { x: number; y: number; rotation: number; length: number };
+    startOverride?: { x: number; y: number; rotation: number; length: number };
+    partInfo?: {
+      tlWorldX: number;
+      tlWorldY: number;
+      width: number;
+      height: number;
+      cos: number;
+      sin: number;
+    };
   } | null>(null);
 
   // Render overlay & handles function
@@ -76,6 +98,11 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
         boneTracks: {}
       };
       pose = evaluator.sample(rig, char, dummyClip as any, 0.0);
+    }
+
+    // Update real character sprite instance
+    if (charInstanceRef.current) {
+      charInstanceRef.current.applyPose(pose, { showBones: false, showAnchors: false });
     }
 
     // 1. Ground Plane Overlay
@@ -149,6 +176,7 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
 
     // 6. Interactive Handles (Only in Setup mode)
     if (doc.mode === "setup" && doc.overlays.handles) {
+      // 6A. Bone Handles
       for (const boneId of skeleton.boneOrder) {
         const b = pose.bones[boneId];
         if (!b) continue;
@@ -178,9 +206,68 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
           handles.lineTo(tipX, tipY);
           handles.stroke({ color: 0xef4444, width: 2, alpha: 0.7 });
 
-          // Distal tip handle
+          // Distal tip handle (Red Square)
           handles.rect(tipX - 5, tipY - 5, 10, 10);
           handles.fill({ color: 0xef4444, alpha: 0.95 });
+          handles.stroke({ color: 0xffffff, width: 2 });
+        }
+      }
+
+      // 6B. Selected Part Sprite Handles (Pivot & Distal Anchor)
+      if (doc.selection?.type === "part") {
+        const partKey = doc.selection.id;
+        const partPose = pose.parts?.find((p: any) => p.partKey === partKey);
+
+        if (partPose) {
+          const rad = (partPose.worldRotation * Math.PI) / 180.0;
+          const cos = Math.cos(rad);
+          const sin = Math.sin(rad);
+          const w = partPose.width;
+          const h = partPose.height;
+          const pU = partPose.pivot[0];
+          const pV = partPose.pivot[1];
+
+          // 1. Sprite Bounding Box (Emerald outline)
+          const corners = [
+            { x: -pU * w, y: -pV * h },
+            { x: (1 - pU) * w, y: -pV * h },
+            { x: (1 - pU) * w, y: (1 - pV) * h },
+            { x: -pU * w, y: (1 - pV) * h }
+          ];
+          const worldCorners = corners.map((c) => ({
+            x: partPose.worldX + (cos * c.x - sin * c.y),
+            y: partPose.worldY + (sin * c.x + cos * c.y)
+          }));
+          handles.poly(worldCorners, true);
+          handles.stroke({ color: 0x10b981, width: 2, alpha: 0.85 });
+
+          // 2. Sprite Pivot Handle (Emerald circle)
+          handles.circle(partPose.worldX, partPose.worldY, 8);
+          handles.fill({ color: 0x10b981, alpha: 0.95 });
+          handles.stroke({ color: 0xffffff, width: 2 });
+
+          // 3. Sprite Distal Anchor Handle (Cyan diamond)
+          const dU = partPose.distalAnchor ? partPose.distalAnchor[0] : 0.5;
+          const dV = partPose.distalAnchor ? partPose.distalAnchor[1] : 1.0;
+          const ddx = (dU - pU) * w;
+          const ddy = (dV - pV) * h;
+          const tipX = partPose.worldX + (cos * ddx - sin * ddy);
+          const tipY = partPose.worldY + (sin * ddx + cos * ddy);
+
+          // Guide line from pivot to distal anchor
+          handles.moveTo(partPose.worldX, partPose.worldY);
+          handles.lineTo(tipX, tipY);
+          handles.stroke({ color: 0x06b6d4, width: 2, alpha: 0.7 });
+
+          // Cyan Diamond handle
+          const dSize = 6;
+          handles.poly([
+            { x: tipX, y: tipY - dSize },
+            { x: tipX + dSize, y: tipY },
+            { x: tipX, y: tipY + dSize },
+            { x: tipX - dSize, y: tipY }
+          ]);
+          handles.fill({ color: 0x06b6d4, alpha: 0.95 });
           handles.stroke({ color: 0xffffff, width: 2 });
         }
       }
@@ -324,9 +411,20 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
       appRef.current = app;
 
       const camera = cameraContainerRef.current;
+      const charInstance = new PixiCharacterInstance(doc.targetRig);
+      charInstanceRef.current = charInstance;
+      camera.addChild(charInstance.rootContainer);
       camera.addChild(overlayGraphicsRef.current);
       camera.addChild(handleGraphicsRef.current);
       app.stage.addChild(camera);
+
+      // Preload textures for initial character
+      loadCharacterTextures(doc.character.id, doc.character.parts).then((textures) => {
+        if (!isCancelled && charInstanceRef.current) {
+          charInstanceRef.current.updateTextures(textures);
+          renderScene();
+        }
+      });
 
       // Perform initial character auto-framing
       fitToCharacter();
@@ -336,6 +434,10 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
 
     return () => {
       isCancelled = true;
+      if (charInstanceRef.current) {
+        charInstanceRef.current.destroy();
+        charInstanceRef.current = null;
+      }
       if (appRef.current) {
         appRef.current.destroy(true);
         appRef.current = null;
@@ -343,18 +445,41 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
     };
   }, []);
 
-  // Update scene whenever document changes, and re-fit on character / rig change
+  // Update scene & textures whenever character or rig changes
   useEffect(() => {
+    let isCancelled = false;
     const currentKey = `${doc.character.id}_${doc.character.rig}`;
+
+    // If target rig changed, re-create instance
+    if (charInstanceRef.current && (charInstanceRef.current as any).rig?.id !== doc.targetRig.id) {
+      charInstanceRef.current.destroy();
+      const newInstance = new PixiCharacterInstance(doc.targetRig);
+      charInstanceRef.current = newInstance;
+      cameraContainerRef.current.addChildAt(newInstance.rootContainer, 0);
+    }
+
+    loadCharacterTextures(doc.character.id, doc.character.parts).then((textures) => {
+      if (isCancelled || !charInstanceRef.current) return;
+      charInstanceRef.current.updateTextures(textures);
+      renderScene();
+    });
+
     if (lastCharKeyRef.current !== currentKey) {
       lastCharKeyRef.current = currentKey;
       fitToCharacter();
     }
 
+    return () => {
+      isCancelled = true;
+    };
+  }, [doc.character.id, doc.character.rig, doc.targetRig, renderScene, fitToCharacter]);
+
+  // Subscribe to document updates
+  useEffect(() => {
     return doc.subscribe(() => {
       renderScene();
     });
-  }, [doc, renderScene, fitToCharacter]);
+  }, [doc, renderScene]);
 
   // Coordinate conversion helpers
   const screenToWorld = useCallback((screenX: number, screenY: number) => {
@@ -383,74 +508,141 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
     // In PREVIEW mode, interaction handles are locked
     if (e.button !== 0 || doc.mode !== "setup") return;
 
-    // Hit test interactive bone handles
     const skeleton = resolveCharacterSetup(doc.targetRig, doc.character);
-    let hitBone: string | null = null;
-    let handleType: "pivot" | "distal" = "pivot";
+    const dummyClip = { version: 1, id: "setup", name: "S", duration: 1, loop: false, boneTracks: {} };
+    const pose = evaluator.sample(doc.targetRig, doc.character, dummyClip as any, 0.0);
 
-    // First test distal handle of currently selected bone
+    // 1. Priority 1 & 2: Selected Part Distal Anchor & Pivot Handles
+    if (doc.selection?.type === "part") {
+      const selectedPartPose = pose.parts?.find((p: any) => p.partKey === doc.selection!.id);
+      if (selectedPartPose) {
+        const pU = selectedPartPose.pivot[0];
+        const pV = selectedPartPose.pivot[1];
+        const w = selectedPartPose.width;
+        const h = selectedPartPose.height;
+        const rad = (selectedPartPose.worldRotation * Math.PI) / 180.0;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+        const tlWorldX = selectedPartPose.worldX - (cos * pU * w - sin * pV * h);
+        const tlWorldY = selectedPartPose.worldY - (sin * pU * w + cos * pV * h);
+
+        // Check distal anchor handle
+        const dU = selectedPartPose.distalAnchor ? selectedPartPose.distalAnchor[0] : 0.5;
+        const dV = selectedPartPose.distalAnchor ? selectedPartPose.distalAnchor[1] : 1.0;
+        const ddx = (dU - pU) * w;
+        const ddy = (dV - pV) * h;
+        const tipX = selectedPartPose.worldX + (cos * ddx - sin * ddy);
+        const tipY = selectedPartPose.worldY + (sin * ddx + cos * ddy);
+
+        if (Math.hypot(worldPos.x - tipX, worldPos.y - tipY) < 16 / cameraRef.current.zoom) {
+          history.beginTransaction(`Drag sprite distal anchor '${selectedPartPose.partKey}'`);
+          dragRef.current = {
+            active: true,
+            targetId: selectedPartPose.partKey,
+            handleType: "part-distal",
+            startWorldPos: worldPos,
+            partInfo: { tlWorldX, tlWorldY, width: w, height: h, cos, sin }
+          };
+          e.currentTarget.setPointerCapture(e.pointerId);
+          return;
+        }
+
+        // Check pivot handle
+        if (Math.hypot(worldPos.x - selectedPartPose.worldX, worldPos.y - selectedPartPose.worldY) < 16 / cameraRef.current.zoom) {
+          history.beginTransaction(`Drag sprite pivot '${selectedPartPose.partKey}'`);
+          dragRef.current = {
+            active: true,
+            targetId: selectedPartPose.partKey,
+            handleType: "part-pivot",
+            startWorldPos: worldPos,
+            partInfo: { tlWorldX, tlWorldY, width: w, height: h, cos, sin }
+          };
+          e.currentTarget.setPointerCapture(e.pointerId);
+          return;
+        }
+      }
+    }
+
+    // 2. Priority 3: Selected Bone Distal Tip Handle
     if (doc.selection?.type === "bone") {
       const b = skeleton.bones[doc.selection.id];
       if (b && b.length > 0) {
-        const dummyClip = { version: 1, id: "setup", name: "S", duration: 1, loop: false, boneTracks: {} };
-        const pose = evaluator.sample(doc.targetRig, doc.character, dummyClip as any, 0.0);
         const pb = pose.bones[doc.selection.id];
         if (pb) {
           const rad = (pb.worldRotation * Math.PI) / 180.0;
           const tipX = pb.worldX - Math.sin(rad) * pb.length;
           const tipY = pb.worldY + Math.cos(rad) * pb.length;
-          const distTip = Math.hypot(worldPos.x - tipX, worldPos.y - tipY);
-          if (distTip < 15 / cameraRef.current.zoom) {
-            hitBone = doc.selection.id;
-            handleType = "distal";
+          if (Math.hypot(worldPos.x - tipX, worldPos.y - tipY) < 15 / cameraRef.current.zoom) {
+            history.beginTransaction(`Drag distal tip '${doc.selection.id}'`);
+            dragRef.current = {
+              active: true,
+              targetId: doc.selection.id,
+              handleType: "bone-distal",
+              startWorldPos: worldPos
+            };
+            e.currentTarget.setPointerCapture(e.pointerId);
+            return;
           }
         }
       }
     }
 
-    // Then test pivot handles
-    if (!hitBone) {
-      const dummyClip = { version: 1, id: "setup", name: "S", duration: 1, loop: false, boneTracks: {} };
-      const pose = evaluator.sample(doc.targetRig, doc.character, dummyClip as any, 0.0);
-      for (const boneId of [...skeleton.boneOrder].reverse()) {
-        const b = pose.bones[boneId];
-        if (!b) continue;
-        const dist = Math.hypot(worldPos.x - b.worldX, worldPos.y - b.worldY);
-        if (dist < 15 / cameraRef.current.zoom) {
-          hitBone = boneId;
-          handleType = "pivot";
-          break;
-        }
+    // 3. Priority 4: Bone Pivot Handles (Joint Circles)
+    for (const boneId of [...skeleton.boneOrder].reverse()) {
+      const pb = pose.bones[boneId];
+      if (!pb) continue;
+      if (Math.hypot(worldPos.x - pb.worldX, worldPos.y - pb.worldY) < 14 / cameraRef.current.zoom) {
+        onSelectBone(boneId);
+        doc.setSelection({ type: "bone", id: boneId });
+        history.beginTransaction(`Drag bone pivot '${boneId}'`);
+        const existing = doc.character.boneOverrides?.[boneId];
+        const startOverride = {
+          x: existing?.x ?? 0,
+          y: existing?.y ?? 0,
+          rotation: existing?.rotation ?? 0,
+          length: existing?.length ?? skeleton.bones[boneId].length
+        };
+        dragRef.current = {
+          active: true,
+          targetId: boneId,
+          handleType: "bone-pivot",
+          startWorldPos: worldPos,
+          startOverride
+        };
+        e.currentTarget.setPointerCapture(e.pointerId);
+        return;
       }
     }
 
-    if (hitBone) {
-      onSelectBone(hitBone);
-      doc.setSelection({ type: "bone", id: hitBone });
+    // 4. Priority 5: Click on Character Part Sprites
+    if (pose.parts && pose.parts.length > 0) {
+      for (let i = pose.parts.length - 1; i >= 0; i--) {
+        const partPose = pose.parts[i];
+        const pU = partPose.pivot[0];
+        const pV = partPose.pivot[1];
+        const w = partPose.width;
+        const h = partPose.height;
+        const rad = (partPose.worldRotation * Math.PI) / 180.0;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
 
-      // Start drag transaction
-      const desc = handleType === "pivot"
-        ? `Drag bone pivot '${hitBone}'`
-        : `Drag distal tip '${hitBone}'`;
-      history.beginTransaction(desc);
+        // Vector from part world pivot to worldPos
+        const dx = worldPos.x - partPose.worldX;
+        const dy = worldPos.y - partPose.worldY;
+        const localX = cos * dx + sin * dy;
+        const localY = -sin * dx + cos * dy;
 
-      const existing = doc.character.boneOverrides?.[hitBone];
-      const startOverride = {
-        x: existing?.x ?? 0,
-        y: existing?.y ?? 0,
-        rotation: existing?.rotation ?? 0,
-        length: existing?.length ?? skeleton.bones[hitBone].length
-      };
+        const minX = -pU * w;
+        const maxX = (1 - pU) * w;
+        const minY = -pV * h;
+        const maxY = (1 - pV) * h;
 
-      dragRef.current = {
-        active: true,
-        boneId: hitBone,
-        handleType,
-        startWorldPos: worldPos,
-        startOverride
-      };
-
-      e.currentTarget.setPointerCapture(e.pointerId);
+        if (localX >= minX && localX <= maxX && localY >= minY && localY <= maxY) {
+          onSelectPart(partPose.partKey);
+          doc.setSelection({ type: "part", id: partPose.partKey });
+          return;
+        }
+      }
     }
   };
 
@@ -469,9 +661,9 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
     if (!dragRef.current?.active) return;
 
     const worldPos = screenToWorld(sx, sy);
-    const { boneId, handleType, startWorldPos, startOverride } = dragRef.current;
+    const { targetId, handleType, startWorldPos, startOverride, partInfo } = dragRef.current;
 
-    if (handleType === "pivot") {
+    if (handleType === "bone-pivot" && startOverride) {
       const dx = worldPos.x - startWorldPos.x;
       const dy = worldPos.y - startWorldPos.y;
 
@@ -481,9 +673,25 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
         y: Math.round((startOverride.y + dy) * 10) / 10
       };
 
-      history.execute(new SetBoneOverrideCommand(boneId, newOverride));
-    } else if (handleType === "distal") {
-      history.execute(new SetDistalAnchorCommand(boneId, worldPos));
+      history.execute(new SetBoneOverrideCommand(targetId, newOverride));
+    } else if (handleType === "bone-distal") {
+      history.execute(new SetDistalAnchorCommand(targetId, worldPos));
+    } else if (handleType === "part-pivot" && partInfo) {
+      const vx = worldPos.x - partInfo.tlWorldX;
+      const vy = worldPos.y - partInfo.tlWorldY;
+      const localX = partInfo.cos * vx + partInfo.sin * vy;
+      const localY = -partInfo.sin * vx + partInfo.cos * vy;
+      const u = Math.max(0, Math.min(1, Math.round((localX / partInfo.width) * 1000) / 1000));
+      const v = Math.max(0, Math.min(1, Math.round((localY / partInfo.height) * 1000) / 1000));
+      history.execute(new SetPartPivotCommand(targetId, [u, v]));
+    } else if (handleType === "part-distal" && partInfo) {
+      const vx = worldPos.x - partInfo.tlWorldX;
+      const vy = worldPos.y - partInfo.tlWorldY;
+      const localX = partInfo.cos * vx + partInfo.sin * vy;
+      const localY = -partInfo.sin * vx + partInfo.cos * vy;
+      const u = Math.max(0, Math.min(1, Math.round((localX / partInfo.width) * 1000) / 1000));
+      const v = Math.max(0, Math.min(1, Math.round((localY / partInfo.height) * 1000) / 1000));
+      history.execute(new SetPartDistalAnchorCommand(targetId, [u, v]));
     }
   };
 

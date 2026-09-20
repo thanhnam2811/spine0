@@ -2,6 +2,7 @@ import type {
   AnimationTemplate,
   CharacterDefinition,
   EvaluatedBonePose,
+  EvaluatedPartPose,
   EvaluatedPose,
   EvaluatedSlotPose,
   PartDefinition,
@@ -14,7 +15,7 @@ import {
   type TransformMatrix
 } from "./math.js";
 import { normalizeTime, sampleDrawOrder, sampleRotationTrack, sampleTranslationTrack } from "./sampling.js";
-import { resolveCharacterSetup, type ResolvedSkeleton } from "./setup.js";
+import { resolveCharacterSetup, resolvePartBone, type ResolvedSkeleton } from "./setup.js";
 
 export class PoseEvaluator {
   /**
@@ -94,13 +95,13 @@ export class PoseEvaluator {
       t
     );
 
-    // 3. Map character parts to slots
+    // 3. Map character parts to slots (for legacy evaluatedSlots)
     const slotToPartMap = new Map<string, { key: string; def: PartDefinition }>();
     for (const [partKey, partDef] of Object.entries(character.parts)) {
       slotToPartMap.set(partDef.slot, { key: partKey, def: partDef });
     }
 
-    // 4. Construct evaluated slot poses
+    // 4. Construct evaluated slot poses (one per rig slot for backward compatibility)
     const evaluatedSlots: EvaluatedSlotPose[] = [];
     for (const slot of skeleton.slots) {
       const boundBone = bonePoses[slot.bone];
@@ -121,9 +122,37 @@ export class PoseEvaluator {
         drawOrder: activeOrders[slot.id] ?? slot.defaultDrawOrder
       });
     }
-
-    // Sort slots according to active drawOrder ascending
     evaluatedSlots.sort((a, b) => a.drawOrder - b.drawOrder);
+
+    // 5. Construct evaluated part poses for ALL 16 character parts
+    // Every part survives simultaneously, driven by its actual anatomical bone transform
+    const evaluatedParts: EvaluatedPartPose[] = [];
+    for (const [partKey, partDef] of Object.entries(character.parts)) {
+      const boundBoneId = resolvePartBone(partKey, partDef, skeleton);
+      const boundBone = bonePoses[boundBoneId];
+      const slot = skeleton.slots.find((s) => s.id === partDef.slot);
+      const slotDrawOrder = slot ? (activeOrders[slot.id] ?? slot.defaultDrawOrder) : 0;
+
+      evaluatedParts.push({
+        partKey,
+        slot: partDef.slot,
+        bone: boundBoneId,
+        texture: partDef.texture,
+        pivot: partDef.pivot,
+        distalAnchor: partDef.distalAnchor,
+        width: partDef.width ?? 100,
+        height: partDef.height ?? 100,
+        worldX: boundBone ? boundBone.worldX : 0.0,
+        worldY: boundBone ? boundBone.worldY : 0.0,
+        worldRotation: boundBone ? boundBone.worldRotation : 0.0,
+        drawOrder: slotDrawOrder
+      });
+    }
+    evaluatedParts.sort((a, b) =>
+      a.drawOrder !== b.drawOrder
+        ? a.drawOrder - b.drawOrder
+        : a.partKey.localeCompare(b.partKey)
+    );
 
     return {
       time: t,
@@ -131,6 +160,7 @@ export class PoseEvaluator {
       characterId: character.id,
       bones: bonePoses,
       slots: evaluatedSlots,
+      parts: evaluatedParts,
       drawOrder: sortedSlotIds
     };
   }

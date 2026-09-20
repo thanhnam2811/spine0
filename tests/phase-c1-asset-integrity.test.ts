@@ -9,6 +9,7 @@ import type {
   CharacterDefinition,
   RigDefinition
 } from "@animation-factory/schema";
+import { decodePngRgba } from "../scripts/check-asset-integrity.mjs";
 
 const repoRoot = path.resolve(__dirname, "..");
 
@@ -101,14 +102,81 @@ describe("Phase C.1: Real Asset Integrity & Production Pipeline Verification", (
         const colorType = buf[25];
         expect(colorType === 6 || colorType === 4, `Texture ${partName} in ${charId} must have alpha channel`).toBe(true);
 
+        const decoded = decodePngRgba(buf);
+        expect(decoded.ok, `Failed to decode PNG for ${charId}.${partName}`).toBe(true);
+        expect(decoded.width, `Width mismatch for ${charId}.${partName}`).toBe(part.width);
+        expect(decoded.height, `Height mismatch for ${charId}.${partName}`).toBe(part.height);
+        expect(decoded.transparentFraction, `Texture ${partName} in ${charId} lacks cutout transparency (<5% transparent)`).toBeGreaterThanOrEqual(0.05);
+        expect(decoded.opaqueFraction, `Texture ${partName} in ${charId} lacks opaque artwork (<10% opaque)`).toBeGreaterThanOrEqual(0.10);
+
         partHashes[partName] = sha256(buf);
       }
 
-      // Contralateral asymmetry check: Left and Right limbs must be independently drawn
+      // Contralateral asymmetry check (exact duplicate rejection)
       for (const [partA, partB] of contralateralPairs) {
         expect(partHashes[partA]).not.toBe(partHashes[partB]);
       }
     }
+  });
+
+  it("proves that fake solid rectangles and empty sprites are rejected by the pixel validator", () => {
+    // 1. Synthetic Solid Opaque Rectangle (100% opaque, 0% transparent)
+    const width = 64;
+    const height = 64;
+    const zlib = require("node:zlib");
+
+    function createMockPng(alphaVal: number): Buffer {
+      const rawScanlines: Buffer[] = [];
+      for (let y = 0; y < height; y++) {
+        const line = Buffer.alloc(1 + width * 4);
+        line[0] = 0; // filter None
+        for (let x = 0; x < width; x++) {
+          line[1 + x * 4] = 255;     // R
+          line[1 + x * 4 + 1] = 0;   // G
+          line[1 + x * 4 + 2] = 0;   // B
+          line[1 + x * 4 + 3] = alphaVal; // Alpha
+        }
+        rawScanlines.push(line);
+      }
+      const raw = Buffer.concat(rawScanlines);
+      const compressed = zlib.deflateSync(raw);
+
+      const header = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+      const ihdr = Buffer.alloc(25);
+      ihdr.writeUInt32BE(13, 0);
+      ihdr.write("IHDR", 4);
+      ihdr.writeUInt32BE(width, 8);
+      ihdr.writeUInt32BE(height, 12);
+      ihdr[16] = 8; // bitDepth
+      ihdr[17] = 6; // RGBA
+      ihdr[18] = 0; // compression
+      ihdr[19] = 0; // filter
+      ihdr[20] = 0; // interlace
+
+      const idat = Buffer.alloc(12 + compressed.length);
+      idat.writeUInt32BE(compressed.length, 0);
+      idat.write("IDAT", 4);
+      compressed.copy(idat, 8);
+
+      const iend = Buffer.from([0, 0, 0, 0, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82]);
+      return Buffer.concat([header, ihdr, idat, iend]);
+    }
+
+    // A solid rectangle has transparentFraction === 0 (< 0.05 threshold)
+    const solidPng = createMockPng(255);
+    const decodedSolid = decodePngRgba(solidPng);
+    expect(decodedSolid.ok).toBe(true);
+    expect(decodedSolid.transparentFraction).toBe(0.0);
+    // Validator threshold rejection:
+    expect(decodedSolid.transparentFraction >= 0.05).toBe(false);
+
+    // An empty sprite has opaqueFraction === 0 (< 0.10 threshold)
+    const emptyPng = createMockPng(0);
+    const decodedEmpty = decodePngRgba(emptyPng);
+    expect(decodedEmpty.ok).toBe(true);
+    expect(decodedEmpty.opaqueFraction).toBe(0.0);
+    // Validator threshold rejection:
+    expect(decodedEmpty.opaqueFraction >= 0.10).toBe(false);
   });
 
   it("verifies generation attempt logs and failure codes are preserved in evidence directory", () => {

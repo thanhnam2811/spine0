@@ -27,13 +27,39 @@ export class CoalescedTransactionCommand implements Command {
   }
 }
 
+export type CommandCommitListener = (cmd: Command) => void;
+
 export class HistoryManager {
   private undoStack: Command[] = [];
   private redoStack: Command[] = [];
   private activeTransaction: ActiveTransaction | null = null;
   private readonly maxDepth: number = 100;
+  private commitListeners: CommandCommitListener[] = [];
+  private undoListeners: (() => void)[] = [];
+  private redoListeners: (() => void)[] = [];
 
   constructor(private doc: EditorDocument) {}
+
+  public onCommandCommitted(listener: CommandCommitListener): () => void {
+    this.commitListeners.push(listener);
+    return () => {
+      this.commitListeners = this.commitListeners.filter((l) => l !== listener);
+    };
+  }
+
+  public onUndo(listener: () => void): () => void {
+    this.undoListeners.push(listener);
+    return () => {
+      this.undoListeners = this.undoListeners.filter((l) => l !== listener);
+    };
+  }
+
+  public onRedo(listener: () => void): () => void {
+    this.redoListeners.push(listener);
+    return () => {
+      this.redoListeners = this.redoListeners.filter((l) => l !== listener);
+    };
+  }
 
   public canUndo(): boolean {
     return this.undoStack.length > 0;
@@ -65,6 +91,8 @@ export class HistoryManager {
     if (this.undoStack.length > this.maxDepth) {
       this.undoStack.shift();
     }
+
+    this.commitListeners.forEach((l) => l(cmd));
   }
 
   /**
@@ -108,6 +136,8 @@ export class HistoryManager {
     if (this.undoStack.length > this.maxDepth) {
       this.undoStack.shift();
     }
+
+    this.commitListeners.forEach((l) => l(coalesced));
   }
 
   /**
@@ -130,6 +160,7 @@ export class HistoryManager {
 
     cmd.undo(this.doc);
     this.redoStack.push(cmd);
+    this.undoListeners.forEach((l) => l());
     return true;
   }
 
@@ -139,6 +170,7 @@ export class HistoryManager {
 
     cmd.execute(this.doc);
     this.undoStack.push(cmd);
+    this.redoListeners.forEach((l) => l());
     return true;
   }
 

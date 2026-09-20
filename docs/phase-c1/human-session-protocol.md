@@ -44,12 +44,16 @@ The session telemetry exported by the editor conforms to the following schema:
 ```json
 {
   "operatorId": "human-01",
+  "characterId": "real-normal-01",
+  "status": "ENDED",
   "sessionStartTimestamp": "2026-09-20T11:15:00.000Z",
   "sessionEndTimestamp": "2026-09-20T11:21:42.000Z",
   "sessionDurationSeconds": 402,
-  "characterId": "real-normal-01",
   "initialIssueCount": 2,
   "finalIssueCount": 0,
+  "totalAdjustments": 20,
+  "undoCount": 1,
+  "redoCount": 0,
   "pivotEditCount": 6,
   "anchorEditCount": 6,
   "positionOverrideCount": 2,
@@ -57,16 +61,18 @@ The session telemetry exported by the editor conforms to the following schema:
   "lengthOverrideCount": 4,
   "slotRemapCount": 0,
   "drawOrderEditCount": 0,
-  "undoCount": 1,
-  "redoCount": 0,
   "validationIterations": 3,
+  "engineeringCompliance": true,
+  "visualReviewStatus": "PASS",
+  "timeToEngineeringComplianceSeconds": 245.0,
+  "timeToHumanVisualAcceptanceSeconds": 402.0,
   "rawJsonUsed": false,
   "exported": true,
   "finalValidity": "PASS",
   "eventLog": [
-    { "ts": "2026-09-20T11:15:00.000Z", "type": "session_started" },
+    { "ts": "2026-09-20T11:15:00.000Z", "type": "session_started", "target": "real-normal-01" },
     { "ts": "2026-09-20T11:16:12.000Z", "type": "pivot_changed", "target": "forearm_R", "value": [0.50, 0.16] },
-    { "ts": "2026-09-20T11:21:42.000Z", "type": "session_ended" }
+    { "ts": "2026-09-20T11:21:42.000Z", "type": "session_ended", "target": "real-normal-01", "value": { "durationSeconds": 402, "visualReviewStatus": "PASS" } }
   ]
 }
 ```

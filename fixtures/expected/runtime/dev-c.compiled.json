@@ -202,7 +202,7 @@
     {
       "key": "foot_L",
       "slotIndex": 3,
-      "boneIndex": 11,
+      "boneIndex": 13,
       "texture": "textures/dev-c/foot_l.png",
       "width": 80,
       "height": 55,
@@ -218,7 +218,7 @@
     {
       "key": "foot_R",
       "slotIndex": 5,
-      "boneIndex": 14,
+      "boneIndex": 16,
       "texture": "textures/dev-c/foot_r.png",
       "width": 80,
       "height": 55,
@@ -234,7 +234,7 @@
     {
       "key": "forearm_L",
       "slotIndex": 2,
-      "boneIndex": 5,
+      "boneIndex": 6,
       "texture": "textures/dev-c/forearm_l.png",
       "width": 60,
       "height": 120,
@@ -250,7 +250,7 @@
     {
       "key": "forearm_R",
       "slotIndex": 9,
-      "boneIndex": 8,
+      "boneIndex": 9,
       "texture": "textures/dev-c/forearm_r.png",
       "width": 60,
       "height": 120,
@@ -266,7 +266,7 @@
     {
       "key": "hand_L",
       "slotIndex": 2,
-      "boneIndex": 5,
+      "boneIndex": 7,
       "texture": "textures/dev-c/hand_l.png",
       "width": 45,
       "height": 55,
@@ -282,7 +282,7 @@
     {
       "key": "hand_R",
       "slotIndex": 9,
-      "boneIndex": 8,
+      "boneIndex": 10,
       "texture": "textures/dev-c/hand_r.png",
       "width": 45,
       "height": 55,
@@ -322,7 +322,7 @@
     {
       "key": "shin_L",
       "slotIndex": 3,
-      "boneIndex": 11,
+      "boneIndex": 12,
       "texture": "textures/dev-c/shin_l.png",
       "width": 70,
       "height": 210,
@@ -338,7 +338,7 @@
     {
       "key": "shin_R",
       "slotIndex": 5,
-      "boneIndex": 14,
+      "boneIndex": 15,
       "texture": "textures/dev-c/shin_r.png",
       "width": 70,
       "height": 210,

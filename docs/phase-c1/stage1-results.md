@@ -4,7 +4,7 @@
 **Phase**: Phase C.1 — Real Evidence Trial for Style-B Production Pipeline  
 **Stage**: Stage 1 — Minimum Real Trial (3 Archetypes)  
 **Date**: September 20, 2026  
-**Status**: **ASSETS GENERATED & VERIFIED — HUMAN GATE PENDING**
+**Status**: **STAGE 1 REAL ASSET PACKAGE — ENGINEERING HARDENING COMPLETE / HUMAN VISUAL GATE PENDING**
 
 ---
 
@@ -22,8 +22,10 @@ All 48 textures (16 parts $\times$ 3 characters) have been generated, segmented 
 ```text
 STAGE 1 ASSET GENERATION:           PASS (100% genuine visual textures)
 CRYPTOGRAPHIC INTEGRITY:            PASS (0 contralateral hash collisions, all > 5KB)
-AUTOMATED INTEGRITY TEST SUITE:     PASS (16 test files, 75 passed)
-EDITOR REGISTRATION:                PASS (selectable in UI dropdown)
+PIXEL-LEVEL CUTOUT VALIDATION:      PASS (all textures > 19% transparent background, > 35% opaque art)
+AUTOMATED INTEGRITY TEST SUITE:     PASS (18 test files, 81 passed)
+EDITOR VISUAL SPRITE PIPELINE:      PASS (real PixiCharacterInstance sprite rendering)
+SEAM & BLEED OVERLAP INSPECTION:    HUMAN_VISUAL_GATE_REQUIRED (Visual check in editor)
 HUMAN RIG ADJUSTER TRIAL:           PENDING HUMAN GATE (Awaiting operator sessions)
 OVERALL STAGE 1 VERDICT:            INCONCLUSIVE — HUMAN EVIDENCE MISSING
 ```

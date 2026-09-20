@@ -6,19 +6,22 @@ export interface HierarchyPanelProps {
   doc: EditorDocument;
   onSelectBone: (boneId: string) => void;
   onSelectSlot: (slotId: string) => void;
+  onSelectPart: (partKey: string) => void;
 }
 
 export const HierarchyPanel: React.FC<HierarchyPanelProps> = ({
   doc,
   onSelectBone,
-  onSelectSlot
+  onSelectSlot,
+  onSelectPart
 }) => {
-  const [tab, setTab] = useState<"bones" | "slots">("bones");
+  const [tab, setTab] = useState<"bones" | "parts" | "slots">("bones");
   const [filterText, setFilterText] = useState<string>("");
 
   const skeleton = resolveCharacterSetup(doc.targetRig, doc.character);
   const selectedBoneId = doc.selection?.type === "bone" ? doc.selection.id : null;
   const selectedSlotId = doc.selection?.type === "slot" ? doc.selection.id : null;
+  const selectedPartKey = doc.selection?.type === "part" ? doc.selection.id : null;
 
   // Compute depth for each bone in hierarchy
   const boneDepths = useMemo(() => {
@@ -77,6 +80,18 @@ export const HierarchyPanel: React.FC<HierarchyPanelProps> = ({
     return skeleton.boneOrder.filter((id) => id.toLowerCase().includes(lower));
   }, [skeleton.boneOrder, filterText]);
 
+  const filteredParts = useMemo(() => {
+    const partKeys = Object.keys(doc.character.parts);
+    if (!filterText.trim()) return partKeys;
+    const lower = filterText.toLowerCase();
+    return partKeys.filter(
+      (k) =>
+        k.toLowerCase().includes(lower) ||
+        doc.character.parts[k].slot.toLowerCase().includes(lower) ||
+        doc.character.parts[k].texture.toLowerCase().includes(lower)
+    );
+  }, [doc.character.parts, filterText]);
+
   const filteredSlots = useMemo(() => {
     if (!filterText.trim()) return doc.targetRig.slots;
     const lower = filterText.toLowerCase();
@@ -102,7 +117,7 @@ export const HierarchyPanel: React.FC<HierarchyPanelProps> = ({
       <div className="flex border-b border-gray-800 bg-gray-950/60 p-1 gap-1">
         <button
           onClick={() => setTab("bones")}
-          className={`flex-1 py-1 text-center font-medium rounded transition flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-1 text-center font-medium rounded transition flex items-center justify-center gap-1 ${
             tab === "bones"
               ? "bg-gray-800 text-cyan-400 font-semibold shadow-sm"
               : "text-gray-400 hover:text-gray-200 hover:bg-gray-850/60"
@@ -112,8 +127,19 @@ export const HierarchyPanel: React.FC<HierarchyPanelProps> = ({
           <span className="text-[10px] text-gray-500 font-mono">({doc.targetRig.bones.length})</span>
         </button>
         <button
+          onClick={() => setTab("parts")}
+          className={`flex-1 py-1 text-center font-medium rounded transition flex items-center justify-center gap-1 ${
+            tab === "parts"
+              ? "bg-gray-800 text-emerald-400 font-semibold shadow-sm"
+              : "text-gray-400 hover:text-gray-200 hover:bg-gray-850/60"
+          }`}
+        >
+          <span>Parts</span>
+          <span className="text-[10px] text-gray-500 font-mono">({Object.keys(doc.character.parts).length})</span>
+        </button>
+        <button
           onClick={() => setTab("slots")}
-          className={`flex-1 py-1 text-center font-medium rounded transition flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-1 text-center font-medium rounded transition flex items-center justify-center gap-1 ${
             tab === "slots"
               ? "bg-gray-800 text-cyan-400 font-semibold shadow-sm"
               : "text-gray-400 hover:text-gray-200 hover:bg-gray-850/60"
@@ -163,6 +189,52 @@ export const HierarchyPanel: React.FC<HierarchyPanelProps> = ({
                       MOD
                     </span>
                   )}
+                </div>
+              </div>
+            );
+          })
+        ) : tab === "parts" ? (
+          filteredParts.map((partKey) => {
+            const part = doc.character.parts[partKey];
+            const isSelected = selectedPartKey === partKey;
+            const hasCustomPivot = part && part.pivot !== undefined;
+            const hasCustomDistal = part && part.distalAnchor !== undefined;
+            const hasOverride = hasCustomPivot || hasCustomDistal;
+            const textureName = part ? part.texture.split("/").pop() : "";
+
+            return (
+              <div
+                key={partKey}
+                onClick={() => onSelectPart(partKey)}
+                className={`flex items-center justify-between px-2 py-1.5 rounded cursor-pointer transition ${
+                  isSelected
+                    ? "bg-emerald-950/80 text-emerald-300 font-semibold border border-emerald-700/60 shadow-sm"
+                    : "text-gray-300 hover:bg-gray-800/60 border border-transparent"
+                }`}
+              >
+                <div className="truncate flex-1 pr-1">
+                  <div className="truncate font-mono text-[11px] flex items-center gap-1">
+                    <span>{partKey}</span>
+                  </div>
+                  <div className="text-[10px] text-gray-500 font-mono truncate">
+                    slot: {part?.slot} {part?.bone ? `| bone: ${part.bone}` : ""}
+                  </div>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <div className="flex items-center gap-1 justify-end">
+                    {hasOverride && (
+                      <span className="text-[8px] bg-amber-950 text-amber-400 border border-amber-800/80 px-0.5 rounded font-mono" title="Custom Pivot / Distal Anchor">
+                        MOD
+                      </span>
+                    )}
+                    <span className="text-[9px] text-gray-400 font-mono truncate max-w-[80px]" title={textureName}>
+                      {textureName}
+                    </span>
+                  </div>
+                  <div className="text-[9px] text-gray-500 font-mono">
+                    [{part?.pivot ? `${part.pivot[0].toFixed(2)},${part.pivot[1].toFixed(2)}` : "0.5,0.5"}]
+                  </div>
                 </div>
               </div>
             );

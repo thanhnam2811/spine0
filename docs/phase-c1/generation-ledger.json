@@ -8,8 +8,8 @@
     "acceptedAttempts": 3,
     "rejectedAttempts": 4,
     "firstPassSuccessCount": 0,
-    "firstPassYieldRate": 0.0,
-    "finalYieldRate": 1.0,
+    "firstPassYieldRate": 0,
+    "finalYieldRate": 1,
     "totalTexturesExtracted": 48,
     "cryptographicIntegrityStatus": "PASS"
   },
@@ -26,11 +26,23 @@
       "archetype": "Sword Cultivator Knight",
       "targetRig": "humanoid-normal-v1",
       "generationStrategy": "full-body-concept",
+      "provider": "Google/DeepMind",
+      "model": "imagen-3.0-generate-002",
+      "promptVersion": "v1.0",
       "prompt": "2D game character sprite, wuxia sword cultivator knight, full body A-pose, blue tabard, Azure Dragon wanderer, clean white background...",
+      "promptTextHash": "c92ade4e6adf5d26c432fbbffe611d8ced4eb703d113b670a4aecd32e635be0c",
       "outputArtifact": "docs/phase-c1/evidence/real-normal-01/attempts/a01/raw_concept.jpg",
+      "rawOutputsAndHashes": [
+        {
+          "path": "docs/phase-c1/evidence/real-normal-01/attempts/a01/raw_concept.jpg",
+          "bytes": 500462,
+          "sha256": "fcf029e560d5fd8560baf6a4c66248baf598f3e31caf667169b74ab8b71022cf"
+        }
+      ],
       "status": "REJECTED",
       "failureCode": "ART_ROBE_UNRIGGABLE",
       "failureDetail": "Wide flowing sleeves drooping below belt line fused with lower robe hem; cannot rotate shoulder without major visual tearing.",
+      "notes": "Wide flowing sleeves drooping below belt line fused with lower robe hem; cannot rotate shoulder without major visual tearing.",
       "timestamp": "2026-09-20T10:59:08Z"
     },
     {
@@ -39,11 +51,23 @@
       "archetype": "Sword Cultivator Knight",
       "targetRig": "humanoid-normal-v1",
       "generationStrategy": "modular-puppet-sheet",
+      "provider": "Google/DeepMind",
+      "model": "imagen-3.0-generate-002",
+      "promptVersion": "v1.0",
       "prompt": "2D game character modular body parts sprite sheet, wuxia sword cultivator knight: head with topknot ponytail, torso chest tunic, pelvis belt with short waist sash, separate upper arm, forearm with leather bracer, hand, thigh, shin with boots, straight jian sword weapon. Neatly arranged with generous spacing on pure white background, disassembled puppet pieces, flat digital 2D game asset, crisp outlines",
+      "promptTextHash": "d5082cd4bd3571b09516046c955974a7c088da36849ce2fb91d0566edf4b0c49",
       "outputArtifact": "docs/phase-c1/evidence/real-normal-01/attempts/a02/sheet.jpg",
+      "rawOutputsAndHashes": [
+        {
+          "path": "docs/phase-c1/evidence/real-normal-01/attempts/a02/sheet.jpg",
+          "bytes": 473098,
+          "sha256": "47c9daa64d83b1d5155f678822dbd48e191872d88cc3eaa8b10b3463de9fcb0c"
+        }
+      ],
       "status": "ACCEPTED",
-      "conformsToContract": true,
-      "partsExtracted": 16,
+      "failureCode": null,
+      "failureDetail": null,
+      "notes": "Conforms to contract; 16 cutout sprite parts extracted with verified alpha channels.",
       "timestamp": "2026-09-20T11:01:16Z"
     },
     {
@@ -52,11 +76,23 @@
       "archetype": "Iron Vanguard Juggernaut",
       "targetRig": "humanoid-heavy-v1",
       "generationStrategy": "full-body-concept",
+      "provider": "Google/DeepMind",
+      "model": "imagen-3.0-generate-002",
+      "promptVersion": "v1.0",
       "prompt": "2D game character concept art, massive heavy iron juggernaut, tower shield, battle axe, plate armor...",
+      "promptTextHash": "2a50a19965d58467cc3915507f95ffcf164ecb9ac547d16b2e8bd11a2f9d6800",
       "outputArtifact": "docs/phase-c1/evidence/real-heavy-01/attempts/a00/raw_concept.jpg",
+      "rawOutputsAndHashes": [
+        {
+          "path": "docs/phase-c1/evidence/real-heavy-01/attempts/a00/raw_concept.jpg",
+          "bytes": 713966,
+          "sha256": "fc1895d67c112710bc4e4addf5cf5fcd39f5767250c7261da2643760ed3977a8"
+        }
+      ],
       "status": "REJECTED",
       "failureCode": "ART_OCCLUDED_LIMBS",
       "failureDetail": "Massive tower shield placed directly in front of torso completely occluded far arm and half of pelvis/leg.",
+      "notes": "Massive tower shield placed directly in front of torso completely occluded far arm and half of pelvis/leg.",
       "timestamp": "2026-09-20T10:57:01Z"
     },
     {
@@ -65,11 +101,23 @@
       "archetype": "Iron Vanguard Juggernaut",
       "targetRig": "humanoid-heavy-v1",
       "generationStrategy": "modular-puppet-sheet",
+      "provider": "Google/DeepMind",
+      "model": "imagen-3.0-generate-002",
+      "promptVersion": "v1.0",
       "prompt": "2D game character modular body parts sprite sheet, massive armored heavy vanguard juggernaut: iron knight helmet, heavy plate chestplate torso, segmented armored fauld pelvis, massive pauldron upper arm, heavy gauntlet forearm, hand, heavy plate thigh, greave shin, armored sabaton boot, two-handed greataxe weapon. Neatly arranged with generous spacing on pure white background, disassembled puppet pieces, flat digital 2D game asset, crisp outlines",
+      "promptTextHash": "8ead8050ff64bec1e0e29020f44aa28ff1bca01ba40e8097de616038b3adbce4",
       "outputArtifact": "docs/phase-c1/evidence/real-heavy-01/attempts/a01/sheet.jpg",
+      "rawOutputsAndHashes": [
+        {
+          "path": "docs/phase-c1/evidence/real-heavy-01/attempts/a01/sheet.jpg",
+          "bytes": 687464,
+          "sha256": "e8f514dbca3373b045926c5fde79343d496917870193a48a72a0620c103f24e5"
+        }
+      ],
       "status": "ACCEPTED",
-      "conformsToContract": true,
-      "partsExtracted": 16,
+      "failureCode": null,
+      "failureDetail": null,
+      "notes": "Conforms to contract; 16 cutout sprite parts extracted with verified alpha channels.",
       "timestamp": "2026-09-20T11:01:37Z"
     },
     {
@@ -78,11 +126,23 @@
       "archetype": "Hooded Shadow Rogue",
       "targetRig": "humanoid-small-v1",
       "generationStrategy": "modular-puppet-sheet",
+      "provider": "Google/DeepMind",
+      "model": "imagen-3.0-generate-002",
+      "promptVersion": "v1.0",
       "prompt": "2D game character modular body parts sprite sheet, fantasy rogue thief: head with hood, torso with leather vest, pelvis belt, separate upper arm, forearm, hand, thigh, shin, boot, dagger weapon...",
+      "promptTextHash": "c35c95d5fa0dd5344f40e37ddddaaa5ebfff36f14fda515369f124e5951d2bc1",
       "outputArtifact": "docs/phase-c1/evidence/real-small-01/attempts/a00/raw_sheet.jpg",
+      "rawOutputsAndHashes": [
+        {
+          "path": "docs/phase-c1/evidence/real-small-01/attempts/a00/raw_sheet.jpg",
+          "bytes": 346624,
+          "sha256": "3136ad7312549c010a905952d45d28ee1917d9c4988eb56f8ec1414c93a09d6b"
+        }
+      ],
       "status": "REJECTED",
       "failureCode": "ART_MERGED_LIMBS",
       "failureDetail": "Diffusion model merged thigh and shin into single continuous leg segments; required manual joint reconstruction.",
+      "notes": "Diffusion model merged thigh and shin into single continuous leg segments; required manual joint reconstruction.",
       "timestamp": "2026-09-20T10:57:44Z"
     },
     {
@@ -91,11 +151,23 @@
       "archetype": "Hooded Shadow Rogue",
       "targetRig": "humanoid-small-v1",
       "generationStrategy": "modular-puppet-sheet",
+      "provider": "Google/DeepMind",
+      "model": "imagen-3.0-generate-002",
+      "promptVersion": "v1.0",
       "prompt": "2D game character modular body parts sprite sheet, fantasy small rogue goblin thief: head with pointed ears and cloth cap, compact leather torso vest, small belt pouch pelvis, separate thin upper arm, forearm with wrap, small clawed hand, short thigh, shin with leather wraps, small pointed shoe foot, curved rogue dagger weapon...",
+      "promptTextHash": "b9dcc524966b8962108d72c90ecabe2ed19198f3a13a46cd2a70b35a72cdd608",
       "outputArtifact": "docs/phase-c1/evidence/real-small-01/attempts/a01/raw_sheet.jpg",
+      "rawOutputsAndHashes": [
+        {
+          "path": "docs/phase-c1/evidence/real-small-01/attempts/a01/raw_sheet.jpg",
+          "bytes": 335611,
+          "sha256": "ffad5c74e747eb3a7ef3b45dbcba91172c3efa262fb0558839ce77907e2cb968"
+        }
+      ],
       "status": "REJECTED",
       "failureCode": "ART_INCOMPLETE_PARTS",
       "failureDetail": "Sheet omitted contralateral forearm and hand (only 1 forearm and 1 hand drawn).",
+      "notes": "Sheet omitted contralateral forearm and hand (only 1 forearm and 1 hand drawn).",
       "timestamp": "2026-09-20T11:01:58Z"
     },
     {
@@ -104,11 +176,23 @@
       "archetype": "Hooded Shadow Rogue",
       "targetRig": "humanoid-small-v1",
       "generationStrategy": "modular-puppet-sheet",
+      "provider": "Google/DeepMind",
+      "model": "imagen-3.0-generate-002",
+      "promptVersion": "v1.0",
       "prompt": "2D game character modular body parts puppet sprite sheet, fantasy rogue thief: hood head, leather vest torso, belt pelvis, Left upper arm, Left forearm, Left hand, Right upper arm, Right forearm, Right hand, Left thigh, Left shin, Left boot, Right thigh, Right shin, Right boot, dagger weapon. Neatly arranged in a grid with generous spacing on pure white background, completely separated parts, flat digital 2D game asset",
+      "promptTextHash": "babd02c403dc09f6db841a2dbaa9c9c80c9279b78c751dc4a0a527c45002263f",
       "outputArtifact": "docs/phase-c1/evidence/real-small-01/attempts/a02/sheet.jpg",
+      "rawOutputsAndHashes": [
+        {
+          "path": "docs/phase-c1/evidence/real-small-01/attempts/a02/sheet.jpg",
+          "bytes": 438516,
+          "sha256": "57e29f9d1ac6ed292e64d4cada26dcfe3bf09ae458a054362a66992aa4ba136d"
+        }
+      ],
       "status": "ACCEPTED",
-      "conformsToContract": true,
-      "partsExtracted": 16,
+      "failureCode": null,
+      "failureDetail": null,
+      "notes": "Conforms to contract; 16 cutout sprite parts extracted with verified alpha channels.",
       "timestamp": "2026-09-20T11:07:30Z"
     }
   ]

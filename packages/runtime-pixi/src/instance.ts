@@ -45,17 +45,34 @@ export class PixiCharacterInstance {
 
   /**
    * Updates sprite textures from a provided map or resolver.
+   * Can be keyed by partKey, texture path, or slotId.
    */
   public updateTextures(textureMap: Record<string, Texture>): void {
-    for (const [slotId, sprite] of this.partSprites.entries()) {
-      if (textureMap[slotId]) {
-        sprite.texture = textureMap[slotId];
+    for (const [key, sprite] of this.partSprites.entries()) {
+      if (textureMap[key]) {
+        sprite.texture = textureMap[key];
       }
     }
   }
 
   /**
+   * Returns sprite for an individual character part.
+   */
+  public getPartSprite(partKey: string): Sprite | undefined {
+    return this.partSprites.get(partKey);
+  }
+
+  /**
+   * Returns all part sprites.
+   */
+  public getAllPartSprites(): Map<string, Sprite> {
+    return this.partSprites;
+  }
+
+  /**
    * Applies an evaluated pose from anim-core to Pixi DisplayObjects.
+   * Renders all 16 character parts simultaneously when pose.parts is available,
+   * with each part transformed by its own anatomical bone and layered by its slot.
    */
   public applyPose(pose: EvaluatedPose, options: RenderOptions = {}): void {
     const { showBones = true, showAnchors = true, flipX = false } = options;
@@ -63,29 +80,81 @@ export class PixiCharacterInstance {
     // 1. Root facing
     this.rootContainer.scale.x = flipX ? -1.0 : 1.0;
 
-    // 2. Position and transform slot sprites
-    for (const slotPose of pose.slots) {
-      const slotContainer = this.slotContainers.get(slotPose.slot);
-      const sprite = this.partSprites.get(slotPose.slot);
-      if (!slotContainer || !sprite) continue;
+    // 2. Position and transform sprites
+    if (pose.parts && pose.parts.length > 0) {
+      // Map for sorting slot containers by active draw order
+      const slotOrderMap = new Map<string, number>();
 
-      slotContainer.position.set(slotPose.worldX, slotPose.worldY);
-      slotContainer.rotation = degToRad(slotPose.worldRotation);
+      for (const partPose of pose.parts) {
+        let slotContainer = this.slotContainers.get(partPose.slot);
+        if (!slotContainer) {
+          slotContainer = new Container();
+          slotContainer.label = partPose.slot;
+          this.slotContainers.set(partPose.slot, slotContainer);
+          this.slotsContainer.addChild(slotContainer);
+        }
 
-      sprite.anchor.set(slotPose.pivot[0], slotPose.pivot[1]);
-      sprite.width = slotPose.width;
-      sprite.height = slotPose.height;
-      sprite.visible = slotPose.partKey !== null;
+        // Slot container sits at origin in root frame; parts hold world transforms
+        slotContainer.position.set(0, 0);
+        slotContainer.rotation = 0;
+
+        let sprite = this.partSprites.get(partPose.partKey);
+        if (!sprite) {
+          sprite = new Sprite();
+          sprite.label = `sprite_${partPose.partKey}`;
+          slotContainer.addChild(sprite);
+          this.partSprites.set(partPose.partKey, sprite);
+        } else if (sprite.parent !== slotContainer) {
+          sprite.parent?.removeChild(sprite);
+          slotContainer.addChild(sprite);
+        }
+
+        sprite.position.set(partPose.worldX, partPose.worldY);
+        sprite.rotation = degToRad(partPose.worldRotation);
+        sprite.anchor.set(partPose.pivot[0], partPose.pivot[1]);
+        sprite.width = partPose.width;
+        sprite.height = partPose.height;
+        sprite.visible = true;
+
+        slotOrderMap.set(partPose.slot, partPose.drawOrder);
+      }
+
+      // Hide placeholder slot sprites if they aren't bound parts
+      for (const [key, sprite] of this.partSprites.entries()) {
+        if (!pose.parts.some((p) => p.partKey === key)) {
+          sprite.visible = false;
+        }
+      }
+
+      // 3. Dynamic draw order re-indexing
+      this.slotsContainer.children.sort((a, b) => {
+        const orderA = slotOrderMap.get(a.label ?? "") ?? 0;
+        const orderB = slotOrderMap.get(b.label ?? "") ?? 0;
+        return orderA - orderB;
+      });
+    } else {
+      // Legacy fallback for poses containing only slots
+      for (const slotPose of pose.slots) {
+        const slotContainer = this.slotContainers.get(slotPose.slot);
+        const sprite = this.partSprites.get(slotPose.slot);
+        if (!slotContainer || !sprite) continue;
+
+        slotContainer.position.set(slotPose.worldX, slotPose.worldY);
+        slotContainer.rotation = degToRad(slotPose.worldRotation);
+
+        sprite.anchor.set(slotPose.pivot[0], slotPose.pivot[1]);
+        sprite.width = slotPose.width;
+        sprite.height = slotPose.height;
+        sprite.visible = slotPose.partKey !== null;
+      }
+
+      const slotPoseMap = new Map(pose.slots.map((s) => [s.slot, s.drawOrder]));
+      this.slotsContainer.children.sort((a, b) => {
+        const orderA = slotPoseMap.get(a.label ?? "") ?? 0;
+        const orderB = slotPoseMap.get(b.label ?? "") ?? 0;
+        return orderA - orderB;
+      });
     }
-
-    // 3. Dynamic draw order re-indexing
-    // Sort slot containers based on active draw order
-    const slotPoseMap = new Map(pose.slots.map((s) => [s.slot, s.drawOrder]));
-    this.slotsContainer.children.sort((a, b) => {
-      const orderA = slotPoseMap.get(a.label ?? "") ?? 0;
-      const orderB = slotPoseMap.get(b.label ?? "") ?? 0;
-      return orderA - orderB;
-    });
 
     // 4. Render debug overlay
     this.boneGraphics.clear();
@@ -120,24 +189,35 @@ export class PixiCharacterInstance {
     }
 
     if (showAnchors) {
-      // Draw joint pivots (green) and distal anchors (cyan)
-      for (const slotPose of pose.slots) {
-        if (!slotPose.partKey) continue;
+      // Draw joint pivots (green) and distal anchors (cyan) for all rendered parts
+      const activePartPoses = pose.parts && pose.parts.length > 0
+        ? pose.parts
+        : pose.slots.filter((s) => s.partKey !== null).map((s) => ({
+            partKey: s.partKey!,
+            worldX: s.worldX,
+            worldY: s.worldY,
+            worldRotation: s.worldRotation,
+            pivot: s.pivot,
+            distalAnchor: s.distalAnchor,
+            width: s.width,
+            height: s.height
+          }));
 
+      for (const partPose of activePartPoses) {
         // Pivot is at (worldX, worldY)
         this.boneGraphics
-          .circle(slotPose.worldX, slotPose.worldY, 3)
+          .circle(partPose.worldX, partPose.worldY, 3)
           .fill({ color: 0x00e676, alpha: 0.9 });
 
         // If distal anchor exists, compute world position
-        if (slotPose.distalAnchor) {
-          const dx = (slotPose.distalAnchor[0] - slotPose.pivot[0]) * slotPose.width;
-          const dy = (slotPose.distalAnchor[1] - slotPose.pivot[1]) * slotPose.height;
-          const rad = degToRad(slotPose.worldRotation);
+        if (partPose.distalAnchor) {
+          const dx = (partPose.distalAnchor[0] - partPose.pivot[0]) * partPose.width;
+          const dy = (partPose.distalAnchor[1] - partPose.pivot[1]) * partPose.height;
+          const rad = degToRad(partPose.worldRotation);
           const cos = Math.cos(rad);
           const sin = Math.sin(rad);
-          const axWorld = slotPose.worldX + (cos * dx - sin * dy);
-          const ayWorld = slotPose.worldY + (sin * dx + cos * dy);
+          const axWorld = partPose.worldX + (cos * dx - sin * dy);
+          const ayWorld = partPose.worldY + (sin * dx + cos * dy);
 
           this.boneGraphics
             .circle(axWorld, ayWorld, 3)

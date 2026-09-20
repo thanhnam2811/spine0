@@ -4,7 +4,7 @@
 **Phase**: Phase C.1 — Real Evidence Trial for Style-B Production Pipeline  
 **Version**: `1.0.0-phase-c1`  
 **Date**: September 20, 2026  
-**Current Phase C.1 Status**: **STAGE 1 ASSETS READY — HUMAN GATE PENDING**  
+**Current Phase C.1 Status**: **STAGE 1 REAL ASSET PACKAGE — ENGINEERING HARDENING COMPLETE / HUMAN VISUAL GATE PENDING**  
 **Final Production Trial Verdict**: **INCONCLUSIVE — HUMAN EVIDENCE MISSING**
 
 ---
@@ -17,9 +17,11 @@
 | **Generation Protocol Freeze** | **PASS** | [`docs/phase-c1/style-b-real-generation-freeze.json`](file:///G:/PERSONAL/spine0/docs/phase-c1/style-b-real-generation-freeze.json) |
 | **Genuine Style-B Assets (3 Archetypes)** | **PASS** | 48 textures in [`fixtures/real-production/`](file:///G:/PERSONAL/spine0/fixtures/real-production/) |
 | **Cryptographic Integrity & Asymmetry** | **PASS** | [`docs/phase-c1/asset-integrity.json`](file:///G:/PERSONAL/spine0/docs/phase-c1/asset-integrity.json) |
-| **Generation Yield & Provenance Ledger** | **PASS** | [`docs/phase-c1/generation-ledger.json`](file:///G:/PERSONAL/spine0/docs/phase-c1/generation-ledger.json) |
-| **Editor Registration & Presets** | **PASS** | Selectable in `apps/editor/src/presets.ts` |
-| **Automated Test Parity** | **PASS** | 16 test files, 75 tests passing in `pnpm test` |
+| **Pixel-Level Cutout & Transparency Validation** | **PASS** | Decoded RGBA stream: > 19% transparent background, > 35% opaque art |
+| **Generation Yield & Provenance Ledger** | **PASS** | Typed schema with providers, models, hashes in [`docs/phase-c1/generation-ledger.json`](file:///G:/PERSONAL/spine0/docs/phase-c1/generation-ledger.json) |
+| **Editor Registration & Visual Sprite Pipeline** | **PASS** | Selectable presets, PixiCharacterInstance texture rendering, part pivot/distal handles |
+| **Automated Test Parity** | **PASS** | 18 test files, 81 tests passing in `pnpm test` |
+| **Visual Seam & Bleed Inspection** | **GATE REQUIRED** | **HUMAN_VISUAL_GATE_REQUIRED** (Operator visual check in editor) |
 | **Human Operator Sessions** | **PENDING** | **STOPPED AT HUMAN GATE** |
 | **Time to Compliance & Override Yield** | **NOT MEASURED** | Awaiting real human session telemetry |
 | **Final Phase C.1 Verdict** | **INCONCLUSIVE** | **AWAITING HUMAN EVIDENCE** |

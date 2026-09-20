@@ -205,4 +205,78 @@ describe("anim-core: evaluator integration", () => {
     expect(thighSlot?.partKey).toBeNull();
     expect(thighSlot?.texture).toBeNull();
   });
+
+  it("verifies multi-part limb: all parts survive simultaneously and bind to anatomical bones", () => {
+    const multiRig: RigDefinition = {
+      version: 1,
+      id: "multi-rig",
+      family: "test",
+      referenceHeight: 1000,
+      bones: [
+        { id: "root", parent: null, x: 0, y: 1000, rotation: 0, length: 0 },
+        { id: "torso", parent: "root", x: 0, y: -500, rotation: 0, length: 200 },
+        { id: "upper_arm_R", parent: "torso", x: 50, y: 0, rotation: 0, length: 100 },
+        { id: "forearm_R", parent: "upper_arm_R", x: 0, y: 100, rotation: 0, length: 100 },
+        { id: "hand_R", parent: "forearm_R", x: 0, y: 100, rotation: 0, length: 50 }
+      ],
+      slots: [
+        { id: "slot_torso", bone: "torso", defaultDrawOrder: 10 },
+        { id: "slot_arm_near", bone: "upper_arm_R", defaultDrawOrder: 20 }
+      ]
+    };
+
+    const multiChar: CharacterDefinition = {
+      version: 1,
+      id: "multi-char",
+      rig: "multi-rig",
+      referenceHeight: 1000,
+      parts: {
+        torso: { slot: "slot_torso", texture: "torso.png", pivot: [0.5, 0.5] },
+        upper_arm_R: { slot: "slot_arm_near", texture: "upper_arm.png", pivot: [0.5, 0.15] },
+        forearm_R: { slot: "slot_arm_near", texture: "forearm.png", pivot: [0.5, 0.15] },
+        hand_R: { slot: "slot_arm_near", texture: "hand.png", pivot: [0.5, 0.2] }
+      }
+    };
+
+    const dummyClip: AnimationTemplate = {
+      version: 1,
+      id: "identity",
+      duration: 1.0,
+      loop: false,
+      boneTracks: {}
+    };
+
+    const pose = evaluator.sample(multiRig, multiChar, dummyClip, 0.0);
+
+    // 1. All 4 parts must exist in pose.parts
+    expect(pose.parts).toHaveLength(4);
+    const partKeys = pose.parts.map((p) => p.partKey);
+    expect(partKeys).toContain("torso");
+    expect(partKeys).toContain("upper_arm_R");
+    expect(partKeys).toContain("forearm_R");
+    expect(partKeys).toContain("hand_R");
+
+    // 2. Each limb part must bind to its respective anatomical bone, not collapse to upper_arm_R
+    const upperArmPose = pose.parts.find((p) => p.partKey === "upper_arm_R")!;
+    const forearmPose = pose.parts.find((p) => p.partKey === "forearm_R")!;
+    const handPose = pose.parts.find((p) => p.partKey === "hand_R")!;
+
+    expect(upperArmPose.bone).toBe("upper_arm_R");
+    expect(forearmPose.bone).toBe("forearm_R");
+    expect(handPose.bone).toBe("hand_R");
+
+    // 3. World positions must be distinct along the kinematic chain
+    expect(upperArmPose.worldY).toBe(500); // 1000 - 500
+    expect(forearmPose.worldY).toBe(600); // 500 + 100
+    expect(handPose.worldY).toBe(700); // 600 + 100
+
+    // 4. All 3 arm parts share the layer slot_arm_near and drawOrder 20
+    expect(upperArmPose.slot).toBe("slot_arm_near");
+    expect(forearmPose.slot).toBe("slot_arm_near");
+    expect(handPose.slot).toBe("slot_arm_near");
+    expect(upperArmPose.drawOrder).toBe(20);
+    expect(forearmPose.drawOrder).toBe(20);
+    expect(handPose.drawOrder).toBe(20);
+  });
 });
+

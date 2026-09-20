@@ -12,6 +12,7 @@ export type EditorMode = "setup" | "preview";
 export type SelectionTarget =
   | { type: "bone"; id: string }
   | { type: "slot"; id: string }
+  | { type: "part"; id: string }
   | null;
 
 export interface OverlaySettings {
