@@ -42,11 +42,13 @@ animation-factory/
    - **Fresh Holdout Results**: Brand-new untouched holdout set (`normal-01`, `normal-02`, `heavy-01`, `heavy-02`, `small-01`, `small-02`) achieved 100% animation reuse, 100% boundary discrimination, and sub-6% material override ratio.
    - **Phase B Outcome**: **`PHASE B — MINIMAL RIG ADJUSTER: PASS`**. Headless document model, transaction-coalescing history, interactive bone/anchor adjustment handles, live multi-family fit panel, contract validator, and preview player delivered with 100% test coverage.
    - **Phase B.2 Outcome**: **`PHASE B.2 USABILITY-READY PASS`**. Production-grade dark desktop interface with Tailwind CSS, hierarchical tree navigation with instant search, dual numeric/slider inspector with nominal deltas, floating viewport HUD with camera reset, and session telemetry tracker.
-   - **Phase C Outcome**: **`PHASE C PRODUCTION TRIAL: PASS`**. Real Style-B art generation procedure frozen; 9 production characters generated with real PNG textures across 3 rig families; average time to full envelope compliance $2.99\text{ minutes}$ ($\approx 120\times$ productivity acceleration vs traditional rigging); 27 / 27 animation matrix scenarios passed with verified foot contact and dynamic weapon clearance geometry.
+   - **Phase C Outcome**: **`ENGINEERING / SYNTHETIC PRODUCTION HARNESS PASS`**. Synthetic multi-part character package ingestion, 27-scenario animation matrix, runtime PIXI parity, and compiler verification passed.
+   - **Phase C.1 Status**: **`STAGE 1 ASSETS READY — HUMAN GATE PENDING`** (Trial Verdict: `INCONCLUSIVE — HUMAN EVIDENCE MISSING`). Real Style-B assets generated (48 textures across 3 archetypes), integrity & asymmetry cryptographically verified, and registered in editor. Halted at Human Gate for operator calibration sessions.
 
 *For Phase A/A.1 data and analysis, see [docs/spike-results/phase-a1-results.md](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a1-results.md).*
 *For Phase B documentation, see [docs/phase-b/results.md](file:///G:/PERSONAL/spine0/docs/phase-b/results.md) and [docs/phase-b/ui-completion.md](file:///G:/PERSONAL/spine0/docs/phase-b/ui-completion.md).*
-*For Phase C documentation, see [docs/phase-c/results.md](file:///G:/PERSONAL/spine0/docs/phase-c/results.md) and [docs/phase-c/methodology.md](file:///G:/PERSONAL/spine0/docs/phase-c/methodology.md).*
+*For Phase C documentation, see [docs/phase-c/results.md](file:///G:/PERSONAL/spine0/docs/phase-c/results.md).*
+*For Phase C.1 documentation, see [docs/phase-c1/results.md](file:///G:/PERSONAL/spine0/docs/phase-c1/results.md) and [docs/phase-c1/stage1-results.md](file:///G:/PERSONAL/spine0/docs/phase-c1/stage1-results.md).*
 
 ---
 

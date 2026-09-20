@@ -1,0 +1,42 @@
+{
+  "freezeManifestVersion": "1.0-phase-c1",
+  "freezeTimestamp": "2026-09-20T11:00:00.000Z",
+  "protocol": "Phase C.1 Real Evidence Trial for Style-B Production Pipeline",
+  "files": {
+    "procedure": {
+      "path": "docs/phase-c1/style-b-real-generation-procedure-v1.md",
+      "sha256": "fdddc0950e036b6ff5b0f949ecbf83964e4089b8e125651063e07db7cef45ee6",
+      "description": "Style-B Real Art Generation Procedure v1.0 specification"
+    },
+    "humanoidNormalRig": {
+      "path": "assets/rigs/humanoid-normal-v1/humanoid-normal-v1.rig.json",
+      "sha256": "bbcaeed1844e17d8b093efb04864fa8e5445254a1d0e05c28a39da46bf276b26",
+      "description": "Frozen HumanoidNormal canonical rig definition"
+    },
+    "humanoidHeavyRig": {
+      "path": "assets/rigs/humanoid-heavy-v1/humanoid-heavy-v1.rig.json",
+      "sha256": "8091d050c0adf7c84c1ea962f808d30e7746993dfc418592740a7d7cbb1c1d62",
+      "description": "Frozen HumanoidHeavy canonical rig definition"
+    },
+    "humanoidSmallRig": {
+      "path": "assets/rigs/humanoid-small-v1/humanoid-small-v1.rig.json",
+      "sha256": "5322de71ec8c06d1ad4c425a4a0442b7546a0cd75a146ac59bdf4c883c078eb4",
+      "description": "Frozen HumanoidSmall canonical rig definition"
+    },
+    "humanoidNormalEnvelope": {
+      "path": "assets/rigs/humanoid-normal-v1/humanoid-normal-v1.envelope.json",
+      "sha256": "5eb49e6b26aea0c384b43819f72deb15206068f07100448888e2157af9cb9493",
+      "description": "Frozen HumanoidNormal anatomy envelope ratios"
+    },
+    "humanoidHeavyEnvelope": {
+      "path": "assets/rigs/humanoid-heavy-v1/humanoid-heavy-v1.envelope.json",
+      "sha256": "a7e7918a2b495fb0bf22326ce8c2e15d66ce82444652f9a06fa2e448ad075977",
+      "description": "Frozen HumanoidHeavy anatomy envelope ratios"
+    },
+    "humanoidSmallEnvelope": {
+      "path": "assets/rigs/humanoid-small-v1/humanoid-small-v1.envelope.json",
+      "sha256": "c2a4c6163b1949efa488a695b46737c142180a50770e3fe5ad835e74827b47de",
+      "description": "Frozen HumanoidSmall anatomy envelope ratios"
+    }
+  }
+}

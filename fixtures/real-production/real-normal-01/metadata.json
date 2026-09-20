@@ -1,0 +1,11 @@
+{
+  "id": "real-normal-01",
+  "name": "Sword Cultivator Knight",
+  "targetRigFamily": "humanoid-normal-v1",
+  "archetype": "Wuxia Sword Cultivator with Jian Sword",
+  "artComplexity": "Standard",
+  "generationAttemptCount": 2,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T11:10:00.000Z"
+}

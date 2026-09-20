@@ -1,0 +1,115 @@
+{
+  "version": "1.0.0-phase-c1",
+  "phase": "Phase C.1 — Real Evidence Trial for Style-B Production Pipeline",
+  "generatedTimestamp": "2026-09-20T11:20:00.000Z",
+  "summary": {
+    "targetCharacters": 3,
+    "totalAttempts": 7,
+    "acceptedAttempts": 3,
+    "rejectedAttempts": 4,
+    "firstPassSuccessCount": 0,
+    "firstPassYieldRate": 0.0,
+    "finalYieldRate": 1.0,
+    "totalTexturesExtracted": 48,
+    "cryptographicIntegrityStatus": "PASS"
+  },
+  "failureTaxonomyOccurrences": {
+    "ART_ROBE_UNRIGGABLE": 1,
+    "ART_OCCLUDED_LIMBS": 1,
+    "ART_MERGED_LIMBS": 1,
+    "ART_INCOMPLETE_PARTS": 1
+  },
+  "attempts": [
+    {
+      "attemptId": "REAL-N01-A01",
+      "characterId": "real-normal-01",
+      "archetype": "Sword Cultivator Knight",
+      "targetRig": "humanoid-normal-v1",
+      "generationStrategy": "full-body-concept",
+      "prompt": "2D game character sprite, wuxia sword cultivator knight, full body A-pose, blue tabard, Azure Dragon wanderer, clean white background...",
+      "outputArtifact": "docs/phase-c1/evidence/real-normal-01/attempts/a01/raw_concept.jpg",
+      "status": "REJECTED",
+      "failureCode": "ART_ROBE_UNRIGGABLE",
+      "failureDetail": "Wide flowing sleeves drooping below belt line fused with lower robe hem; cannot rotate shoulder without major visual tearing.",
+      "timestamp": "2026-09-20T10:59:08Z"
+    },
+    {
+      "attemptId": "REAL-N01-A02",
+      "characterId": "real-normal-01",
+      "archetype": "Sword Cultivator Knight",
+      "targetRig": "humanoid-normal-v1",
+      "generationStrategy": "modular-puppet-sheet",
+      "prompt": "2D game character modular body parts sprite sheet, wuxia sword cultivator knight: head with topknot ponytail, torso chest tunic, pelvis belt with short waist sash, separate upper arm, forearm with leather bracer, hand, thigh, shin with boots, straight jian sword weapon. Neatly arranged with generous spacing on pure white background, disassembled puppet pieces, flat digital 2D game asset, crisp outlines",
+      "outputArtifact": "docs/phase-c1/evidence/real-normal-01/attempts/a02/sheet.jpg",
+      "status": "ACCEPTED",
+      "conformsToContract": true,
+      "partsExtracted": 16,
+      "timestamp": "2026-09-20T11:01:16Z"
+    },
+    {
+      "attemptId": "REAL-H01-A00",
+      "characterId": "real-heavy-01",
+      "archetype": "Iron Vanguard Juggernaut",
+      "targetRig": "humanoid-heavy-v1",
+      "generationStrategy": "full-body-concept",
+      "prompt": "2D game character concept art, massive heavy iron juggernaut, tower shield, battle axe, plate armor...",
+      "outputArtifact": "docs/phase-c1/evidence/real-heavy-01/attempts/a00/raw_concept.jpg",
+      "status": "REJECTED",
+      "failureCode": "ART_OCCLUDED_LIMBS",
+      "failureDetail": "Massive tower shield placed directly in front of torso completely occluded far arm and half of pelvis/leg.",
+      "timestamp": "2026-09-20T10:57:01Z"
+    },
+    {
+      "attemptId": "REAL-H01-A01",
+      "characterId": "real-heavy-01",
+      "archetype": "Iron Vanguard Juggernaut",
+      "targetRig": "humanoid-heavy-v1",
+      "generationStrategy": "modular-puppet-sheet",
+      "prompt": "2D game character modular body parts sprite sheet, massive armored heavy vanguard juggernaut: iron knight helmet, heavy plate chestplate torso, segmented armored fauld pelvis, massive pauldron upper arm, heavy gauntlet forearm, hand, heavy plate thigh, greave shin, armored sabaton boot, two-handed greataxe weapon. Neatly arranged with generous spacing on pure white background, disassembled puppet pieces, flat digital 2D game asset, crisp outlines",
+      "outputArtifact": "docs/phase-c1/evidence/real-heavy-01/attempts/a01/sheet.jpg",
+      "status": "ACCEPTED",
+      "conformsToContract": true,
+      "partsExtracted": 16,
+      "timestamp": "2026-09-20T11:01:37Z"
+    },
+    {
+      "attemptId": "REAL-S01-A00",
+      "characterId": "real-small-01",
+      "archetype": "Hooded Shadow Rogue",
+      "targetRig": "humanoid-small-v1",
+      "generationStrategy": "modular-puppet-sheet",
+      "prompt": "2D game character modular body parts sprite sheet, fantasy rogue thief: head with hood, torso with leather vest, pelvis belt, separate upper arm, forearm, hand, thigh, shin, boot, dagger weapon...",
+      "outputArtifact": "docs/phase-c1/evidence/real-small-01/attempts/a00/raw_sheet.jpg",
+      "status": "REJECTED",
+      "failureCode": "ART_MERGED_LIMBS",
+      "failureDetail": "Diffusion model merged thigh and shin into single continuous leg segments; required manual joint reconstruction.",
+      "timestamp": "2026-09-20T10:57:44Z"
+    },
+    {
+      "attemptId": "REAL-S01-A01",
+      "characterId": "real-small-01",
+      "archetype": "Hooded Shadow Rogue",
+      "targetRig": "humanoid-small-v1",
+      "generationStrategy": "modular-puppet-sheet",
+      "prompt": "2D game character modular body parts sprite sheet, fantasy small rogue goblin thief: head with pointed ears and cloth cap, compact leather torso vest, small belt pouch pelvis, separate thin upper arm, forearm with wrap, small clawed hand, short thigh, shin with leather wraps, small pointed shoe foot, curved rogue dagger weapon...",
+      "outputArtifact": "docs/phase-c1/evidence/real-small-01/attempts/a01/raw_sheet.jpg",
+      "status": "REJECTED",
+      "failureCode": "ART_INCOMPLETE_PARTS",
+      "failureDetail": "Sheet omitted contralateral forearm and hand (only 1 forearm and 1 hand drawn).",
+      "timestamp": "2026-09-20T11:01:58Z"
+    },
+    {
+      "attemptId": "REAL-S01-A02",
+      "characterId": "real-small-01",
+      "archetype": "Hooded Shadow Rogue",
+      "targetRig": "humanoid-small-v1",
+      "generationStrategy": "modular-puppet-sheet",
+      "prompt": "2D game character modular body parts puppet sprite sheet, fantasy rogue thief: hood head, leather vest torso, belt pelvis, Left upper arm, Left forearm, Left hand, Right upper arm, Right forearm, Right hand, Left thigh, Left shin, Left boot, Right thigh, Right shin, Right boot, dagger weapon. Neatly arranged in a grid with generous spacing on pure white background, completely separated parts, flat digital 2D game asset",
+      "outputArtifact": "docs/phase-c1/evidence/real-small-01/attempts/a02/sheet.jpg",
+      "status": "ACCEPTED",
+      "conformsToContract": true,
+      "partsExtracted": 16,
+      "timestamp": "2026-09-20T11:07:30Z"
+    }
+  ]
+}

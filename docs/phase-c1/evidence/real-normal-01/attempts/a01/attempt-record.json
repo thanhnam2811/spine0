@@ -1,0 +1,9 @@
+{
+  "attemptId": "REAL-N01-A01",
+  "characterId": "real-normal-01",
+  "prompt": "2D game character sprite, wuxia sword cultivator knight, full body A-pose...",
+  "status": "REJECTED",
+  "failureCode": "ART_ROBE_UNRIGGABLE",
+  "failureDetail": "Wide flowing sleeves drooping below belt line fused with lower robe hem; cannot rotate shoulder without major visual tearing.",
+  "timestamp": "2026-09-20T10:59:08Z"
+}

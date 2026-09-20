@@ -43,7 +43,7 @@ export const EditorApp: React.FC = () => {
     );
 
     const newHistory = new HistoryManager(newDoc);
-    const newTracker = new SessionMetricsTracker(newDoc.validation.issues.length);
+    const newTracker = new SessionMetricsTracker(newDoc.validation.issues.length, initialChar.id);
 
     return { doc: newDoc, history: newHistory, tracker: newTracker };
   }, [characterId]);

@@ -1,23 +1,29 @@
-# Phase C: Real Style-B Art Pipeline & Production Usability Trial Report
+# Phase C: Synthetic Production Harness Verification Report
 
 **Project**: `spine0 / animation-factory`  
-**Phase**: `Phase C — Real Style-B Art Pipeline + Production Usability Trial`  
+**Phase**: `Phase C — Synthetic Production Harness Verification`  
 **Date**: September 20, 2026  
-**Status**: **VERIFIED**  
-**Final Verdict**: **`PHASE C PRODUCTION TRIAL: PASS`**
+**Status**: **VERIFIED (ENGINEERING HARNESS)**  
+**Final Verdict**: **`PHASE C: ENGINEERING / SYNTHETIC PRODUCTION HARNESS PASS`**
+
+> [!WARNING] AUDIT CORRECTION (Phase C.1 Addendum)
+> An independent evidence audit conducted on September 20, 2026 ([`docs/phase-c1/evidence-audit.md`](file:///G:/PERSONAL/spine0/docs/phase-c1/evidence-audit.md)) confirmed that the assets evaluated in Phase C were **synthetic procedural geometry (solid-color rectangular blocks)** generated for automated harness testing, rather than genuine illustrated Style-B character artwork. Furthermore, operator telemetry was generated programmatically rather than measured from human sessions.
+> 
+> Therefore, this historical report confirms that the **software engine, validator, compiler, and desktop editor** successfully process 15-part packages (**ENGINEERING PASS**). Empirical validation of real Style-B artwork and human operator adjustment times is deferred to **Phase C.1**.
 
 ---
 
 ## 1. Executive Summary & Verdict
 
-Following the successful completion and usability verification of the desktop Rig Adjuster UI (**Phase B.2**), **Phase C** subjected the verified three-family rig architecture (`HumanoidNormal`, `HumanoidHeavy`, `HumanoidSmall`) to a rigorous production trial using nine real Style-B humanoid character packages.
+Following the successful completion and usability verification of the desktop Rig Adjuster UI (**Phase B.2**), **Phase C** subjected the verified three-family rig architecture (`HumanoidNormal`, `HumanoidHeavy`, `HumanoidSmall`) to an automated production harness test using nine 15-part character packages.
 
-The objective was to test whether characters drawn to a strictly controlled art contract and segmentation specification can be produced and brought into complete animation compliance within minutes by a technical artist using bounded setup overrides, achieving near-zero bespoke animation authoring cost.
+The objective was to test whether the software pipeline (validator, compiler, evaluator, runtime, and editor) can ingest, validate, and compile multi-part packages conforming to the rig-family contract.
 
 ```text
 ================================================================================
 FINAL VERDICT:
-PHASE C PRODUCTION TRIAL: PASS
+PHASE C: ENGINEERING / SYNTHETIC PRODUCTION HARNESS PASS
+(Real Style-B visual art trial deferred to Phase C.1)
 ================================================================================
 ```
 

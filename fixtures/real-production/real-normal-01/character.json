@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "id": "real-normal-01",
+  "name": "Sword Cultivator Knight (Real normal-01)",
+  "rig": "humanoid-normal-v1",
+  "referenceHeight": 1000,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/head.png",
+      "width": 160,
+      "height": 225,
+      "pivot": [
+        0.5,
+        0.85
+      ],
+      "distalAnchor": [
+        0.5,
+        0.15
+      ]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/torso.png",
+      "width": 256,
+      "height": 226,
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "distalAnchor": [
+        0.5,
+        0.1
+      ]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/pelvis.png",
+      "width": 218,
+      "height": 208,
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/upper_arm_R.png",
+      "width": 96,
+      "height": 156,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/forearm_R.png",
+      "width": 86,
+      "height": 144,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/hand_R.png",
+      "width": 96,
+      "height": 99,
+      "pivot": [
+        0.5,
+        0.2
+      ],
+      "distalAnchor": [
+        0.5,
+        0.8
+      ]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/upper_arm_L.png",
+      "width": 83,
+      "height": 156,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/forearm_L.png",
+      "width": 97,
+      "height": 130,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/hand_L.png",
+      "width": 98,
+      "height": 107,
+      "pivot": [
+        0.5,
+        0.2
+      ],
+      "distalAnchor": [
+        0.5,
+        0.8
+      ]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/thigh_R.png",
+      "width": 208,
+      "height": 250,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/shin_R.png",
+      "width": 142,
+      "height": 170,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/foot_R.png",
+      "width": 106,
+      "height": 100,
+      "pivot": [
+        0.3,
+        0.35
+      ],
+      "distalAnchor": [
+        0.85,
+        0.85
+      ]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/thigh_L.png",
+      "width": 205,
+      "height": 247,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/shin_L.png",
+      "width": 83,
+      "height": 122,
+      "pivot": [
+        0.5,
+        0.15
+      ],
+      "distalAnchor": [
+        0.5,
+        0.85
+      ]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/foot_L.png",
+      "width": 91,
+      "height": 89,
+      "pivot": [
+        0.3,
+        0.35
+      ],
+      "distalAnchor": [
+        0.85,
+        0.85
+      ]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/weapon.png",
+      "width": 538,
+      "height": 104,
+      "pivot": [
+        0.5,
+        0.85
+      ],
+      "distalAnchor": [
+        0.5,
+        0.1
+      ]
+    }
+  },
+  "boneOverrides": {}
+}

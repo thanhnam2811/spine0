@@ -46,6 +46,11 @@ import trialSmall01 from "../../../fixtures/production-trial/small-01/character.
 import trialSmall02 from "../../../fixtures/production-trial/small-02/character.json";
 import trialSmall03 from "../../../fixtures/production-trial/small-03/character.json";
 
+// Preset Characters - Phase C.1 Real Production Evidence Trial
+import realNormal01 from "../../../fixtures/real-production/real-normal-01/character.json";
+import realHeavy01 from "../../../fixtures/real-production/real-heavy-01/character.json";
+import realSmall01 from "../../../fixtures/real-production/real-small-01/character.json";
+
 export const PRESET_RIGS: Record<string, RigDefinition> = {
   "humanoid-normal-v1": normalRig as unknown as RigDefinition,
   "humanoid-heavy-v1": heavyRig as unknown as RigDefinition,
@@ -77,7 +82,12 @@ export const PRESET_ANIMATIONS: Record<string, Record<string, AnimationTemplate>
 };
 
 export const PRESET_CHARACTERS: Record<string, CharacterDefinition> = {
-  // Phase C Production Trial
+  // Phase C.1 Real Production Trial (Genuine Style-B Assets)
+  "real-normal-01": realNormal01 as unknown as CharacterDefinition,
+  "real-heavy-01": realHeavy01 as unknown as CharacterDefinition,
+  "real-small-01": realSmall01 as unknown as CharacterDefinition,
+
+  // Phase C Production Trial (Synthetic Harness)
   "trial-normal-01": trialNormal01 as unknown as CharacterDefinition,
   "trial-normal-02": trialNormal02 as unknown as CharacterDefinition,
   "trial-normal-03": trialNormal03 as unknown as CharacterDefinition,

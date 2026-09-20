@@ -1,0 +1,11 @@
+{
+  "id": "real-small-01",
+  "name": "Hooded Shadow Rogue",
+  "targetRigFamily": "humanoid-small-v1",
+  "archetype": "Agile Rogue with dual-edge dagger",
+  "artComplexity": "Standard",
+  "generationAttemptCount": 3,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T11:15:00.000Z"
+}

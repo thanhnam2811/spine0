@@ -1,0 +1,9 @@
+{
+  "attemptId": "REAL-S01-A01",
+  "characterId": "real-small-01",
+  "prompt": "2D game character modular body parts sprite sheet, fantasy small rogue goblin thief...",
+  "status": "REJECTED",
+  "failureCode": "ART_INCOMPLETE_PARTS",
+  "failureDetail": "Sheet omitted contralateral forearm and hand (only 1 forearm and 1 hand drawn).",
+  "timestamp": "2026-09-20T11:01:58Z"
+}

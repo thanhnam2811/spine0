@@ -1,0 +1,9 @@
+{
+  "attemptId": "REAL-H01-A00",
+  "characterId": "real-heavy-01",
+  "prompt": "2D game character concept art, massive heavy iron juggernaut...",
+  "status": "REJECTED",
+  "failureCode": "ART_OCCLUDED_LIMBS",
+  "failureDetail": "Massive tower shield placed directly in front of torso completely occluded far arm and half of pelvis/leg.",
+  "timestamp": "2026-09-20T10:57:01Z"
+}

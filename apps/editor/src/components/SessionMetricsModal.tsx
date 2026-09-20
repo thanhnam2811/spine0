@@ -53,8 +53,11 @@ export const SessionMetricsModal: React.FC<SessionMetricsModalProps> = ({ summar
         </div>
 
         <div className="bg-gray-800/60 p-3 rounded border border-gray-800 text-[11px] text-gray-300 space-y-1 font-mono">
-          <div>Initial Violations: <strong>{summary.initialIssues}</strong></div>
-          <div>Current Violations: <strong>{summary.currentIssues}</strong></div>
+          <div>Character: <strong>{summary.characterId}</strong> ({summary.operatorId})</div>
+          <div>Initial Violations: <strong>{summary.initialIssues}</strong> | Current: <strong>{summary.currentIssues}</strong></div>
+          <div>
+            Adjustments Breakdown: Pivots (<strong>{summary.pivotEditCount}</strong>), Anchors (<strong>{summary.anchorEditCount}</strong>), Overrides (<strong>{summary.lengthOverrideCount + summary.rotationOverrideCount + summary.positionOverrideCount}</strong>)
+          </div>
           <div>
             Time to Full Envelope Compliance:{" "}
             <strong className="text-cyan-400">
@@ -63,7 +66,23 @@ export const SessionMetricsModal: React.FC<SessionMetricsModalProps> = ({ summar
           </div>
         </div>
 
-        <div className="text-right pt-2">
+        <div className="flex items-center justify-between pt-2">
+          <button
+            onClick={() => {
+              const jsonStr = JSON.stringify(summary, null, 2);
+              navigator.clipboard?.writeText(jsonStr);
+              const blob = new Blob([jsonStr], { type: "application/json" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `${summary.characterId}_${summary.operatorId}_session.json`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            className="px-3 py-1.5 bg-cyan-900/60 hover:bg-cyan-800 border border-cyan-600/70 text-cyan-200 rounded text-xs font-mono font-semibold transition"
+          >
+            Export Session Record (.json)
+          </button>
           <button
             onClick={onClose}
             className="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-xs font-semibold"

@@ -49,8 +49,11 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   };
 
   // Group presets
+  const realPresets = Object.keys(PRESET_CHARACTERS).filter((id) => id.startsWith("real-"));
   const trialPresets = Object.keys(PRESET_CHARACTERS).filter((id) => id.startsWith("trial-"));
-  const benchmarkPresets = Object.keys(PRESET_CHARACTERS).filter((id) => !id.startsWith("trial-"));
+  const benchmarkPresets = Object.keys(PRESET_CHARACTERS).filter(
+    (id) => !id.startsWith("trial-") && !id.startsWith("real-")
+  );
 
   return (
     <header className="h-13 bg-[#111622] border-b border-gray-800 px-4 flex items-center justify-between select-none shadow-sm z-20">
@@ -83,7 +86,14 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             onChange={(e) => onSelectPreset(e.target.value)}
             className="bg-gray-800 hover:bg-gray-750 border border-gray-700 rounded px-2.5 py-1 text-xs text-gray-200 focus:outline-none focus:border-cyan-500 font-mono transition"
           >
-            <optgroup label="Phase C Production Trial">
+            <optgroup label="Phase C.1 Real Production Trial">
+              {realPresets.map((id) => (
+                <option key={id} value={id}>
+                  {id}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Phase C Production Trial (Synthetic)">
               {trialPresets.map((id) => (
                 <option key={id} value={id}>
                   {id}

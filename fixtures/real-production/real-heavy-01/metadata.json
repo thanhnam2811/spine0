@@ -1,0 +1,11 @@
+{
+  "id": "real-heavy-01",
+  "name": "Iron Vanguard Juggernaut",
+  "targetRigFamily": "humanoid-heavy-v1",
+  "archetype": "Armored Heavy Vanguard with Greataxe",
+  "artComplexity": "High",
+  "generationAttemptCount": 2,
+  "partsCount": 16,
+  "conformsToArtContract": true,
+  "createdTimestamp": "2026-09-20T11:12:00.000Z"
+}
