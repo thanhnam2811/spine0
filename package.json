@@ -10,7 +10,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc -b",
     "lint": "eslint --no-error-on-unmatched-pattern packages/ apps/",
-    "preview": "pnpm --filter preview dev"
+    "preview": "pnpm --filter preview dev",
+    "editor": "pnpm --filter editor dev"
   },
   "devDependencies": {
     "@types/node": "^22.13.0",

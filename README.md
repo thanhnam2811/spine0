@@ -9,7 +9,8 @@ An engineering research spike evaluating whether Style-B 2D game humanoid charac
 ```text
 animation-factory/
 ├── apps/
-│   └── preview/            # Vite + React + PixiJS 8 Diagnostic Preview (NO editor in Phase A)
+│   ├── editor/             # Vite + React + PixiJS 8 Minimal Rig Adjuster (Phase B)
+│   └── preview/            # Vite + React + PixiJS 8 Diagnostic Preview
 ├── packages/
 │   ├── schema/             # Pure TypeScript interfaces & constants for Rigs, Characters, Animations
 │   ├── anim-core/          # Headless FK engine, shortest-angle interpolation, dynamic draw order
@@ -39,9 +40,10 @@ animation-factory/
    - **Phase A**: Single-rig hypothesis was falsified by proportion outliers (`test-c` and `test-e`). Multi-family system proposed.
    - **Phase A.1 Independent Verification**: Phase A challenge fixtures (`test-c`, `test-e`) were moved to family calibration. Rig profiles, envelopes, and animation templates for `HumanoidNormal`, `HumanoidHeavy`, and `HumanoidSmall` were cryptographically frozen in [`docs/spike-results/phase-a1-freeze-manifest.json`](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a1-freeze-manifest.json).
    - **Fresh Holdout Results**: Brand-new untouched holdout set (`normal-01`, `normal-02`, `heavy-01`, `heavy-02`, `small-01`, `small-02`) achieved 100% animation reuse, 100% boundary discrimination, and sub-6% material override ratio.
-   - **Phase B Authorized**: Proceed to Minimal Rig Adjuster.
+   - **Phase B Outcome**: **`PHASE B — MINIMAL RIG ADJUSTER: PASS`**. Headless document model, transaction-coalescing history, interactive bone/anchor adjustment handles, live multi-family fit panel, contract validator, and preview player delivered with 100% test coverage.
 
-*For detailed data and analysis, see [docs/spike-results/phase-a1-results.md](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a1-results.md), [docs/spike-results/phase-a1-methodology.md](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a1-methodology.md), and [docs/spike-results/phase-a1-family-matrix.md](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a1-family-matrix.md).*
+*For Phase A/A.1 data and analysis, see [docs/spike-results/phase-a1-results.md](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a1-results.md).*
+*For Phase B documentation, see [docs/phase-b/results.md](file:///G:/PERSONAL/spine0/docs/phase-b/results.md) and [docs/phase-b/architecture.md](file:///G:/PERSONAL/spine0/docs/phase-b/architecture.md).*
 
 ---
 
@@ -58,12 +60,19 @@ Runs unit tests, validator checks, compiler goldens, pose goldens, runtime parit
 pnpm test
 ```
 
-### Typecheck
+### Typecheck & Lint
 ```bash
 pnpm typecheck
+pnpm lint
 ```
 
-### Launch Diagnostic Preview
+### Launch Minimal Rig Adjuster (Phase B)
+```bash
+pnpm editor
+```
+Open `http://localhost:5174` to interactively calibrate bone pivots, distal anchors, slot assignments, live family fits, and preview animation retargeting.
+
+### Launch Diagnostic Preview (Phase A)
 ```bash
 pnpm preview
 ```
