@@ -4,5 +4,6 @@ dist/
 .cache/
 coverage/
 *.log
+*.tsbuildinfo
 .DS_Store
 Thumbs.db

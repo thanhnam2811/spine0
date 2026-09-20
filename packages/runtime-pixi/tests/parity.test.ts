@@ -137,6 +137,76 @@ describe("runtime-parity & deterministic pose goldens", () => {
     const orderRecovery = poseRecovery.slots.find((s) => s.slot === "slot_weapon")?.drawOrder;
     expect(orderRecovery).toBe(15);
     const torsoOrderRecovery = poseRecovery.slots.find((s) => s.slot === "slot_torso")?.drawOrder ?? 80;
-    expect(orderRecovery!).toBeLessThan(torsoOrderRecovery);
+    expect(torsoOrderRecovery!).toBeGreaterThan(orderRecovery!);
+  });
+
+  it("verifies numerical parity across all 3 rig families (normal-01, heavy-01, small-01) for idle, run, and slash (tolerance 1e-4)", () => {
+    const familyCases = [
+      {
+        family: "humanoid-normal",
+        rig: loadJson<RigDefinition>("assets/rigs/humanoid-normal-v1/humanoid-normal-v1.rig.json"),
+        char: loadJson<CharacterDefinition>("fixtures/family-challenge/normal-01/character.json"),
+        clips: [
+          loadJson<AnimationTemplate>("assets/animations/shared/idle.anim.json"),
+          loadJson<AnimationTemplate>("assets/animations/normal/run.anim.json"),
+          loadJson<AnimationTemplate>("assets/animations/normal/slash.anim.json")
+        ]
+      },
+      {
+        family: "humanoid-heavy",
+        rig: loadJson<RigDefinition>("assets/rigs/humanoid-heavy-v1/humanoid-heavy-v1.rig.json"),
+        char: loadJson<CharacterDefinition>("fixtures/family-challenge/heavy-01/character.json"),
+        clips: [
+          loadJson<AnimationTemplate>("assets/animations/shared/idle.anim.json"),
+          loadJson<AnimationTemplate>("assets/animations/heavy/run.anim.json"),
+          loadJson<AnimationTemplate>("assets/animations/heavy/slash.anim.json")
+        ]
+      },
+      {
+        family: "humanoid-small",
+        rig: loadJson<RigDefinition>("assets/rigs/humanoid-small-v1/humanoid-small-v1.rig.json"),
+        char: loadJson<CharacterDefinition>("fixtures/family-challenge/small-01/character.json"),
+        clips: [
+          loadJson<AnimationTemplate>("assets/animations/shared/idle.anim.json"),
+          loadJson<AnimationTemplate>("assets/animations/small/run.anim.json"),
+          loadJson<AnimationTemplate>("assets/animations/small/slash.anim.json")
+        ]
+      }
+    ];
+
+    for (const fc of familyCases) {
+      const compileRes = compileCharacter(fc.rig, fc.char, fc.clips);
+      expect(compileRes.success).toBe(true);
+      const compiled = compileRes.compiled!;
+
+      for (const clip of fc.clips) {
+        for (const t of [0.0, 0.2, 0.4, 0.6]) {
+          const sourcePose = evaluator.sample(fc.rig, fc.char, clip, t);
+          const compiledPose = sampleCompiledCharacter(compiled, clip.id, t);
+
+          expect(compiledPose.time).toBeCloseTo(sourcePose.time, 4);
+          expect(compiledPose.drawOrder).toEqual(sourcePose.drawOrder);
+
+          for (const [boneId, sBone] of Object.entries(sourcePose.bones)) {
+            const cBone = compiledPose.bones[boneId];
+            expect(cBone, `Bone ${boneId} in family ${fc.family} clip ${clip.id}`).toBeDefined();
+            expect(cBone.worldX).toBeCloseTo(sBone.worldX, 4);
+            expect(cBone.worldY).toBeCloseTo(sBone.worldY, 4);
+            expect(cBone.worldRotation).toBeCloseTo(sBone.worldRotation, 4);
+          }
+
+          expect(compiledPose.slots.length).toBe(sourcePose.slots.length);
+          for (let i = 0; i < sourcePose.slots.length; i++) {
+            const sSlot = sourcePose.slots[i];
+            const cSlot = compiledPose.slots[i];
+            expect(cSlot.slot).toBe(sSlot.slot);
+            expect(cSlot.drawOrder).toBe(sSlot.drawOrder);
+            expect(cSlot.worldX).toBeCloseTo(sSlot.worldX, 4);
+            expect(cSlot.worldY).toBeCloseTo(sSlot.worldY, 4);
+            expect(cSlot.worldRotation).toBeCloseTo(sSlot.worldRotation, 4);
+          }
+        }
+      }
+    }
   });
 });
