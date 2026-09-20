@@ -23,9 +23,15 @@ export const EditorApp: React.FC = () => {
   const [showMetricsModal, setShowMetricsModal] = useState<boolean>(false);
   const [, setRerender] = useState<number>(0);
 
+  // Initial character snapshot for dirty state tracking
+  const initialCharJsonRef = useRef<string>(
+    JSON.stringify(PRESET_CHARACTERS[characterId] ?? PRESET_CHARACTERS["normal-01"])
+  );
+
   // Initialize document, history, metrics
   const { doc, history, tracker } = useMemo(() => {
     const initialChar = PRESET_CHARACTERS[characterId] ?? PRESET_CHARACTERS["normal-01"];
+    initialCharJsonRef.current = JSON.stringify(initialChar);
     const initialRigId = initialChar.rig;
     const clips = PRESET_ANIMATIONS[initialRigId] ?? PRESET_ANIMATIONS["humanoid-normal-v1"];
 
@@ -51,10 +57,32 @@ export const EditorApp: React.FC = () => {
     });
   }, [doc, tracker]);
 
+  // Calculate dirty state
+  const isDirty = useMemo(() => {
+    return JSON.stringify(doc.character) !== initialCharJsonRef.current;
+  }, [doc.character, doc.validation]);
+
+  // Format session elapsed time
+  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsedSeconds(tracker.getSummary().sessionDurationSeconds);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [tracker]);
+
+  const formattedTimer = useMemo(() => {
+    const mins = Math.floor(elapsedSeconds / 60);
+    const secs = elapsedSeconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  }, [elapsedSeconds]);
+
   // Global keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement).tagName === "INPUT") return;
+      if ((e.target as HTMLElement).tagName === "INPUT" || (e.target as HTMLElement).tagName === "SELECT") {
+        return;
+      }
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
         e.preventDefault();
@@ -91,18 +119,19 @@ export const EditorApp: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-gray-950 overflow-hidden font-sans text-gray-200">
+    <div className="flex flex-col h-screen w-screen bg-[#090d16] overflow-hidden font-sans text-gray-200">
       {/* Top Toolbar */}
       <Toolbar
         doc={doc}
         history={history}
+        isDirty={isDirty}
         onSelectPreset={setCharacterId}
         onOpenMetrics={() => setShowMetricsModal(true)}
       />
 
-      {/* Main Workspace Area */}
+      {/* Main Workspace Area (3 Columns) */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left: Hierarchy */}
+        {/* Left: Hierarchy Tree */}
         <HierarchyPanel
           doc={doc}
           onSelectBone={handleSelectBone}
@@ -110,7 +139,7 @@ export const EditorApp: React.FC = () => {
         />
 
         {/* Center: Interactive Pixi Viewport */}
-        <main className="flex-1 relative bg-gray-950 overflow-hidden">
+        <main className="flex-1 relative bg-[#090d16] overflow-hidden">
           <Viewport
             doc={doc}
             history={history}
@@ -119,40 +148,40 @@ export const EditorApp: React.FC = () => {
         </main>
 
         {/* Right: Tabbed Inspector / Validator / Family Fit */}
-        <aside className="w-80 bg-gray-900/90 border-l border-gray-800 flex flex-col select-none">
+        <aside className="w-84 bg-[#111622] border-l border-gray-800 flex flex-col select-none z-10">
           {/* Tabs */}
           <div className="flex border-b border-gray-800 bg-gray-950/60 p-1 gap-1 text-xs">
             <button
               onClick={() => setRightTab("inspector")}
-              className={`flex-1 py-1 text-center font-medium rounded ${
+              className={`flex-1 py-1 text-center font-medium rounded transition ${
                 rightTab === "inspector"
-                  ? "bg-gray-800 text-cyan-400"
-                  : "text-gray-400 hover:text-gray-200"
+                  ? "bg-gray-800 text-cyan-400 font-semibold shadow-sm"
+                  : "text-gray-400 hover:text-gray-200 hover:bg-gray-850/60"
               }`}
             >
               Inspector
             </button>
             <button
               onClick={() => setRightTab("validator")}
-              className={`flex-1 py-1 text-center font-medium rounded flex items-center justify-center gap-1 ${
+              className={`flex-1 py-1 text-center font-medium rounded transition flex items-center justify-center gap-1.5 ${
                 rightTab === "validator"
-                  ? "bg-gray-800 text-cyan-400"
-                  : "text-gray-400 hover:text-gray-200"
+                  ? "bg-gray-800 text-cyan-400 font-semibold shadow-sm"
+                  : "text-gray-400 hover:text-gray-200 hover:bg-gray-850/60"
               }`}
             >
               <span>Validator</span>
               {doc.validation.issues.length > 0 && (
-                <span className="w-4 h-4 rounded-full bg-red-900/80 text-red-300 text-[10px] flex items-center justify-center">
+                <span className="w-4 h-4 rounded-full bg-red-950 text-red-300 border border-red-800 text-[10px] font-mono flex items-center justify-center font-bold">
                   {doc.validation.issues.length}
                 </span>
               )}
             </button>
             <button
               onClick={() => setRightTab("family")}
-              className={`flex-1 py-1 text-center font-medium rounded ${
+              className={`flex-1 py-1 text-center font-medium rounded transition ${
                 rightTab === "family"
-                  ? "bg-gray-800 text-cyan-400"
-                  : "text-gray-400 hover:text-gray-200"
+                  ? "bg-gray-800 text-cyan-400 font-semibold shadow-sm"
+                  : "text-gray-400 hover:text-gray-200 hover:bg-gray-850/60"
               }`}
             >
               Family Fit
@@ -174,8 +203,73 @@ export const EditorApp: React.FC = () => {
         </aside>
       </div>
 
-      {/* Bottom: Animation Preview Controls */}
+      {/* Animation Preview Controls (when preview active) */}
       <PreviewControls doc={doc} />
+
+      {/* Bottom Status Bar */}
+      <footer className="h-7 bg-[#0b0f19] border-t border-gray-800/90 px-3 flex items-center justify-between text-[11px] text-gray-400 font-mono select-none z-20">
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-1.5">
+            <span className="text-gray-500">Mode:</span>
+            <strong className="text-cyan-400 uppercase font-semibold">{doc.mode}</strong>
+          </span>
+
+          <span className="text-gray-700">|</span>
+
+          <span className="flex items-center gap-1.5">
+            <span className="text-gray-500">Target:</span>
+            {doc.selection ? (
+              <span className="text-gray-200">
+                {doc.selection.type}: <strong className="text-cyan-400">{doc.selection.id}</strong>
+              </span>
+            ) : (
+              <span className="text-gray-600">(None)</span>
+            )}
+          </span>
+
+          <span className="text-gray-700">|</span>
+
+          <span className="flex items-center gap-1.5">
+            <span className="text-gray-500">Rig:</span>
+            <span className="text-gray-300">{doc.targetRig.id}</span>
+          </span>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-1.5">
+            <span className="text-gray-500">Validation:</span>
+            {doc.validation.isValid ? (
+              <span className="text-emerald-400 font-semibold">✓ Compliant</span>
+            ) : (
+              <span className="text-red-400 font-semibold">✗ {doc.validation.issues.length} Issues</span>
+            )}
+          </span>
+
+          <span className="text-gray-700">|</span>
+
+          <span className="flex items-center gap-1.5">
+            <span className="text-gray-500">Status:</span>
+            {isDirty ? (
+              <span className="text-amber-400 font-medium">● Modified</span>
+            ) : (
+              <span className="text-emerald-400/80">✓ Synced</span>
+            )}
+          </span>
+
+          <span className="text-gray-700">|</span>
+
+          <span className="flex items-center gap-1.5">
+            <span className="text-gray-500">Session:</span>
+            <span className="text-gray-200 font-medium">{formattedTimer}</span>
+          </span>
+
+          <span className="text-gray-700">|</span>
+
+          <span className="text-gray-500 hidden xl:inline">
+            Shortcuts: [1] Setup | [2] Preview | [Space] Play | [Ctrl+Z] Undo
+          </span>
+        </div>
+      </footer>
 
       {/* Session Metrics Modal */}
       {showMetricsModal && (
@@ -187,3 +281,4 @@ export const EditorApp: React.FC = () => {
     </div>
   );
 };
+

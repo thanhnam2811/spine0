@@ -1,9 +1,13 @@
 import React, { useEffect, useRef, useCallback } from "react";
-import { Application, Container, Graphics, Text } from "pixi.js";
+import { Application, Container, Graphics } from "pixi.js";
 import type { EditorDocument } from "../model/document.js";
 import type { HistoryManager } from "../model/history.js";
 import { SetBoneOverrideCommand, SetDistalAnchorCommand } from "../model/commands.js";
-import { evaluator, resolveCharacterSetup } from "@animation-factory/anim-core";
+import {
+  evaluator,
+  resolveCharacterSetup,
+  evaluateSetupWorldTransforms
+} from "@animation-factory/anim-core";
 
 export interface ViewportProps {
   doc: EditorDocument;
@@ -29,6 +33,8 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
     panStartX: 0,
     panStartY: 0
   });
+
+  const lastCharKeyRef = useRef<string>("");
 
   // Drag handle state
   const dragRef = useRef<{
@@ -60,7 +66,7 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
     }
 
     if (!pose) {
-      // Setup pose: evaluate at idle t = 0 or identity
+      // Setup pose: evaluate at identity
       const dummyClip = {
         version: 1,
         id: "setup",
@@ -78,7 +84,7 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
       overlay.fill({ color: 0x22d3ee, alpha: 0.6 });
       // Ground grid ticks
       for (let x = -1000; x <= 1000; x += 100) {
-        overlay.rect(x, 1000, 2, 10);
+        overlay.rect(x, 995, 2, 10);
         overlay.fill({ color: 0x22d3ee, alpha: 0.3 });
       }
     }
@@ -114,7 +120,7 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
         if (b) {
           const maxT = 30.0;
           overlay.rect(b.worldX - maxT, b.worldY - maxT, maxT * 2, maxT * 2);
-          overlay.stroke({ color: 0x10b981, width: 1, alpha: 0.3 });
+          overlay.stroke({ color: 0x10b981, width: 1, alpha: 0.25 });
         }
       }
     }
@@ -127,9 +133,16 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
         const parentId = skeleton.bones[boneId]?.parent;
         if (parentId && pose.bones[parentId]) {
           const pb = pose.bones[parentId];
+          const isSelected = doc.selection?.type === "bone" && doc.selection.id === boneId;
+          const hasOverride = !!char.boneOverrides?.[boneId];
+
           overlay.moveTo(pb.worldX, pb.worldY);
           overlay.lineTo(b.worldX, b.worldY);
-          overlay.stroke({ color: 0x64748b, width: 3, alpha: 0.8 });
+          overlay.stroke({
+            color: isSelected ? 0x38bdf8 : hasOverride ? 0xf59e0b : 0x64748b,
+            width: isSelected ? 4 : 2.5,
+            alpha: isSelected ? 1.0 : 0.8
+          });
         }
       }
     }
@@ -160,13 +173,131 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
           const tipX = b.worldX - Math.sin(rad) * b.length;
           const tipY = b.worldY + Math.cos(rad) * b.length;
 
+          // Connecting guide line to tip
+          handles.moveTo(b.worldX, b.worldY);
+          handles.lineTo(tipX, tipY);
+          handles.stroke({ color: 0xef4444, width: 2, alpha: 0.7 });
+
+          // Distal tip handle
           handles.rect(tipX - 5, tipY - 5, 10, 10);
-          handles.fill({ color: 0xef4444, alpha: 0.9 });
+          handles.fill({ color: 0xef4444, alpha: 0.95 });
           handles.stroke({ color: 0xffffff, width: 2 });
         }
       }
     }
   }, [doc]);
+
+  // Auto-center camera to fit character setup pose within viewport
+  const fitToCharacter = useCallback(() => {
+    const app = appRef.current;
+    if (!app || !containerRef.current) return;
+
+    try {
+      const transforms = evaluateSetupWorldTransforms(doc.targetRig, doc.character);
+      let minX = Infinity;
+      let maxX = -Infinity;
+      let minY = Infinity;
+      let maxY = -Infinity;
+
+      for (const t of Object.values(transforms)) {
+        minX = Math.min(minX, t.worldX, t.distalEndpoint[0]);
+        maxX = Math.max(maxX, t.worldX, t.distalEndpoint[0]);
+        minY = Math.min(minY, t.worldY, t.distalEndpoint[1]);
+        maxY = Math.max(maxY, t.worldY, t.distalEndpoint[1]);
+      }
+
+      if (!isFinite(minX) || !isFinite(maxX) || !isFinite(minY) || !isFinite(maxY)) {
+        minX = -120;
+        maxX = 120;
+        minY = 680;
+        maxY = 1020;
+      }
+
+      // Ensure ground line at y=1000 is included
+      maxY = Math.max(maxY, 1010);
+      minY = Math.min(minY, 650);
+
+      const charWidth = Math.max(160, maxX - minX);
+      const charHeight = Math.max(220, maxY - minY);
+      const centerX = (minX + maxX) / 2;
+      const centerY = (minY + maxY) / 2;
+
+      const screenW = app.screen.width || containerRef.current.clientWidth || 800;
+      const screenH = app.screen.height || containerRef.current.clientHeight || 600;
+
+      // 75% screen fill with comfortable margins
+      const zoomX = (screenW * 0.75) / charWidth;
+      const zoomY = (screenH * 0.75) / charHeight;
+      const targetZoom = Math.min(1.8, Math.max(0.35, Math.min(zoomX, zoomY)));
+
+      cameraRef.current.zoom = targetZoom;
+      cameraRef.current.x = screenW / 2 - centerX * targetZoom;
+      cameraRef.current.y = screenH / 2 - centerY * targetZoom;
+
+      const camera = cameraContainerRef.current;
+      camera.position.set(cameraRef.current.x, cameraRef.current.y);
+      camera.scale.set(targetZoom);
+
+      renderScene();
+    } catch {
+      // Fallback centering if transforms fail
+      const screenW = app.screen.width || 800;
+      const screenH = app.screen.height || 600;
+      cameraRef.current.zoom = 0.65;
+      cameraRef.current.x = screenW / 2;
+      cameraRef.current.y = screenH / 2 + 150;
+      cameraContainerRef.current.position.set(cameraRef.current.x, cameraRef.current.y);
+      cameraContainerRef.current.scale.set(0.65);
+      renderScene();
+    }
+  }, [doc, renderScene]);
+
+  // Set zoom to exact 100%
+  const setZoom100 = useCallback(() => {
+    const app = appRef.current;
+    if (!app) return;
+    const screenW = app.screen.width || 800;
+    const screenH = app.screen.height || 600;
+
+    const oldZoom = cameraRef.current.zoom;
+    const newZoom = 1.0;
+
+    const cx = screenW / 2;
+    const cy = screenH / 2;
+
+    cameraRef.current.x = cx - (cx - cameraRef.current.x) * (newZoom / oldZoom);
+    cameraRef.current.y = cy - (cy - cameraRef.current.y) * (newZoom / oldZoom);
+    cameraRef.current.zoom = newZoom;
+
+    cameraContainerRef.current.position.set(cameraRef.current.x, cameraRef.current.y);
+    cameraContainerRef.current.scale.set(newZoom);
+    renderScene();
+  }, [renderScene]);
+
+  // Step zoom in/out
+  const stepZoom = useCallback(
+    (factor: number) => {
+      const app = appRef.current;
+      if (!app) return;
+      const screenW = app.screen.width || 800;
+      const screenH = app.screen.height || 600;
+
+      const oldZoom = cameraRef.current.zoom;
+      const newZoom = Math.min(3.0, Math.max(0.2, oldZoom * factor));
+
+      const cx = screenW / 2;
+      const cy = screenH / 2;
+
+      cameraRef.current.x = cx - (cx - cameraRef.current.x) * (newZoom / oldZoom);
+      cameraRef.current.y = cy - (cy - cameraRef.current.y) * (newZoom / oldZoom);
+      cameraRef.current.zoom = newZoom;
+
+      cameraContainerRef.current.position.set(cameraRef.current.x, cameraRef.current.y);
+      cameraContainerRef.current.scale.set(newZoom);
+      renderScene();
+    },
+    [renderScene]
+  );
 
   // Initialize Pixi application
   useEffect(() => {
@@ -197,13 +328,8 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
       camera.addChild(handleGraphicsRef.current);
       app.stage.addChild(camera);
 
-      // Center camera
-      cameraRef.current.x = app.screen.width / 2;
-      cameraRef.current.y = app.screen.height / 2 + 150;
-      camera.position.set(cameraRef.current.x, cameraRef.current.y);
-      camera.scale.set(cameraRef.current.zoom);
-
-      renderScene();
+      // Perform initial character auto-framing
+      fitToCharacter();
     }
 
     init();
@@ -217,12 +343,18 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
     };
   }, []);
 
-  // Update scene whenever document changes
+  // Update scene whenever document changes, and re-fit on character / rig change
   useEffect(() => {
+    const currentKey = `${doc.character.id}_${doc.character.rig}`;
+    if (lastCharKeyRef.current !== currentKey) {
+      lastCharKeyRef.current = currentKey;
+      fitToCharacter();
+    }
+
     return doc.subscribe(() => {
       renderScene();
     });
-  }, [doc, renderScene]);
+  }, [doc, renderScene, fitToCharacter]);
 
   // Coordinate conversion helpers
   const screenToWorld = useCallback((screenX: number, screenY: number) => {
@@ -248,6 +380,7 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
       return;
     }
 
+    // In PREVIEW mode, interaction handles are locked
     if (e.button !== 0 || doc.mode !== "setup") return;
 
     // Hit test interactive bone handles
@@ -390,17 +523,122 @@ export const Viewport: React.FC<ViewportProps> = ({ doc, history, onSelectBone }
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full cursor-crosshair overflow-hidden touch-none"
+      className={`relative w-full h-full overflow-hidden touch-none select-none ${
+        doc.mode === "setup" ? "cursor-crosshair" : "cursor-default"
+      }`}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onWheel={handleWheel}
     >
-      <div className="absolute top-3 left-3 bg-gray-900/80 backdrop-blur border border-gray-800 rounded px-3 py-1.5 text-xs text-gray-300 pointer-events-none flex gap-4">
-        <span>Zoom: {(cameraRef.current.zoom * 100).toFixed(0)}%</span>
-        <span>Mode: <strong className="text-cyan-400 uppercase">{doc.mode}</strong></span>
-        <span>Alt+Drag: Pan | Wheel: Zoom</span>
+      {/* Floating Viewport Toolbar (Top Left) */}
+      <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
+        <div className="bg-gray-900/90 backdrop-blur border border-gray-800 rounded px-2 py-1 text-xs text-gray-300 flex items-center gap-1.5 shadow-lg">
+          <button
+            onClick={fitToCharacter}
+            title="Fit Character to Viewport"
+            className="px-2 py-0.5 bg-gray-800 hover:bg-gray-700 text-cyan-400 hover:text-cyan-300 rounded font-medium transition"
+          >
+            Fit View
+          </button>
+          <button
+            onClick={setZoom100}
+            title="Reset Zoom to 100%"
+            className="px-1.5 py-0.5 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded font-mono transition"
+          >
+            100%
+          </button>
+          <button
+            onClick={() => stepZoom(1.2)}
+            title="Zoom In"
+            className="w-5 h-5 flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-gray-300 rounded transition font-bold"
+          >
+            +
+          </button>
+          <button
+            onClick={() => stepZoom(0.8)}
+            title="Zoom Out"
+            className="w-5 h-5 flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-gray-300 rounded transition font-bold"
+          >
+            -
+          </button>
+          <div className="h-3 w-px bg-gray-700 mx-0.5" />
+          <span className="font-mono text-[11px] text-gray-400 min-w-[38px] text-right">
+            {(cameraRef.current.zoom * 100).toFixed(0)}%
+          </span>
+        </div>
+
+        {/* Viewport Overlay Controls */}
+        <div className="bg-gray-900/90 backdrop-blur border border-gray-800 rounded p-1 text-xs flex items-center gap-1 shadow-lg">
+          <button
+            onClick={() => doc.toggleOverlay("skeleton")}
+            title="Toggle Skeleton Hierarchy"
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition ${
+              doc.overlays.skeleton
+                ? "bg-cyan-950 text-cyan-400 border border-cyan-800"
+                : "text-gray-500 hover:text-gray-300"
+            }`}
+          >
+            Skel
+          </button>
+          <button
+            onClick={() => doc.toggleOverlay("handles")}
+            title="Toggle Pivot Handles"
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition ${
+              doc.overlays.handles
+                ? "bg-cyan-950 text-cyan-400 border border-cyan-800"
+                : "text-gray-500 hover:text-gray-300"
+            }`}
+          >
+            Handles
+          </button>
+          <button
+            onClick={() => doc.toggleOverlay("ground")}
+            title="Toggle Ground Grid & Foot Contacts"
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition ${
+              doc.overlays.ground
+                ? "bg-cyan-950 text-cyan-400 border border-cyan-800"
+                : "text-gray-500 hover:text-gray-300"
+            }`}
+          >
+            Ground
+          </button>
+          <button
+            onClick={() => doc.toggleOverlay("clearanceProxies")}
+            title="Toggle Pauldron & Cranial Clearance Proxies"
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition ${
+              doc.overlays.clearanceProxies
+                ? "bg-cyan-950 text-cyan-400 border border-cyan-800"
+                : "text-gray-500 hover:text-gray-300"
+            }`}
+          >
+            Proxies
+          </button>
+          <button
+            onClick={() => doc.toggleOverlay("envelopeBounds")}
+            title="Toggle Envelope Bounding Limits"
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition ${
+              doc.overlays.envelopeBounds
+                ? "bg-cyan-950 text-cyan-400 border border-cyan-800"
+                : "text-gray-500 hover:text-gray-300"
+            }`}
+          >
+            Envelope
+          </button>
+        </div>
+      </div>
+
+      {/* Floating Navigation Hint (Bottom Left) */}
+      <div className="absolute bottom-3 left-3 bg-gray-900/80 backdrop-blur border border-gray-800/80 rounded px-2.5 py-1 text-[10px] text-gray-400 pointer-events-none flex gap-3 shadow">
+        <span><strong className="text-gray-300">Pan:</strong> Middle-click or Alt+Drag</span>
+        <span><strong className="text-gray-300">Zoom:</strong> Wheel</span>
+        {doc.mode === "setup" ? (
+          <span><strong className="text-cyan-400">Drag:</strong> Bone Pivot (Circle) / Distal Tip (Red Square)</span>
+        ) : (
+          <span className="text-amber-400">Preview Mode: Rig adjustment locked</span>
+        )}
       </div>
     </div>
   );
 };
+
