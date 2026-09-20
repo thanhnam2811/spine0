@@ -123,7 +123,7 @@ This closure report resolves all four mandatory findings identified during indep
 
 ### 4.3 CI Verification Status
 - **Local**: **PASS** (lint, typecheck, test, build).
-- **GitHub Actions**: **TO BE OBSERVED** upon push to `origin/main`.
+- **GitHub Actions**: **PASS** (Run [`35496436664`](https://github.com/thanhnam2811/spine0/actions/runs/35496436664), duration 40s, all checks green).
 
 ---
 
