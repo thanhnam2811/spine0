@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "id": "normal-02",
+  "name": "Silk Ribbon Priestess (Holdout Normal-02)",
+  "rig": "humanoid-normal-v1",
+  "referenceHeight": 1000.0,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/normal-02/head.png",
+      "width": 135,
+      "height": 170,
+      "pivot": [0.5, 0.85]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/normal-02/robe_silk.png",
+      "width": 110,
+      "height": 195,
+      "pivot": [0.5, 0.90],
+      "distalAnchor": [0.5, 0.10]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/normal-02/silk_sash.png",
+      "width": 100,
+      "height": 70,
+      "pivot": [0.5, 0.50]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/normal-02/sleeve_near.png",
+      "width": 68,
+      "height": 128,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/normal-02/forearm_near.png",
+      "width": 45,
+      "height": 115,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/normal-02/hand_near.png",
+      "width": 38,
+      "height": 48,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/normal-02/sleeve_far.png",
+      "width": 68,
+      "height": 128,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/normal-02/forearm_far.png",
+      "width": 45,
+      "height": 115,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/normal-02/hand_far.png",
+      "width": 38,
+      "height": 48,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/normal-02/skirt_near.png",
+      "width": 75,
+      "height": 225,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/normal-02/slipper_near.png",
+      "width": 55,
+      "height": 200,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/normal-02/foot_near.png",
+      "width": 65,
+      "height": 48,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/normal-02/skirt_far.png",
+      "width": 75,
+      "height": 225,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/normal-02/slipper_far.png",
+      "width": 55,
+      "height": 200,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/normal-02/foot_far.png",
+      "width": 65,
+      "height": 48,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/normal-02/banner_wand.png",
+      "width": 75,
+      "height": 280,
+      "pivot": [0.5, 0.80],
+      "distalAnchor": [0.5, 0.10]
+    }
+  },
+  "boneOverrides": {
+    "head": { "length": 150.0 },
+    "torso": { "length": 175.0 },
+    "upper_arm_L": { "x": -2.0 },
+    "upper_arm_R": { "x": 2.0 }
+  }
+}

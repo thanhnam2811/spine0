@@ -36,11 +36,12 @@ animation-factory/
 1. **Protocol Separation**: Development and envelope calibration used fixtures `dev-a`, `dev-b`, `dev-c`. All rig structures, animations, and ratios were then cryptographically frozen in [`docs/spike-results/freeze-manifest.json`](file:///G:/PERSONAL/spine0/docs/spike-results/freeze-manifest.json).
 2. **Untouched Challenge Set**: Independent fixtures `test-a` through `test-e` were evaluated strictly without altering frozen assets.
 3. **Outcome**: **`RIG-FAMILY ENGINEERING PASS`**
-   - Single-rig hypothesis was falsified for heavy armored and chibi outliers.
-   - 17-bone topology + Rig Families (`HumanoidNormal`, `HumanoidHeavy`, `HumanoidSmall`) delivered high-efficiency animation reuse.
-   - Phase B (Minimal Rig Adjuster) is authorized and recommended.
+   - **Phase A**: Single-rig hypothesis was falsified by proportion outliers (`test-c` and `test-e`). Multi-family system proposed.
+   - **Phase A.1 Independent Verification**: Phase A challenge fixtures (`test-c`, `test-e`) were moved to family calibration. Rig profiles, envelopes, and animation templates for `HumanoidNormal`, `HumanoidHeavy`, and `HumanoidSmall` were cryptographically frozen in [`docs/spike-results/phase-a1-freeze-manifest.json`](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a1-freeze-manifest.json).
+   - **Fresh Holdout Results**: Brand-new untouched holdout set (`normal-01`, `normal-02`, `heavy-01`, `heavy-02`, `small-01`, `small-02`) achieved 100% animation reuse, 100% boundary discrimination, and sub-6% material override ratio.
+   - **Phase B Authorized**: Proceed to Minimal Rig Adjuster.
 
-*For detailed data and analysis, see [docs/spike-results/results.md](file:///G:/PERSONAL/spine0/docs/spike-results/results.md) and [docs/spike-results/phase-a-supervisor-report.md](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a-supervisor-report.md).*
+*For detailed data and analysis, see [docs/spike-results/phase-a1-results.md](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a1-results.md), [docs/spike-results/phase-a1-methodology.md](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a1-methodology.md), and [docs/spike-results/phase-a1-family-matrix.md](file:///G:/PERSONAL/spine0/docs/spike-results/phase-a1-family-matrix.md).*
 
 ---
 

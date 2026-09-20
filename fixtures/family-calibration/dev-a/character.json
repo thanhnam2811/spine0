@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "id": "dev-a",
+  "name": "Standard Sword Cultivator (Dev-A)",
+  "rig": "humanoid-normal-v1",
+  "referenceHeight": 1000.0,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/dev-a/head.png",
+      "width": 140,
+      "height": 180,
+      "pivot": [0.5, 0.85]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/dev-a/torso.png",
+      "width": 120,
+      "height": 200,
+      "pivot": [0.5, 0.90],
+      "distalAnchor": [0.5, 0.10]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/dev-a/pelvis.png",
+      "width": 110,
+      "height": 80,
+      "pivot": [0.5, 0.50]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/dev-a/upper_arm_r.png",
+      "width": 60,
+      "height": 130,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/dev-a/forearm_r.png",
+      "width": 50,
+      "height": 120,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/dev-a/hand_r.png",
+      "width": 40,
+      "height": 50,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/dev-a/upper_arm_l.png",
+      "width": 60,
+      "height": 130,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/dev-a/forearm_l.png",
+      "width": 50,
+      "height": 120,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/dev-a/hand_l.png",
+      "width": 40,
+      "height": 50,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/dev-a/thigh_r.png",
+      "width": 70,
+      "height": 230,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/dev-a/shin_r.png",
+      "width": 60,
+      "height": 210,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/dev-a/foot_r.png",
+      "width": 70,
+      "height": 50,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/dev-a/thigh_l.png",
+      "width": 70,
+      "height": 230,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/dev-a/shin_l.png",
+      "width": 60,
+      "height": 210,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/dev-a/foot_l.png",
+      "width": 70,
+      "height": 50,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/dev-a/iron_sword.png",
+      "width": 50,
+      "height": 300,
+      "pivot": [0.5, 0.85],
+      "distalAnchor": [0.5, 0.05]
+    }
+  },
+  "boneOverrides": {}
+}

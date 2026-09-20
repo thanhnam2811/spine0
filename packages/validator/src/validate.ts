@@ -441,3 +441,196 @@ export function validateAnimation(
 
   return issues;
 }
+
+export interface ResolvedAnatomy {
+  referenceHeight: number;
+  boneLengths: Record<string, number>;
+  bonePositions: Record<string, [number, number]>;
+  ratios: Record<string, number>;
+}
+
+/**
+ * Resolves character anatomy (bone lengths, positions, and envelope ratios)
+ * based on its authored setup and base rig.
+ */
+export function resolveCharacterAnatomy(
+  character: CharacterDefinition,
+  baseRig: RigDefinition
+): ResolvedAnatomy {
+  const H = character.referenceHeight;
+  const overrides = character.boneOverrides ?? {};
+  const boneMap = new Map(baseRig.bones.map((b) => [b.id, b]));
+
+  const boneLengths: Record<string, number> = {};
+  const bonePositions: Record<string, [number, number]> = {};
+
+  for (const bone of baseRig.bones) {
+    const o = overrides[bone.id];
+    boneLengths[bone.id] = o?.length ?? bone.length;
+    bonePositions[bone.id] = [
+      bone.x + (o?.x ?? 0),
+      bone.y + (o?.y ?? 0)
+    ];
+  }
+
+  const headLength = boneLengths["head"] ?? 0;
+  const torsoLength = boneLengths["torso"] ?? 0;
+  const upperArmL = boneLengths["upper_arm_L"] ?? 0;
+  const forearmL = boneLengths["forearm_L"] ?? 0;
+  const thighL = boneLengths["thigh_L"] ?? 0;
+  const shinL = boneLengths["shin_L"] ?? 0;
+
+  const [armLx] = bonePositions["upper_arm_L"] ?? [0, 0];
+  const [armRx] = bonePositions["upper_arm_R"] ?? [0, 0];
+  const shoulderSpan = Math.abs(armRx - armLx);
+
+  const [thighLx] = bonePositions["thigh_L"] ?? [0, 0];
+  const [thighRx] = bonePositions["thigh_R"] ?? [0, 0];
+  const hipSpan = Math.abs(thighRx - thighLx);
+
+  const ratios: Record<string, number> = {};
+  if (H > 0) {
+    ratios["head_to_height"] = headLength / H;
+    ratios["torso_to_height"] = torsoLength / H;
+    ratios["shoulder_span_to_height"] = shoulderSpan / H;
+    ratios["hip_span_to_height"] = hipSpan / H;
+    ratios["upper_arm_to_height"] = upperArmL / H;
+    if (upperArmL > 0) ratios["forearm_to_upper_arm"] = forearmL / upperArmL;
+    ratios["thigh_to_height"] = thighL / H;
+    if (thighL > 0) ratios["shin_to_thigh"] = shinL / thighL;
+    ratios["total_leg_to_height"] = (thighL + shinL) / H;
+  }
+
+  return { referenceHeight: H, boneLengths, bonePositions, ratios };
+}
+
+export interface FamilyMatchCandidate {
+  rigId: string;
+  family: string;
+  fits: boolean;
+  issues: ValidationIssue[];
+}
+
+export interface FamilyMatchResult {
+  assignedRig: string;
+  assignedFamily: string;
+  fitsAssignedEnvelope: boolean;
+  issuesForAssigned: ValidationIssue[];
+  candidates: Record<string, FamilyMatchCandidate>;
+  recommendedFamily: string | null;
+}
+
+/**
+ * Validates a character against all available Rig Families and determines whether
+ * the character conforms to its assigned family envelope and whether boundaries correctly
+ * reject mismatched families.
+ */
+export function validateFamilyAssignment(
+  character: CharacterDefinition,
+  rigs: Record<string, RigDefinition>,
+  envelopes: Record<string, AnatomyEnvelope>
+): FamilyMatchResult {
+  const candidates: Record<string, FamilyMatchCandidate> = {};
+  let recommendedFamily: string | null = null;
+
+  const assignedRig = rigs[character.rig] ?? Object.values(rigs).find((r) => r.id === character.rig);
+  const assignedFamily = assignedRig ? assignedRig.family : "unknown";
+
+  const assignedEnvelope = envelopes[character.rig] ?? Object.values(envelopes).find((e) => e.targetRigFamily === assignedFamily);
+  const { issues: issuesForAssigned } = assignedRig
+    ? validateCharacter(character, assignedRig, assignedEnvelope)
+    : { issues: [{ code: "RIG_MISMATCH", severity: "error" as const, category: "SPEC" as const, message: `Unknown assigned rig '${character.rig}'` }] };
+
+  const fitsAssignedEnvelope = issuesForAssigned.filter((i) => i.severity === "error").length === 0;
+
+  if (!assignedRig) {
+    return {
+      assignedRig: character.rig,
+      assignedFamily,
+      fitsAssignedEnvelope: false,
+      issuesForAssigned,
+      candidates,
+      recommendedFamily: null
+    };
+  }
+
+  const anatomy = resolveCharacterAnatomy(character, assignedRig);
+
+  for (const [key, rigDef] of Object.entries(rigs)) {
+    const env = envelopes[key] ?? Object.values(envelopes).find((e) => e.targetRigFamily === rigDef.family);
+    const issues: ValidationIssue[] = [];
+
+    // 1. Check envelope ratios against resolved anatomy
+    if (env) {
+      for (const [ratioName, val] of Object.entries(anatomy.ratios)) {
+        const range = env.ratios[ratioName];
+        if (range && (val < range.min || val > range.max)) {
+          issues.push({
+            code: "SPEC_OUTSIDE_ENVELOPE",
+            severity: "error",
+            category: "SPEC",
+            message: `Anatomy ratio '${ratioName}' = ${val.toFixed(3)} is outside permitted envelope [${range.min}, ${range.max}] for family '${rigDef.family}'.`,
+            target: ratioName
+          });
+        }
+      }
+    }
+
+    // 2. Synthesize adaptation overrides from candidate rig to resolved anatomy
+    const adaptationOverrides: Record<string, { x?: number; y?: number; length?: number }> = {};
+    for (const bone of rigDef.bones) {
+      const targetLen = anatomy.boneLengths[bone.id];
+      const targetPos = anatomy.bonePositions[bone.id];
+      const override: { x?: number; y?: number; length?: number } = {};
+      if (targetLen !== undefined && Math.abs(targetLen - bone.length) > 1e-4) {
+        override.length = targetLen;
+      }
+      if (targetPos) {
+        const dx = targetPos[0] - bone.x;
+        const dy = targetPos[1] - bone.y;
+        if (Math.abs(dx) > 1e-4) override.x = dx;
+        if (Math.abs(dy) > 1e-4) override.y = dy;
+      }
+      if (Object.keys(override).length > 0) {
+        adaptationOverrides[bone.id] = override;
+      }
+    }
+
+    const adaptedChar: CharacterDefinition = {
+      ...character,
+      rig: rigDef.id,
+      boneOverrides: adaptationOverrides
+    };
+
+    const baseValidation = validateCharacter(adaptedChar, rigDef, undefined);
+    for (const issue of baseValidation.issues) {
+      if (issue.code === "RIG_OVERRIDE_RATIO_HIGH") {
+        issues.push(issue);
+      }
+    }
+
+    const errors = issues.filter((i) => i.severity === "error");
+    const fits = errors.length === 0;
+
+    candidates[rigDef.family] = {
+      rigId: rigDef.id,
+      family: rigDef.family,
+      fits,
+      issues
+    };
+
+    if (fits && !recommendedFamily) {
+      recommendedFamily = rigDef.family;
+    }
+  }
+
+  return {
+    assignedRig: character.rig,
+    assignedFamily,
+    fitsAssignedEnvelope,
+    issuesForAssigned,
+    candidates,
+    recommendedFamily
+  };
+}
+

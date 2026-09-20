@@ -1,0 +1,122 @@
+[
+  {
+    "id": "normal-01",
+    "name": "Azure Spearman (Holdout Normal-01)",
+    "assignedFamily": "humanoid-normal",
+    "assignedRig": "humanoid-normal-v1",
+    "fitsAssignedEnvelope": true,
+    "rejectedByOtherFamilies": true,
+    "materialOverrideRatio": 0,
+    "clips": {
+      "idle": {
+        "status": "PASS"
+      },
+      "run": {
+        "status": "PASS"
+      },
+      "slash": {
+        "status": "PASS"
+      }
+    }
+  },
+  {
+    "id": "normal-02",
+    "name": "Silk Ribbon Priestess (Holdout Normal-02)",
+    "assignedFamily": "humanoid-normal",
+    "assignedRig": "humanoid-normal-v1",
+    "fitsAssignedEnvelope": true,
+    "rejectedByOtherFamilies": true,
+    "materialOverrideRatio": 0.058823529411764705,
+    "clips": {
+      "idle": {
+        "status": "PASS"
+      },
+      "run": {
+        "status": "PASS"
+      },
+      "slash": {
+        "status": "PASS"
+      }
+    }
+  },
+  {
+    "id": "heavy-01",
+    "name": "Iron Citadel Guardian (Holdout Heavy-01)",
+    "assignedFamily": "humanoid-heavy",
+    "assignedRig": "humanoid-heavy-v1",
+    "fitsAssignedEnvelope": true,
+    "rejectedByOtherFamilies": true,
+    "materialOverrideRatio": 0,
+    "clips": {
+      "idle": {
+        "status": "PASS"
+      },
+      "run": {
+        "status": "PASS"
+      },
+      "slash": {
+        "status": "PASS"
+      }
+    }
+  },
+  {
+    "id": "heavy-02",
+    "name": "Obsidian Marauder (Holdout Heavy-02)",
+    "assignedFamily": "humanoid-heavy",
+    "assignedRig": "humanoid-heavy-v1",
+    "fitsAssignedEnvelope": true,
+    "rejectedByOtherFamilies": true,
+    "materialOverrideRatio": 0,
+    "clips": {
+      "idle": {
+        "status": "PASS"
+      },
+      "run": {
+        "status": "PASS"
+      },
+      "slash": {
+        "status": "PASS"
+      }
+    }
+  },
+  {
+    "id": "small-01",
+    "name": "Shadow Halfling Rogue (Holdout Small-01)",
+    "assignedFamily": "humanoid-small",
+    "assignedRig": "humanoid-small-v1",
+    "fitsAssignedEnvelope": true,
+    "rejectedByOtherFamilies": true,
+    "materialOverrideRatio": 0,
+    "clips": {
+      "idle": {
+        "status": "PASS"
+      },
+      "run": {
+        "status": "PASS"
+      },
+      "slash": {
+        "status": "PASS"
+      }
+    }
+  },
+  {
+    "id": "small-02",
+    "name": "Clockwork Dwarf Tinkerer (Holdout Small-02)",
+    "assignedFamily": "humanoid-small",
+    "assignedRig": "humanoid-small-v1",
+    "fitsAssignedEnvelope": true,
+    "rejectedByOtherFamilies": true,
+    "materialOverrideRatio": 0,
+    "clips": {
+      "idle": {
+        "status": "PASS"
+      },
+      "run": {
+        "status": "PASS"
+      },
+      "slash": {
+        "status": "PASS"
+      }
+    }
+  }
+]

@@ -23,8 +23,9 @@ Following rigorous protocol discipline:
 - Run locomotion (`run`) achieved **80% reuse** (4/5).
 - High-stress combat (`slash`) achieved **60% reuse** (3/5), failing cleanly on characters that mathematically belong to alternate rig families (`HumanoidHeavy` and `HumanoidSmall`).
 
-**Engineering Outcome**: **`RIG-FAMILY ENGINEERING PASS`**  
-**Recommendation on Phase B**: **`YES`** (Proceed to Minimal Rig Adjuster).
+**Engineering Outcome (Updated via Phase A.1 Addendum)**: **`SINGLE-RIG HYPOTHESIS FALSIFIED; RIG-FAMILY HYPOTHESIS SUPPORTED — VERIFICATION PENDING`**  
+*(Historical Phase A label: `RIG-FAMILY ENGINEERING PASS` — corrected in Phase A.1 prior to independent holdout verification)*  
+**Recommendation on Phase B**: **`HOLD PENDING PHASE A.1`** (Complete rig family holdout verification before initiating editor implementation).
 
 ---
 
@@ -144,13 +145,16 @@ This demonstrates that for a 100-character roster, **3 to 4 canonical rig famili
 
 ---
 
-## 9. Final Phase A Classification
-
-$$\mathbf{RIG-FAMILY\ ENGINEERING\ PASS}$$
-
-### Definition Confirmation:
-- Evidence confirms that shared 17-bone topology, delta setup pose semantics, dynamic draw order, and standardized cutout contracts succeed.
-- Multiple frozen proportion profiles (`HumanoidNormal`, `HumanoidHeavy`, `HumanoidSmall`) are mathematically required and justified to prevent retargeting distortion across diverse body types.
+## 9. Final Phase A Classification & Phase A.1 Addendum
+ 
+$$\mathbf{SINGLE-RIG\ HYPOTHESIS\ FALSIFIED;\ RIG-FAMILY\ HYPOTHESIS\ SUPPORTED\ —\ VERIFICATION\ PENDING}$$
+*(Originally labeled $\mathbf{RIG-FAMILY\ ENGINEERING\ PASS}$ at Phase A close)*
+ 
+### Methodological Correction Note (Phase A.1 Addendum):
+- Phase A demonstrated that a single geometric rig profile (`humanoid-normal-v1`) cannot cover heavy or small humanoid archetypes (`test-c`, `test-e`).
+- The hypothesis that 3 canonical families (`HumanoidNormal`, `HumanoidHeavy`, `HumanoidSmall`) can satisfy these archetypes was formulated from that failure data.
+- However, labeling this an "Engineering Pass" before testing the proposed families against fresh holdouts constituted a methodological gap. `test-c` and `test-e` were the calibration sources for the new families, not an independent validation set.
+- Phase A.1 directly closes this gap by freezing the 3-family system and testing it against a brand-new untouched holdout set.
 
 ---
 

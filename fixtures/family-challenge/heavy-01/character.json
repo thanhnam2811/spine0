@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "id": "heavy-01",
+  "name": "Iron Citadel Guardian (Holdout Heavy-01)",
+  "rig": "humanoid-heavy-v1",
+  "referenceHeight": 1000.0,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/heavy-01/bastion_helm.png",
+      "width": 165,
+      "height": 195,
+      "pivot": [0.5, 0.85]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/heavy-01/citadel_plate.png",
+      "width": 175,
+      "height": 225,
+      "pivot": [0.5, 0.90],
+      "distalAnchor": [0.5, 0.10]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/heavy-01/tasset_guard.png",
+      "width": 145,
+      "height": 100,
+      "pivot": [0.5, 0.50]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/heavy-01/bastion_pauldron_r.png",
+      "width": 90,
+      "height": 150,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/heavy-01/heavy_vambrace_r.png",
+      "width": 75,
+      "height": 135,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/heavy-01/crusher_gauntlet_r.png",
+      "width": 58,
+      "height": 62,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/heavy-01/bastion_pauldron_l.png",
+      "width": 90,
+      "height": 150,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/heavy-01/heavy_vambrace_l.png",
+      "width": 75,
+      "height": 135,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/heavy-01/crusher_gauntlet_l.png",
+      "width": 58,
+      "height": 62,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/heavy-01/plated_thigh_r.png",
+      "width": 92,
+      "height": 245,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/heavy-01/bulwark_greave_r.png",
+      "width": 82,
+      "height": 225,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/heavy-01/iron_solleret_r.png",
+      "width": 95,
+      "height": 65,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/heavy-01/plated_thigh_l.png",
+      "width": 92,
+      "height": 245,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/heavy-01/bulwark_greave_l.png",
+      "width": 82,
+      "height": 225,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/heavy-01/iron_solleret_l.png",
+      "width": 95,
+      "height": 65,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/heavy-01/iron_warhammer.png",
+      "width": 120,
+      "height": 320,
+      "pivot": [0.5, 0.85],
+      "distalAnchor": [0.5, 0.05]
+    }
+  },
+  "boneOverrides": {
+    "torso": { "length": 215.0 },
+    "upper_arm_L": { "x": 2.0 },
+    "upper_arm_R": { "x": -2.0 },
+    "thigh_L": { "x": 1.0 },
+    "thigh_R": { "x": -1.0 }
+  }
+}

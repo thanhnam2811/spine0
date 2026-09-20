@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "id": "test-c",
+  "name": "Wide Armored Warrior (Test-C Calibrated)",
+  "rig": "humanoid-heavy-v1",
+  "referenceHeight": 1000.0,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/test-c/helmet.png",
+      "width": 160,
+      "height": 190,
+      "pivot": [0.5, 0.85]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/test-c/plate_cuirass.png",
+      "width": 170,
+      "height": 220,
+      "pivot": [0.5, 0.90],
+      "distalAnchor": [0.5, 0.10]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/test-c/belt_guard.png",
+      "width": 140,
+      "height": 95,
+      "pivot": [0.5, 0.50]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/test-c/pauldron_r.png",
+      "width": 85,
+      "height": 145,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/test-c/vambrace_r.png",
+      "width": 70,
+      "height": 130,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/test-c/gauntlet_r.png",
+      "width": 55,
+      "height": 60,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/test-c/pauldron_l.png",
+      "width": 85,
+      "height": 145,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/test-c/vambrace_l.png",
+      "width": 70,
+      "height": 130,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/test-c/gauntlet_l.png",
+      "width": 55,
+      "height": 60,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/test-c/cuisse_r.png",
+      "width": 90,
+      "height": 240,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/test-c/greave_r.png",
+      "width": 80,
+      "height": 220,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/test-c/solleret_r.png",
+      "width": 90,
+      "height": 60,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/test-c/cuisse_l.png",
+      "width": 90,
+      "height": 240,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/test-c/greave_l.png",
+      "width": 80,
+      "height": 220,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/test-c/solleret_l.png",
+      "width": 90,
+      "height": 60,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/test-c/colossal_greatsword.png",
+      "width": 110,
+      "height": 340,
+      "pivot": [0.5, 0.85],
+      "distalAnchor": [0.5, 0.05]
+    }
+  },
+  "boneOverrides": {}
+}

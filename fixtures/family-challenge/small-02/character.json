@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "id": "small-02",
+  "name": "Clockwork Dwarf Tinkerer (Holdout Small-02)",
+  "rig": "humanoid-small-v1",
+  "referenceHeight": 1000.0,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/small-02/goggle_dwarf_head.png",
+      "width": 240,
+      "height": 280,
+      "pivot": [0.5, 0.85]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/small-02/smith_apron.png",
+      "width": 140,
+      "height": 180,
+      "pivot": [0.5, 0.90],
+      "distalAnchor": [0.5, 0.10]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/small-02/tool_belt.png",
+      "width": 125,
+      "height": 80,
+      "pivot": [0.5, 0.50]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/small-02/brawny_arm_r.png",
+      "width": 58,
+      "height": 100,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/small-02/tinker_glove_r.png",
+      "width": 52,
+      "height": 90,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/small-02/heavy_glove_r.png",
+      "width": 45,
+      "height": 45,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/small-02/brawny_arm_l.png",
+      "width": 58,
+      "height": 100,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/small-02/tinker_glove_l.png",
+      "width": 52,
+      "height": 90,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/small-02/heavy_glove_l.png",
+      "width": 45,
+      "height": 45,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/small-02/stocky_thigh_r.png",
+      "width": 72,
+      "height": 160,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/small-02/work_boot_r.png",
+      "width": 68,
+      "height": 150,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/small-02/iron_toe_r.png",
+      "width": 78,
+      "height": 55,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/small-02/stocky_thigh_l.png",
+      "width": 72,
+      "height": 160,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/small-02/work_boot_l.png",
+      "width": 68,
+      "height": 150,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/small-02/iron_toe_l.png",
+      "width": 78,
+      "height": 55,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/small-02/steam_wrench.png",
+      "width": 55,
+      "height": 170,
+      "pivot": [0.5, 0.85],
+      "distalAnchor": [0.5, 0.10]
+    }
+  },
+  "boneOverrides": {
+    "head": { "length": 250.0 },
+    "torso": { "length": 156.0 },
+    "upper_arm_L": { "x": 3.0 },
+    "upper_arm_R": { "x": -3.0 },
+    "thigh_L": { "x": 2.0, "length": 145.0 },
+    "thigh_R": { "x": -2.0, "length": 145.0 },
+    "shin_L": { "length": 135.0 },
+    "shin_R": { "length": 135.0 }
+  }
+}

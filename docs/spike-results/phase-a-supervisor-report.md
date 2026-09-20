@@ -4,9 +4,9 @@
 **Mã dự án**: `spine0` (`animation-factory`)  
 **Repository**: [github.com/thanhnam2811/spine0](https://github.com/thanhnam2811/spine0) (`main`)  
 **Giấy phép**: [MIT License](file:///G:/PERSONAL/spine0/LICENSE)  
-**Thời gian hoàn thành**: 2026-09-19  
-**Kết luận nghiệm thu Phase A**: **`RIG-FAMILY ENGINEERING PASS`**  
-**Đề xuất chuyển giai đoạn**: **`CHẤP THUẬN TIẾN HÀNH PHASE B (MINIMAL RIG ADJUSTER)`**
+**Kết luận nghiệm thu Phase A (Cập nhật Addendum Phase A.1)**: **`SINGLE-RIG HYPOTHESIS FALSIFIED; RIG-FAMILY HYPOTHESIS SUPPORTED — VERIFICATION PENDING`**  
+*(Kết luận ban đầu `RIG-FAMILY ENGINEERING PASS` được điều chỉnh để phản ánh tính độc lập thực nghiệm trước khi đo kiểm holdout mới)*  
+**Đề xuất chuyển giai đoạn**: **`TẠM DỪNG CHỜ PHASE A.1 HOÀN THÀNH`** (Tiến hành thẩm định hệ thống Rig Family trên bộ holdout độc lập mới trước khi code Editor).
 
 ---
 
@@ -15,9 +15,9 @@
 ### 1.1. Câu hỏi cốt lõi
 > *Các nhân vật 2D Style-B tuân thủ art contract có thể tái sử dụng các animation template dạng khung xương (skeletal) mà không cần chỉnh sửa keyframe riêng cho từng nhân vật hay không?*
 
-### 1.2. Kết quả Falsification
+### 1.2. Kết quả Falsification & Hiệu chỉnh phương pháp luận Phase A.1
 - **Giả thuyết đơn rig (Single Rig)**: Cho rằng một geometric rig profile duy nhất có thể co giãn cho mọi tỷ lệ humanoid $\to$ **BÁC BỎ (FALSIFIED)** bởi các mẫu thử thách cực đoan (`test-c` giáp hộ tâm vai rộng và `test-e` semi-chibi).
-- **Mô hình Rig Family**: Giữ nguyên topology 17 xương, delta setup pose và slot contract, nhưng phân cụm theo các family profile tỷ lệ (`HumanoidNormal`, `HumanoidHeavy`, `HumanoidSmall`) $\to$ **XÁC THỰC THÀNH CÔNG (VERIFIED)**.
+- **Mô hình Rig Family**: Giữ nguyên topology 17 xương, delta setup pose và slot contract, nhưng phân cụm theo các family profile tỷ lệ (`HumanoidNormal`, `HumanoidHeavy`, `HumanoidSmall`) $\to$ **ĐƯỢC HỖ TRỢ BỞI DỮ LIỆU CALIBRATION — CHỜ THẨM ĐỊNH HOLDOUT (VERIFICATION PENDING)**. (Các mẫu `test-c` và `test-e` là căn cứ hình thành giả thuyết nên không thể dùng làm tập holdout độc lập; cần bộ holdout mới hoàn toàn trong Phase A.1).
 
 ---
 
@@ -143,12 +143,10 @@ Toàn bộ **27/27 test tự động** vượt qua $100\%$ không có cảnh bá
 
 ## 8. Quyết Định & Lộ Trình Kế Tiếp
 
-1. **Kết quả Phase A**: Đạt tiêu chuẩn **`RIG-FAMILY ENGINEERING PASS`**.
-2. **Kế hoạch Phase B**:
-   - Triển khai ứng dụng `apps/editor/` dưới dạng **Minimal Rig Adjuster**:
-     - Điều chỉnh pan/zoom/select.
-     - Căn chỉnh trực quan Normalized Pivot & Joint Distal Anchor.
-     - Tinh chỉnh các setup overrides nằm trong ngưỡng cho phép.
-     - Gán slot cho part và draw order tĩnh ban đầu.
-     - Hệ thống History Transaction (Undo/Redo coalesced).
-   - Tiếp tục **tuyệt đối không làm**: timeline editor, keyframing, IK, mesh skinning, state machine.
+1. **Kết quả Phase A (Sau hiệu chỉnh Phase A.1)**: **`SINGLE-RIG HYPOTHESIS FALSIFIED; RIG-FAMILY HYPOTHESIS SUPPORTED — VERIFICATION PENDING`**.
+2. **Kế hoạch Phase A.1**:
+   - Chuyển `test-c` và `test-e` về tập Calibration mở rộng cho Heavy và Small families.
+   - Định nghĩa đóng băng 3 Rig Families (`HumanoidNormal`, `HumanoidHeavy`, `HumanoidSmall`) cùng envelopes và animations.
+   - Thử nghiệm trên 6 mẫu holdout độc lập hoàn toàn mới (`normal-01`, `normal-02`, `heavy-01`, `heavy-02`, `small-01`, `small-02`).
+3. **Kế hoạch Phase B (Sau khi hoàn tất Phase A.1)**:
+   - Triển khai ứng dụng `apps/editor/` dưới dạng **Minimal Rig Adjuster** cho các canonical rig families đã được chứng minh.

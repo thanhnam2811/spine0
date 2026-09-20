@@ -1,0 +1,61 @@
+{
+  "version": "0.1.0",
+  "id": "envelope-humanoid-small-v1",
+  "targetRigFamily": "humanoid-small",
+  "ratios": {
+    "head_to_height": {
+      "min": 0.22,
+      "nominal": 0.26,
+      "max": 0.32,
+      "description": "Head length to character reference height ratio"
+    },
+    "torso_to_height": {
+      "min": 0.12,
+      "nominal": 0.15,
+      "max": 0.20,
+      "description": "Torso length to reference height ratio"
+    },
+    "shoulder_span_to_height": {
+      "min": 0.020,
+      "nominal": 0.036,
+      "max": 0.055,
+      "description": "Projected 2D 3/4 shoulder span to reference height ratio"
+    },
+    "hip_span_to_height": {
+      "min": 0.030,
+      "nominal": 0.048,
+      "max": 0.070,
+      "description": "Projected 2D 3/4 hip span to reference height ratio"
+    },
+    "upper_arm_to_height": {
+      "min": 0.065,
+      "nominal": 0.085,
+      "max": 0.10,
+      "description": "Upper arm length to reference height ratio"
+    },
+    "forearm_to_upper_arm": {
+      "min": 0.75,
+      "nominal": 0.88,
+      "max": 1.05,
+      "description": "Forearm to upper arm ratio"
+    },
+    "thigh_to_height": {
+      "min": 0.11,
+      "nominal": 0.14,
+      "max": 0.17,
+      "description": "Thigh length to reference height ratio"
+    },
+    "shin_to_thigh": {
+      "min": 0.80,
+      "nominal": 0.93,
+      "max": 1.05,
+      "description": "Shin to thigh ratio"
+    },
+    "total_leg_to_height": {
+      "min": 0.22,
+      "nominal": 0.27,
+      "max": 0.35,
+      "description": "Total leg length to reference height ratio"
+    }
+  }
+}

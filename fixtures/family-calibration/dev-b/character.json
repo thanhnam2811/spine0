@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "id": "dev-b",
+  "name": "Slim Robe Cultivator (Dev-B)",
+  "rig": "humanoid-normal-v1",
+  "referenceHeight": 1000.0,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/dev-b/head.png",
+      "width": 130,
+      "height": 175,
+      "pivot": [0.5, 0.85]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/dev-b/robe_torso.png",
+      "width": 115,
+      "height": 190,
+      "pivot": [0.5, 0.90],
+      "distalAnchor": [0.5, 0.10]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/dev-b/robe_sash.png",
+      "width": 105,
+      "height": 75,
+      "pivot": [0.5, 0.50]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/dev-b/sleeve_near.png",
+      "width": 75,
+      "height": 130,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/dev-b/forearm_r.png",
+      "width": 45,
+      "height": 115,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/dev-b/hand_r.png",
+      "width": 38,
+      "height": 48,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/dev-b/sleeve_far.png",
+      "width": 75,
+      "height": 130,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/dev-b/forearm_l.png",
+      "width": 45,
+      "height": 115,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/dev-b/hand_l.png",
+      "width": 38,
+      "height": 48,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/dev-b/robe_skirt_near.png",
+      "width": 80,
+      "height": 230,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/dev-b/boot_near.png",
+      "width": 55,
+      "height": 200,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/dev-b/foot_r.png",
+      "width": 65,
+      "height": 48,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/dev-b/robe_skirt_far.png",
+      "width": 80,
+      "height": 230,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/dev-b/boot_far.png",
+      "width": 55,
+      "height": 200,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/dev-b/foot_l.png",
+      "width": 65,
+      "height": 48,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/dev-b/jade_staff.png",
+      "width": 45,
+      "height": 320,
+      "pivot": [0.5, 0.80],
+      "distalAnchor": [0.5, 0.10]
+    }
+  },
+  "boneOverrides": {
+    "torso": {
+      "length": 175.0
+    }
+  }
+}

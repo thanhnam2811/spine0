@@ -1,0 +1,107 @@
+{
+  "freezeTimestamp": "2026-09-20T04:36:30.000Z",
+  "phase": "A.1",
+  "schemaVersion": "0.1.0",
+  "rigVersion": 1,
+  "retargetVersion": "0.2.0",
+  "envelopeVersion": "0.2.0",
+  "familySystem": [
+    "HumanoidNormal",
+    "HumanoidHeavy",
+    "HumanoidSmall"
+  ],
+  "familyRigs": {
+    "humanoid-normal-v1": {
+      "id": "humanoid-normal-v1",
+      "family": "humanoid-normal",
+      "path": "assets/rigs/humanoid-normal-v1/humanoid-normal-v1.rig.json",
+      "hash": "bbcaeed1844e17d8b093efb04864fa8e5445254a1d0e05c28a39da46bf276b26"
+    },
+    "humanoid-heavy-v1": {
+      "id": "humanoid-heavy-v1",
+      "family": "humanoid-heavy",
+      "path": "assets/rigs/humanoid-heavy-v1/humanoid-heavy-v1.rig.json",
+      "hash": "8091d050c0adf7c84c1ea962f808d30e7746993dfc418592740a7d7cbb1c1d62"
+    },
+    "humanoid-small-v1": {
+      "id": "humanoid-small-v1",
+      "family": "humanoid-small",
+      "path": "assets/rigs/humanoid-small-v1/humanoid-small-v1.rig.json",
+      "hash": "5322de71ec8c06d1ad4c425a4a0442b7546a0cd75a146ac59bdf4c883c078eb4"
+    }
+  },
+  "familyEnvelopes": {
+    "envelope-humanoid-normal-v1": {
+      "id": "envelope-humanoid-normal-v1",
+      "targetRigFamily": "humanoid-normal",
+      "path": "assets/rigs/humanoid-normal-v1/humanoid-normal-v1.envelope.json",
+      "hash": "5eb49e6b26aea0c384b43819f72deb15206068f07100448888e2157af9cb9493"
+    },
+    "envelope-humanoid-heavy-v1": {
+      "id": "envelope-humanoid-heavy-v1",
+      "targetRigFamily": "humanoid-heavy",
+      "path": "assets/rigs/humanoid-heavy-v1/humanoid-heavy-v1.envelope.json",
+      "hash": "a7e7918a2b495fb0bf22326ce8c2e15d66ce82444652f9a06fa2e448ad075977"
+    },
+    "envelope-humanoid-small-v1": {
+      "id": "envelope-humanoid-small-v1",
+      "targetRigFamily": "humanoid-small",
+      "path": "assets/rigs/humanoid-small-v1/humanoid-small-v1.envelope.json",
+      "hash": "c2a4c6163b1949efa488a695b46737c142180a50770e3fe5ad835e74827b47de"
+    }
+  },
+  "animationTemplates": {
+    "shared": {
+      "idle": {
+        "id": "idle",
+        "path": "assets/animations/shared/idle.anim.json",
+        "hash": "41916334fcead2ef0157e8cbdf03f8aa4dde864a96d374d34bc02d1806727409"
+      }
+    },
+    "normal": {
+      "run": {
+        "id": "run-normal",
+        "path": "assets/animations/normal/run.anim.json",
+        "hash": "94bc327de74aa132ec7ed8fbd9c800848fe789909da23ac7bec557e72fde3c00"
+      },
+      "slash": {
+        "id": "slash-normal",
+        "path": "assets/animations/normal/slash.anim.json",
+        "hash": "c0d110462819c58196304e36c7730dff9de7bf3ab9152d1fc6e6e9180957db27"
+      }
+    },
+    "heavy": {
+      "run": {
+        "id": "run-heavy",
+        "path": "assets/animations/heavy/run.anim.json",
+        "hash": "ac781546522f103533b3c2f6963112f0ee5bd6dd2804b4509bcf2cc71c952629"
+      },
+      "slash": {
+        "id": "slash-heavy",
+        "path": "assets/animations/heavy/slash.anim.json",
+        "hash": "dad9f0fb6984d89cf36ca439535d36f6ccf049458215b089c2e3a9bc85b89502"
+      }
+    },
+    "small": {
+      "run": {
+        "id": "run-small",
+        "path": "assets/animations/small/run.anim.json",
+        "hash": "306027b6af364b5d6276773fd882e02ebead24ad7cb7d3cbf16c1c14bea900f5"
+      },
+      "slash": {
+        "id": "slash-small",
+        "path": "assets/animations/small/slash.anim.json",
+        "hash": "bc9da48ef4f98ab1258b9095f25945a6abd66c764e83fe94acfaef2cb3d2b0b8"
+      }
+    }
+  },
+  "frozenRules": {
+    "canonicalBonesCount": 17,
+    "canonicalSlotsCount": 11,
+    "coordinateSystem": "X+ right, Y+ down, clockwise positive",
+    "facingDirection": "Right (+X)",
+    "scaleOverridesForbidden": true,
+    "hierarchyMutationForbidden": true,
+    "materialOverrideRatioThreshold": 0.4
+  }
+}

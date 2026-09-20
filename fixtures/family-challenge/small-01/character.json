@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "id": "small-01",
+  "name": "Shadow Halfling Rogue (Holdout Small-01)",
+  "rig": "humanoid-small-v1",
+  "referenceHeight": 1000.0,
+  "parts": {
+    "head": {
+      "slot": "slot_head",
+      "texture": "textures/small-01/hooded_head.png",
+      "width": 245,
+      "height": 285,
+      "pivot": [0.5, 0.85]
+    },
+    "torso": {
+      "slot": "slot_torso",
+      "texture": "textures/small-01/leather_tunic.png",
+      "width": 135,
+      "height": 175,
+      "pivot": [0.5, 0.90],
+      "distalAnchor": [0.5, 0.10]
+    },
+    "pelvis": {
+      "slot": "slot_pelvis",
+      "texture": "textures/small-01/rogue_belt.png",
+      "width": 115,
+      "height": 75,
+      "pivot": [0.5, 0.50]
+    },
+    "upper_arm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/small-01/arm_near.png",
+      "width": 52,
+      "height": 95,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/small-01/forearm_near.png",
+      "width": 48,
+      "height": 85,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_R": {
+      "slot": "slot_arm_near",
+      "texture": "textures/small-01/glove_r.png",
+      "width": 42,
+      "height": 42,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "upper_arm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/small-01/arm_far.png",
+      "width": 52,
+      "height": 95,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "forearm_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/small-01/forearm_far.png",
+      "width": 48,
+      "height": 85,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "hand_L": {
+      "slot": "slot_arm_far",
+      "texture": "textures/small-01/glove_l.png",
+      "width": 42,
+      "height": 42,
+      "pivot": [0.5, 0.20],
+      "distalAnchor": [0.5, 0.80]
+    },
+    "thigh_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/small-01/thigh_r.png",
+      "width": 68,
+      "height": 155,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/small-01/boot_r.png",
+      "width": 62,
+      "height": 145,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_R": {
+      "slot": "slot_leg_near",
+      "texture": "textures/small-01/foot_r.png",
+      "width": 72,
+      "height": 52,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "thigh_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/small-01/thigh_l.png",
+      "width": 68,
+      "height": 155,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "shin_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/small-01/boot_l.png",
+      "width": 62,
+      "height": 145,
+      "pivot": [0.5, 0.15],
+      "distalAnchor": [0.5, 0.85]
+    },
+    "foot_L": {
+      "slot": "slot_leg_far",
+      "texture": "textures/small-01/foot_l.png",
+      "width": 72,
+      "height": 52,
+      "pivot": [0.3, 0.30],
+      "distalAnchor": [0.8, 0.80]
+    },
+    "weapon": {
+      "slot": "slot_weapon",
+      "texture": "textures/small-01/shadow_stiletto.png",
+      "width": 45,
+      "height": 150,
+      "pivot": [0.5, 0.85],
+      "distalAnchor": [0.5, 0.10]
+    }
+  },
+  "boneOverrides": {
+    "head": { "length": 270.0 },
+    "torso": { "length": 145.0 },
+    "upper_arm_L": { "x": -1.0 },
+    "upper_arm_R": { "x": 1.0 },
+    "shin_L": { "length": 125.0 },
+    "shin_R": { "length": 125.0 }
+  }
+}
