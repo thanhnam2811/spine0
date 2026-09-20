@@ -13,7 +13,7 @@ PHASE B — MINIMAL RIG ADJUSTER: PASS
 Phase B successfully delivered the **Minimal Rig Adjuster** (`apps/editor`), an interactive, lightweight web-based visual tool engineered specifically to calibrate Style-B humanoid character rigs against canonical rig families (`HumanoidNormal`, `HumanoidHeavy`, `HumanoidSmall`).
 
 By integrating the headless core model (`EditorDocument`, `Command`, `HistoryManager`) directly with the frozen Phase A/A.1 validation engine and PixiJS v8 interactive rendering, Phase B proves that:
-1. **Bounded Visual Setup is Ergonomic & Fast**: Character setup overrides (bone pivot translation, rest angle, distal anchors, slot re-parenting, and draw order) can be calibrated visually in $< 2$ minutes without DCC animation tool overhead.
+1. **Bounded Visual Setup is Ergonomic & Non-Destructive**: Character setup overrides (bone pivot translation, rest angle, distal anchors, slot re-parenting, and draw order) are calibrated visually without DCC animation tool overhead. *(Human Adjustment Time: NOT YET MEASURED / NOT YET HUMAN-VALIDATED — instrumentation is in place for future empirical study).*
 2. **Interactive Transaction Coalescing Eliminates History Bloat**: Continuous drag gestures (pointer move events) coalesce into exactly one undo entry, providing a responsive and non-destructive user editing experience.
 3. **Real-time Contract Enforcement Prevents Invalid Submissions**: The live validation engine continuously computes contract compliance, envelope bounds, and material override ratios ($\le 40\%$) during manipulation, making it impossible to produce out-of-spec character definitions unnoticed.
 4. **Multi-Family Assistance Streamlines Re-Targeting**: The Family Fit panel automatically scores characters against all 3 canonical families simultaneously and provides one-click re-targeting to the optimal family.
@@ -37,17 +37,21 @@ By integrating the headless core model (`EditorDocument`, `Command`, `HistoryMan
 ## 3. Quantitative Verification Evidence
 
 ### 3.1 Unit & Parity Test Suite
-- **13 Test Files, 53 Tests Passing (100% Pass Rate)**:
-  - 5 tests in `apps/editor/tests/editor-model.test.ts` (command execution, transaction coalescing, undo/redo, metrics).
+- **13 Test Files, 61 Tests Passing (100% Pass Rate)**:
+  - 13 tests in `apps/editor/tests/editor-model.test.ts` (commands, transaction coalescing, undo/redo, deep-freeze immutability, isolation, world transform with rotation, compiler integration, export round-trip).
   - 4 tests in `packages/runtime-pixi/tests/parity.test.ts` (evaluator vs runtime pose parity across 3 families).
   - 7 tests in `tests/run-contact-geometry.test.ts` and `tests/slash-clearance-geometry.test.ts` (foot contact & weapon clearance).
   - 5 tests in `packages/validator/tests/assets-integrity.test.ts` (freeze manifest & alias parity).
   - 32 tests in compiler, validator, anim-core, and challenge evaluation suites.
 
-### 3.2 Compilation & Static Analysis
+### 3.2 Human Usability & Ergonomics Status
+- **Human Adjustment Time**: **`NOT YET MEASURED`** (`NOT YET HUMAN-VALIDATED`).
+- Instrumentation (`SessionMetricsTracker`) records session timestamps, adjustment counts, undos/redos, and validation iterations ready for formal human testing in subsequent phases.
+
+### 3.3 Compilation & Static Analysis
 - **TypeScript**: Full project typecheck passes with zero errors (`tsc -b`).
 - **ESLint**: Strict linting passes across all `packages/` and `apps/` with zero warnings.
-- **Production Build**: `tsc && vite build` generates clean production distribution (`apps/editor/dist`) with chunk optimization.
+- **Production Build**: Root `pnpm build` builds packages, preview, and editor cleanly.
 - **Offline Lockfile**: `pnpm-lock.yaml` fully resolved and verified (`pnpm install --frozen-lockfile`).
 
 ---

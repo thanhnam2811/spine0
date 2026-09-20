@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-The **Minimal Rig Adjuster** is designed for 2D character technical artists to calibrate Style-B humanoid characters against a target canonical rig family in under 2 minutes.
+The **Minimal Rig Adjuster** is designed for 2D character technical artists to calibrate Style-B humanoid characters against a target canonical rig family without DCC tool overhead *(Human Adjustment Time: NOT YET MEASURED / NOT YET HUMAN-VALIDATED)*.
 
 ---
 

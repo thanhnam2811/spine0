@@ -20,7 +20,7 @@ The following features were intentionally excluded from Phase B to prevent scope
 | **Inverse Kinematics (IK) Solver** | The canonical rig hierarchy is forward-kinematic (FK) with bounded setup offsets. Retargeting uses hierarchical parent-space FK transforms. Dynamic foot planting/ground IK is handled at game engine runtime if needed. | Post-Spike Engine Integration |
 | **Mesh Deformation & Skinning (Weights)** | Style-B characters are strictly 2D planar sliced sprite attachments (rigid slot-to-bone binding). Deformable meshes introduce huge asset creation cost and break deterministic retargeting. | Out of Scope for Style-B Contract |
 | **Animation State Machine & Transitions** | State blending, crossfades, and locomotion transitions are game engine runtime responsibilities (e.g., Unity/Unreal/Godot), not character setup tool responsibilities. | Game Engine Runtime Package |
-| **Automatic AI Segmentation & Auto-Rigging** | AI-based visual segmentation and auto-pivot guessing produce inconsistent results and lack mechanical verification guarantees. Human-guided adjustment with live validation takes $< 2$ minutes per character. | Future R&D Experiment |
+| **Automatic AI Segmentation & Auto-Rigging** | AI-based visual segmentation and auto-pivot guessing produce inconsistent results and lack mechanical verification guarantees. Human-guided adjustment with live validation enables bounded setup without algorithmic guesswork (Human adjustment time: NOT YET MEASURED). | Future R&D Experiment |
 | **Cloud Synchronization / Collaborative Editing** | Characters and rigs are version-controlled via Git in plain JSON formats (`fixtures/` and asset repos). Cloud sync introduces server maintenance and conflict resolution complexity. | Out of Scope |
 
 ---
