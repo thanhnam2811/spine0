@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { EditorDocument } from "./model/document.js";
 import { HistoryManager } from "./model/history.js";
 import { SessionMetricsTracker } from "./model/metrics.js";
+import type { VisualReviewStatus } from "./model/metrics.js";
 import { Toolbar } from "./components/Toolbar.js";
 import { HierarchyPanel } from "./components/HierarchyPanel.js";
 import { Viewport } from "./components/Viewport.js";
@@ -9,7 +10,7 @@ import { InspectorPanel } from "./components/InspectorPanel.js";
 import { ValidatorPanel } from "./components/ValidatorPanel.js";
 import { FamilyFitPanel } from "./components/FamilyFitPanel.js";
 import { PreviewControls } from "./components/PreviewControls.js";
-import { SessionMetricsModal } from "./components/SessionMetricsModal.js";
+import { SessionControlModal } from "./components/SessionControlModal.js";
 import {
   PRESET_RIGS,
   PRESET_ENVELOPES,
@@ -20,7 +21,7 @@ import {
 export const EditorApp: React.FC = () => {
   const [characterId, setCharacterId] = useState<string>("normal-01");
   const [rightTab, setRightTab] = useState<"inspector" | "validator" | "family">("inspector");
-  const [showMetricsModal, setShowMetricsModal] = useState<boolean>(false);
+  const [modalMode, setModalMode] = useState<"none" | "start" | "end" | "view">("none");
   const [, setRerender] = useState<number>(0);
 
   // Initial character snapshot for dirty state tracking
@@ -56,21 +57,10 @@ export const EditorApp: React.FC = () => {
     });
 
     const unsubCmd = history.onCommandCommitted((cmd) => {
-      if (cmd.id === "SET_PART_PIVOT") {
-        tracker.recordAdjustment("pivot", (cmd as any).partKey, (cmd as any).nextPivot);
-      } else if (cmd.id === "SET_PART_DISTAL_ANCHOR") {
-        tracker.recordAdjustment("anchor", (cmd as any).partKey, (cmd as any).nextAnchor);
-      } else if (cmd.id === "SET_BONE_DISTAL_TIP") {
-        tracker.recordAdjustment("anchor", (cmd as any).boneId);
-      } else if (cmd.id === "SET_BONE_OVERRIDE") {
-        tracker.recordAdjustment("position", (cmd as any).boneId);
-      } else if (cmd.id === "SET_PART_SLOT_BINDING") {
-        tracker.recordAdjustment("slot", (cmd as any).partKey);
-      } else if (cmd.id === "SET_SETUP_DRAW_ORDER") {
-        tracker.recordAdjustment("drawOrder");
-      } else {
-        tracker.recordAdjustment();
-      }
+      const category = (cmd as any).telemetryCategory;
+      const target = (cmd as any).partKey ?? (cmd as any).boneId;
+      const val = (cmd as any).nextPivot ?? (cmd as any).nextAnchor ?? (cmd as any).nextOverride;
+      tracker.recordAdjustment(category, target, val);
     });
 
     const unsubUndo = history.onUndo(() => {
@@ -98,7 +88,7 @@ export const EditorApp: React.FC = () => {
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
   useEffect(() => {
     const interval = setInterval(() => {
-      setElapsedSeconds(tracker.getSummary().sessionDurationSeconds);
+      setElapsedSeconds(tracker.getElapsedSeconds());
     }, 1000);
     return () => clearInterval(interval);
   }, [tracker]);
@@ -156,12 +146,67 @@ export const EditorApp: React.FC = () => {
   };
 
   const handleSelectPreset = (newCharId: string) => {
-    if (tracker.isActive() && isDirty) {
-      if (!confirm(`Switching character will discard current unsaved session for '${characterId}'. Continue?`)) {
+    if (tracker.isActive()) {
+      alert(`A calibration session is currently ACTIVE for character '${characterId}'. Please end or abort the session before switching characters.`);
+      return;
+    }
+    if (isDirty) {
+      if (!confirm(`Switching character will discard uncommitted changes for '${characterId}'. Continue?`)) {
         return;
       }
     }
     setCharacterId(newCharId);
+  };
+
+  const handleStartSession = (operatorId: string) => {
+    tracker.startSession({
+      operatorId,
+      characterId,
+      initialIssueCount: doc.validation.issues.length,
+      baselineCharacterJson: JSON.stringify(doc.character)
+    });
+    setModalMode("none");
+    setRerender((v) => v + 1);
+  };
+
+  const handleEndSession = (visualVerdict: VisualReviewStatus, visualNotes: string) => {
+    const record = tracker.endSession(visualVerdict, visualNotes, JSON.stringify(doc.character));
+    setModalMode("none");
+    setRerender((v) => v + 1);
+
+    // Automatically export/download session record file
+    try {
+      const jsonStr = JSON.stringify(record, null, 2);
+      navigator.clipboard?.writeText?.(jsonStr);
+      const blob = new Blob([jsonStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${characterId}.session.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.warn("Auto-download session record failed:", e);
+    }
+  };
+
+  const handleExportEndedRecord = () => {
+    const record = tracker.exportEndedRecord();
+    if (record) {
+      try {
+        const jsonStr = JSON.stringify(record, null, 2);
+        navigator.clipboard?.writeText?.(jsonStr);
+        const blob = new Blob([jsonStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${characterId}.session.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        console.warn("Export session record failed:", e);
+      }
+    }
   };
 
   return (
@@ -172,8 +217,20 @@ export const EditorApp: React.FC = () => {
         history={history}
         isDirty={isDirty}
         selectedCharacterId={characterId}
+        sessionStatus={tracker.getStatus()}
+        elapsedSeconds={elapsedSeconds}
+        totalAdjustments={tracker.getTotalAdjustments()}
         onSelectPreset={handleSelectPreset}
-        onOpenMetrics={() => setShowMetricsModal(true)}
+        onOpenMetrics={() => setModalMode("view")}
+        onRequestStartSession={() => setModalMode("start")}
+        onRequestEndSession={() => setModalMode("end")}
+        onRequestAbortSession={() => {
+          if (confirm(`Abort the active calibration session for '${characterId}'? All session progress will be discarded.`)) {
+            tracker.abortSession();
+            setRerender((v) => v + 1);
+          }
+        }}
+        onExportEndedRecord={handleExportEndedRecord}
         onExport={() => tracker.markExported()}
       />
 
@@ -310,7 +367,15 @@ export const EditorApp: React.FC = () => {
 
           <span className="flex items-center gap-1.5">
             <span className="text-gray-500">Session:</span>
-            <span className="text-gray-200 font-medium">{formattedTimer}</span>
+            <span className={
+              tracker.getStatus() === "ACTIVE"
+                ? "text-cyan-400 font-bold"
+                : tracker.getStatus() === "ENDED"
+                ? "text-emerald-400 font-medium"
+                : "text-gray-400"
+            }>
+              {tracker.getStatus() === "ACTIVE" ? `ACTIVE (${formattedTimer})` : tracker.getStatus()}
+            </span>
           </span>
 
           <span className="text-gray-700">|</span>
@@ -321,11 +386,18 @@ export const EditorApp: React.FC = () => {
         </div>
       </footer>
 
-      {/* Session Metrics Modal */}
-      {showMetricsModal && (
-        <SessionMetricsModal
+      {/* Session Control Modal (Start / End / View) */}
+      {modalMode !== "none" && (
+        <SessionControlModal
+          mode={modalMode}
           summary={tracker.getSummary()}
-          onClose={() => setShowMetricsModal(false)}
+          characterId={characterId}
+          initialIssues={tracker.getInitialIssues()}
+          currentIssues={doc.validation.issues.length}
+          onClose={() => setModalMode("none")}
+          onStartSession={handleStartSession}
+          onEndSession={handleEndSession}
+          onExportEndedRecord={handleExportEndedRecord}
         />
       )}
     </div>

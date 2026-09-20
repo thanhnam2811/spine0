@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import type { EditorDocument } from "../model/document.js";
 import type { HistoryManager } from "../model/history.js";
+import type { SessionLifecycle } from "../model/metrics.js";
 import { ChangeFamilyCommand } from "../model/commands.js";
 import { PRESET_CHARACTERS } from "../presets.js";
 
@@ -9,8 +10,15 @@ export interface ToolbarProps {
   history: HistoryManager;
   isDirty?: boolean;
   selectedCharacterId?: string;
+  sessionStatus: SessionLifecycle;
+  elapsedSeconds: number;
+  totalAdjustments: number;
   onSelectPreset: (id: string) => void;
   onOpenMetrics: () => void;
+  onRequestStartSession: () => void;
+  onRequestEndSession: () => void;
+  onRequestAbortSession: () => void;
+  onExportEndedRecord: () => void;
   onExport?: () => void;
 }
 
@@ -19,11 +27,24 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   history,
   isDirty = false,
   selectedCharacterId,
+  sessionStatus,
+  elapsedSeconds,
+  totalAdjustments,
   onSelectPreset,
   onOpenMetrics,
+  onRequestStartSession,
+  onRequestEndSession,
+  onRequestAbortSession,
+  onExportEndedRecord,
   onExport
 }) => {
   const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
+
+  const formattedTimer = React.useMemo(() => {
+    const mins = Math.floor(elapsedSeconds / 60);
+    const secs = elapsedSeconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  }, [elapsedSeconds]);
 
   const handleExportJson = () => {
     const jsonStr = doc.exportJson();
@@ -61,7 +82,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   return (
     <header className="h-13 bg-[#111622] border-b border-gray-800 px-4 flex items-center justify-between select-none shadow-sm z-20">
       {/* Left: Branding & Character/Family Selectors */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
           <div className="flex flex-col">
@@ -86,8 +107,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           <label className="text-[11px] text-gray-400 font-medium">Character:</label>
           <select
             value={selectedCharacterId ?? doc.character.id}
+            disabled={sessionStatus === "ACTIVE"}
+            title={sessionStatus === "ACTIVE" ? "Character switching is blocked while a session is ACTIVE" : "Select Character Preset"}
             onChange={(e) => onSelectPreset(e.target.value)}
-            className="bg-gray-800 hover:bg-gray-750 border border-gray-700 rounded px-2.5 py-1 text-xs text-gray-200 focus:outline-none focus:border-cyan-500 font-mono transition"
+            className={`bg-gray-800 hover:bg-gray-750 border border-gray-700 rounded px-2.5 py-1 text-xs text-gray-200 focus:outline-none focus:border-cyan-500 font-mono transition ${
+              sessionStatus === "ACTIVE" ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             <optgroup label="Phase C.1 Real Production Trial">
               {realPresets.map((id) => (
@@ -145,7 +170,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         </div>
       </div>
 
-      {/* Center: Mode Switcher */}
+      {/* Center: Mode Switcher & Session Status */}
       <div className="flex items-center gap-3">
         <div className="bg-gray-900/90 p-0.5 rounded-md border border-gray-800 flex shadow-inner">
           <button
@@ -173,6 +198,65 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             <span>Animation Preview</span>
           </button>
         </div>
+
+        <div className="h-5 w-px bg-gray-800" />
+
+        {/* Session Lifecycle Action in Center */}
+        {sessionStatus === "ACTIVE" && (
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-950/80 border border-emerald-500/80 text-emerald-300 text-xs font-mono font-bold shadow-[0_0_12px_rgba(16,185,129,0.3)]">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              ACTIVE ({formattedTimer}) [Adj: {totalAdjustments}]
+            </span>
+            <button
+              onClick={onRequestEndSession}
+              title="End current calibration session and record visual verdict"
+              className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-semibold shadow transition"
+            >
+              End Session
+            </button>
+            <button
+              onClick={onRequestAbortSession}
+              title="Abort session without producing evidence"
+              className="px-2 py-1 bg-gray-800 hover:bg-red-950/60 border border-gray-700 hover:border-red-800 text-gray-400 hover:text-red-300 rounded text-xs transition"
+            >
+              Abort
+            </button>
+          </div>
+        )}
+
+        {sessionStatus === "IDLE" && (
+          <button
+            onClick={onRequestStartSession}
+            title="Start an operator calibration session for this character"
+            className="px-3 py-1 bg-cyan-700 hover:bg-cyan-600 text-white rounded text-xs font-semibold shadow transition flex items-center gap-1.5"
+          >
+            <span>▶</span>
+            <span>Start Session</span>
+          </button>
+        )}
+
+        {sessionStatus === "ENDED" && (
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded bg-cyan-950/80 border border-cyan-700/80 text-cyan-300 text-[11px] font-mono font-medium">
+              ✓ SESSION ENDED
+            </span>
+            <button
+              onClick={onExportEndedRecord}
+              title="Export the frozen ended session record (.json)"
+              className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-xs font-semibold shadow transition"
+            >
+              Export Record
+            </button>
+            <button
+              onClick={onRequestStartSession}
+              title="Start a new session"
+              className="px-2.5 py-1 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded text-xs font-medium transition"
+            >
+              New Session
+            </button>
+          </div>
+        )}
 
         <div className="h-5 w-px bg-gray-800" />
 
@@ -211,7 +295,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       <div className="flex items-center gap-2.5">
         <button
           onClick={onOpenMetrics}
-          title="View Session Telemetry & Compliance"
+          title="View Session Telemetry & Compliance Audit"
           className="px-2.5 py-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded text-xs text-gray-300 font-medium transition shadow-sm"
         >
           Session Stats
@@ -236,4 +320,3 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     </header>
   );
 };
-

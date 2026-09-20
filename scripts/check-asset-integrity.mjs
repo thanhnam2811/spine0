@@ -278,8 +278,8 @@ export function runAssetIntegrityCheck() {
       };
     }
 
-    // Contralateral asymmetry check (exact duplication rejection test: verifies that left and right limbs
-    // are independently generated asymmetric textures rather than mirrored/copied files)
+    // Contralateral exact duplication rejection test: verifies that left and right limbs
+    // are not byte-identical copies. True visual asymmetry/perspective is verified by human visual review.
     for (const [partA, partB] of CONTRALATERAL_PAIRS) {
       if (partHashes[partA] && partHashes[partB]) {
         if (partHashes[partA] === partHashes[partB]) {

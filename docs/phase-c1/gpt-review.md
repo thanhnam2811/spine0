@@ -1,319 +1,170 @@
-Tôi đã đối chiếu trực tiếp state của repository tại bc1e2eb7e2f6fbe716368a462718c7e5ee08ad94, gồm schema, anim-core, validator, compiler, runtime-pixi, editor model/UI, Phase C.1 fixtures, ledger, integrity checker và human-gate protocol.
+Tôi đã re-review trực tiếp repository state tại c556b84883ffb80ac1c3057b7a1d48726230873f, không lấy báo cáo nghiệm thu làm nguồn sự thật. Tôi cũng xác nhận GitHub Actions của đúng commit này chạy thành công: checkout → lint → typecheck → tests → build đều success. Commit c556b84
+ · CI run #14
 
-Kết luận
+Verdict
 
-CHANGES REQUIRED.
+CHANGES REQUIRED — NOT HUMAN-GATE READY YET.
 
-Việc hạ kết luận Phase C từ “production pass” xuống ENGINEERING / SYNTHETIC PRODUCTION HARNESS PASS là đúng hướng, và việc dừng Phase C.1 trước human gate cũng đúng.
+Khác review trước, lần này tôi công nhận phần lõi visual pipeline đã tiến bộ thật:
 
-Nhưng Stage 1 hiện chưa thực sự “ASSETS READY FOR HUMAN GATE”. Có ít nhất hai blocker cấp kiến trúc khiến human trial theo tài liệu không thể tạo ra bằng chứng rigging hợp lệ ở commit này.
+Finding cũ	Re-review
+P0-1 Real artwork rendering	PASS về kiến trúc
+P0-2 Part vs Slot	PASS, còn validation hardening nhỏ
+P0-3 Sprite pivot/anchor	PASS về model/editor capability
+P0-4 Telemetry lifecycle	FAIL — blocker
+P1-1 Pixel alpha/cutout	PASS một phần
+P1-2 Seam/bleed honesty	PASS hướng xử lý
+P1-3 Provenance	UNVERIFIED / needs evidence correction
+P1-4 Engineering vs visual	FAIL một phần — blocker
 
-Blocker 1 — Editor không render character artwork
+Không cần quay lại sửa architecture visual từ đầu. Nhưng chưa được chạy human gate, vì telemetry hiện vẫn có thể sinh ra session record không đúng protocol.
 
-apps/editor/src/components/Viewport.tsx chỉ tạo Pixi Graphics cho:
+P0-1, P0-2: lần này fix là thật
 
-skeleton,
+Viewport.tsx đã thực sự tạo PixiCharacterInstance, load texture bằng textureResolver.ts, đưa character instance vào scene tree và gọi applyPose().
 
-ground,
+EvaluatedPose.parts cũng giải quyết đúng lỗi cardinality cũ. Từng part giờ có:
 
-clearance proxy,
+partKey
+slot
+bone
+worldX
+worldY
+worldRotation
+drawOrder
 
-handles,
+resolvePartBone() làm đúng separation:
 
-envelope overlay.
+part anatomical transform != layer slot transform
 
-Nó không import/use Sprite, Texture, Assets, PixiCharacterInstance, cũng không load character.parts[*].texture.
+Ví dụ forearm_R nhận transform từ forearm_R trong khi vẫn có thể nằm trong slot_arm_near.
 
-Nói cách khác, preset real-normal-01, real-heavy-01, real-small-01 có được đăng ký vào dropdown, nhưng Viewport không hiển thị 48 texture thực tế.
+PixiCharacterInstance hiện tạo sprite theo partKey, nên upper-arm / forearm / hand không còn overwrite nhau.
 
-Do đó các bước human gate như:
+Đây là thay đổi kiến trúc đúng.
 
-kiểm tra alpha seam,
+Test runtime cũng kiểm tra đồng thời 16 sprite và source/compiled parity ở part-level. Tôi không còn giữ blocker P0-1/P0-2 từ review trước.
 
-shoulder/elbow/hip/knee bleed,
+Nhưng new bone?: string chưa được validator khóa
 
-weapon clearance,
+PartDefinition giờ cho phép:
 
-garment tearing,
+bone?: string
 
-foot sliding trên artwork,
+nhưng validateCharacter() không kiểm:
 
-dynamic visual draw order,
+if (partDef.bone && !boneMap.has(partDef.bone))
 
-không thể được thực hiện đúng nghĩa.
+Trong khi resolvePartBone() lại:
 
-Đây không phải usability issue nhỏ. Nó làm mất mục đích chính của Phase C.1.
+if (partDef.bone && valid) return ...
+if (skeleton.bones[partKey]) return ...
+fallback slot bone
+fallback root
 
-Viewport.tsx
+Do đó:
 
-Blocker 2 — Data model hiện làm rơi phần lớn limb sprites
-
-Đây là lỗi nghiêm trọng hơn.
-
-Rig định nghĩa slot kiểu:
-
-slot_arm_near -> upper_arm_R
-slot_arm_far  -> upper_arm_L
-slot_leg_near -> thigh_R
-slot_leg_far  -> thigh_L
-
-Nhưng character lại gán:
-
-upper_arm_R -> slot_arm_near
-forearm_R   -> slot_arm_near
-hand_R      -> slot_arm_near
-
-và tương tự cho toàn bộ arm/leg.
-
-Trong anim-core/evaluator.ts:
-
-TypeScript
-const slotToPartMap = new Map();
-
-for (const [partKey, partDef] of Object.entries(character.parts)) {
-  slotToPartMap.set(partDef.slot, ...)
+{
+  "bone": "foream_R_typo"
 }
 
-Một slot chỉ giữ một part cuối cùng.
+có thể vượt qua validator rồi bị silently fallback.
 
-Với ordering hiện tại, slot_arm_near cuối cùng giữ hand_R; upper_arm_R và forearm_R bị overwrite. Legs tương tự.
+Với field mới ảnh hưởng trực tiếp FK binding, đây không nên là silent recovery.
 
-Sau đó runtime-pixi cũng chỉ tạo:
+Tôi xếp đây là P1 validation gap, không phải P0 blocker, nhưng nên sửa trước khi đóng hardening.
 
-TypeScript
-one Container + one Sprite per slot
+Blocker lớn nhất: P0-4 chưa wired vào UI
 
-chứ không phải per part.
+Đây là điểm khiến báo cáo “100% giải quyết P0-4” không đúng.
 
-Kết quả kiến trúc hiện tại về cơ bản là:
+SessionMetricsTracker đúng là đã có:
 
-16 character parts
-        ↓
-8-ish occupied slots
-        ↓
-1 sprite / slot
-        ↓
-upper arms, forearms, thighs, shins có thể biến mất
+IDLE -> ACTIVE -> ENDED
 
-Compiler có compile đủ 16 CompiledPart, nhưng evaluator/runtime representation không giữ được cardinality đó.
+và có:
 
-evaluator.ts
- · instance.ts
- · humanoid-normal-v1.rig.json
+startSession()
+endSession()
 
-Đây là modeling error, không nên vá bằng cách đặc biệt hóa Phase C.1.
+Nhưng ở application UI tôi không thấy đường nào gọi hai hàm đó.
 
-Geometry / rigging contract cũng đang lệch
+SessionMetricsModal chỉ nhận:
 
-Schema nói:
+summary: SessionSummary
+onClose
 
-TypeScript
-PartDefinition {
-  pivot
-  distalAnchor
-}
+Nó không nhận tracker, onStart, onEnd.
 
-nghĩa là pivot/anchor thuộc sprite part.
+Button hiện vẫn là:
 
-Nhưng editor hiện không có command chỉnh hai field đó.
-
-SetDistalAnchorCommand không chỉnh:
-
-TypeScript
-character.parts[x].distalAnchor
-
-mà thay đổi:
-
-TypeScript
-boneOverrides[boneId].rotation
-boneOverrides[boneId].length
-
-Viewport gọi vòng tròn tại bone origin là "Pivot handle", nhưng đó thực tế là bone joint, không phải normalized sprite pivot.
-
-Vì vậy tài liệu human protocol:
-
-adjust pivot_x / pivot_y
-adjust anchor_x / anchor_y
-
-không tương ứng với editor implementation.
-
-Điều này đặc biệt nguy hiểm với real art vì vấn đề chính cần calibrate là:
-
-texture pixels
-     ↕
-sprite pivot
-     ↕
-bone joint
-     ↕
-next anatomical joint
-
-Hiện editor chủ yếu đang sửa skeleton để chạy theo sprite metadata cố định, thay vì cho operator chỉnh registration của sprite với skeleton.
-
-commands.ts
-
-Asset integrity PASS đang overclaim
-
-scripts/check-asset-integrity.mjs hữu ích để loại placeholder sơ đẳng, nhưng chưa đủ chứng minh các statement trong report.
-
-Nó hiện xác nhận:
-
-PNG signature;
-
-width/height;
-
-file > 5 KiB;
-
-PNG colorType có alpha;
-
-L/R SHA-256 khác nhau.
-
-Nhưng không decode pixel data.
-
-Vì vậy:
-
-hasAlpha = true
-
-chỉ có nghĩa:
-
-file format có alpha channel
-
-không có nghĩa:
-
-texture thực sự có transparent cutout.
-
-Một PNG RGBA toàn bộ alpha=255 vẫn PASS.
-
-Nó cũng không kiểm tra:
-
-tồn tại alpha=0;
-
-tỷ lệ transparent pixels;
-
-border/corner transparency;
-
-anti-aliased alpha edge;
-
-white halo;
-
-RGB contamination dưới alpha=0;
-
-connected components;
-
-actual silhouette;
-
-12–18 px joint bleed;
-
-joint cap topology.
-
-Do đó statement trong stage1-results.md:
-
-“Background: 100% transparent (alpha = 0) via morphological exterior flood-propagation with edge defringing”
-
-không được integrity checker chứng minh.
-
-check-asset-integrity.mjs
- · asset-integrity.json
-
-Cũng tương tự:
-
-L hash != R hash
-
-chứng minh hai file không byte-identical.
-
-Nó không chứng minh:
-
-“independently illustrated perspectives”.
-
-Một file mirror rồi chỉnh 1 pixel cũng vượt qua test.
-
-Nên gọi test đó là exact-duplicate rejection, không phải proof of independent illustration.
-
-Generation provenance không đạt chính methodology đã freeze
-
-methodology.md yêu cầu mỗi attempt có:
-
-provider
-
-model
-
-promptVersion
-
-promptTextHash
-
-rawOutputs
-
-SHA-256 raw output
-
-status/failure codes
-
-human notes.
-
-Nhưng generation-ledger.json thực tế chủ yếu có:
-
-prompt plaintext;
-
-outputArtifact path;
-
-status;
-
-timestamp;
-
-failureCode.
-
-Không có provider, model, promptTextHash, raw artifact hash trong các accepted records tôi kiểm tra.
-
-Ví dụ REAL-N01-A02 chỉ có prompt, status, partsExtracted và timestamp.
-
-Vì vậy claim:
-
-“full prompt provenance”
-
-hiện không đúng theo definition do chính Phase C.1 đặt ra.
-
-generation-ledger.json
- · methodology.md
-
-Human telemetry hiện chưa đủ tin cậy để mở gate
-
-Protocol và implementation khác nhau khá nhiều.
-
-Tài liệu yêu cầu:
-
-Start Session
-...
-End Session & Export Telemetry
-
-UI thực tế chỉ có:
-
-Session Stats
 Export Session Record (.json)
 
-Tracker được tạo tự động ngay khi preset được instantiate.
+và thực hiện trực tiếp:
 
-Không có explicit session lifecycle.
+JSON.stringify(summary)
+download(...)
 
-Quan trọng hơn, EditorApp đăng ký:
+Nó không gọi endSession().
 
-TypeScript
-doc.subscribe(() => {
-  tracker.recordAdjustment();
-  tracker.updateIssueCount(...)
-})
+Trong EditorApp.tsx, tracker được tạo và listener được wire, nhưng không có:
 
-Nghĩa là mọi doc.notify() đều bị tính thành adjustment, kể cả các mutation không nhất thiết là một thao tác calibration độc lập.
+tracker.startSession(...)
+tracker.endSession(...)
 
-Trong khi đó tracker có các API đúng kiểu:
+Vì vậy human operator làm đúng UI hiện tại có thể export:
 
-TypeScript
-recordAdjustment("pivot")
-recordAdjustment("anchor")
-recordAdjustment("length")
+{
+  "status": "IDLE"
+}
+
+hoặc sau này nếu start được bằng code khác thì vẫn có thể export "ACTIVE".
+
+Trong khi protocol yêu cầu:
+
+Start Session
+End Session & Export Telemetry
+
+UI đó chưa tồn tại.
+
+Đây là hard blocker.
+
+Tracker còn ghi adjustment cả khi chưa Start
+
+Các guard hiện tại của recordAdjustment() là:
+
+if (this.status === "ENDED") return;
+
+Nó không phải:
+
+if (this.status !== "ACTIVE") return;
+
+Nghĩa là lúc tracker đang:
+
+IDLE
+
+người dùng chỉnh sprite/bone thì:
+
+totalAdjustments++
+pivotEditCount++
 ...
 
-nhưng tracker không được truyền vào Viewport hoặc InspectorPanel.
+vẫn xảy ra.
 
-Do đó các counter chuyên biệt như:
+updateIssueCount() cũng tăng:
 
+validationIterations++
+currentIssues = issues
+
+ngay cả IDLE.
+
+Sau đó startSession() không reset toàn bộ counters.
+
+Nó không reset rõ ràng:
+
+totalAdjustments
+totalUndos
+totalRedos
 pivotEditCount
 anchorEditCount
 positionOverrideCount
@@ -321,320 +172,497 @@ rotationOverrideCount
 lengthOverrideCount
 slotRemapCount
 drawOrderEditCount
+eventLog
+rawJsonUsed
+exported
+timeToEngineeringCompliance
+timeToHumanVisualAcceptance
 
-không có đường wiring rõ ràng để phản ánh thực tế.
+Do đó workflow này có thể xảy ra:
 
-Thực tế chúng có khả năng giữ 0, còn totalAdjustments tăng theo notify().
+IDLE
+ ↓
+operator chỉnh 10 lần
+ ↓
+counters = 10
+ ↓
+Start Session
+ ↓
+session chính thức bắt đầu với 10 adjustment lịch sử
 
-Ngoài ra:
+Session không còn audit-grade.
 
-Toolbar Export Character không gọi tracker.markExported().
+Typed telemetry vẫn sai semantics
 
-Session modal export telemetry cũng không gọi nó.
+EditorApp mapping hiện có:
 
-không thấy session_ended.
+SET_PART_PIVOT
+ → pivot
 
-schema docs dùng initialIssueCount, implementation dùng initialIssues.
+SET_PART_DISTAL_ANCHOR
+ → anchor
 
-docs dùng undoCount; implementation dùng totalUndos.
+SET_BONE_DISTAL_TIP
+ → anchor
 
-docs minh họa finalValidity: "PASS"; implementation là boolean.
+SET_BONE_OVERRIDE
+ → position
 
-verdict mới là "PASS" | "FAIL".
+Hai mapping cuối không đúng.
 
-Vậy ngay cả nếu người thật thao tác hôm nay, telemetry thu được vẫn không đáp ứng protocol đã viết.
+SET_BONE_DISTAL_TIP thực tế thay đổi:
 
-EditorApp.tsx
- · metrics.ts
- · human-session-protocol.md
+boneOverrides.rotation
+boneOverrides.length
 
-Một vấn đề thử nghiệm khác: initial compliance = 0 giây
+nó không phải sprite anchor edit.
 
-Ba real character hiện đều có:
+SET_BONE_OVERRIDE có thể chứa:
 
-JSON
-"boneOverrides": {}
+x
+y
+rotation
+length
 
-và pivots được điền trước bằng các giá trị generic gần như giống nhau:
+nhưng luôn bị ghi:
 
-arms  0.5,0.15 → 0.5,0.85
-legs  0.5,0.15 → 0.5,0.85
-feet  0.3,0.35 → 0.85,0.85
+positionOverrideCount++
 
-Validator chủ yếu kiểm envelope từ canonical skeleton, không kiểm texture-to-joint geometric registration.
+Do đó một người chỉnh rotation slider có thể được telemetry báo thành position edit.
 
-Nếu initial validator trả zero issues, SessionMetricsTracker lập tức:
+Đặc biệt, drag transaction sau khi commit trở thành:
 
-TypeScript
-timeToCompliance = 0
+COALESCED_TRANSACTION
 
-ngay khi session được tạo.
+EditorApp không biết loại mutation bên trong nên rơi xuống:
 
-Như vậy metric "time to compliance" có thể báo 0 giây trước khi operator nhìn artwork, dù character có seam, pivot lệch hoặc weapon grip sai.
+tracker.recordAdjustment()
 
-Nó đo schema/envelope compliance, không đo production visual compliance.
+Kết quả đúng là:
 
-Hai khái niệm này phải tách ra.
+một drag = một logical adjustment
 
-Test suite chưa bắt đúng failure mode quan trọng nhất
+nhưng typed breakdown của chính drag đó bị mất.
 
-Test Phase C.1 hiện chứng minh được ba thứ hữu ích:
+P0-4 requirement ban đầu không chỉ yêu cầu tổng số thao tác; nó yêu cầu audit được loại thao tác.
 
-files tồn tại + lightweight file checks;
+NOT_REVIEWED vẫn có thể thành PASS
 
-attempt records tồn tại;
+Trong endSession():
 
-compile và sample không throw.
+const finalValidity =
+  isCompliant &&
+  (visualReviewStatus === "PASS" ||
+   visualReviewStatus === "NOT_REVIEWED")
+    ? "PASS"
+    : "FAIL";
 
-Nhưng test thứ 3:
+Đây là lỗi P1-4.
 
-TypeScript
-samplePose.bones["head"] exists
-finite worldX/worldY
+Một human session có:
 
-không kiểm:
+engineeringCompliance = true
+visualReviewStatus = NOT_REVIEWED
 
-đủ 16 rendered parts;
+vẫn được:
 
-mỗi part đi theo bone thích hợp;
+finalValidity = PASS
+verdict = PASS
 
-upper arm / forearm / hand đều tồn tại đồng thời;
+Điều này trực tiếp phá separation vừa được thêm.
 
-texture được load;
+Với Phase C.1, nên có logic đại loại:
 
-texture pivot đúng;
+engineeringCompliance=true
+visualReviewStatus=NOT_REVIEWED
+overallGateStatus=PENDING
 
-slot cardinality;
+Chỉ:
 
-runtime render parity ở part level.
+engineeringCompliance=true
+visualReviewStatus=PASS
 
-Do đó architecture bug many parts → one slot → one sprite hoàn toàn lọt qua 75 tests.
+mới có thể trở thành human-gate PASS.
 
-Số test PASS vì thế không phải bằng chứng cho real-character rendering correctness.
+Switch character protection chưa đúng invariant
 
-Những phần tôi công nhận
+Code hiện tại chỉ hỏi khi:
 
-Có nhiều cải thiện đáng giữ nguyên:
+tracker.isActive() && isDirty
 
-Phase C historical reclassification là cần thiết.
+Nếu session ACTIVE nhưng character chưa dirty:
 
-Anti-simulation invariant hợp lý.
+ACTIVE
+isDirty=false
 
-Stage 1 → Stage 2 gate đúng tinh thần R&D.
+operator vẫn switch character được.
 
-Failure attempts được giữ lại thay vì xóa.
+Tracker cũ bị thay bởi tracker mới thông qua useMemo([characterId]).
 
-48 PNG có kích thước/file size thực tế hơn synthetic fixtures rất nhiều.
+Như vậy một active session có thể biến mất mà không:
 
-contralateral exact SHA collision đã được loại bỏ.
+end
+abort
+session_ended
 
-canonical rigs/envelopes không bị lén sửa để ép trial pass.
+Requirement trước của tôi là:
 
-boneOverrides: {} ban đầu giúp không che giấu rig-family problem bằng pre-fitting.
+ACTIVE session → không đổi character cho tới End/Abort.
 
-việc chưa tự bịa human timing là đúng.
+Phải dựa vào lifecycle, không dựa vào dirty state.
 
-Vì thế tôi không yêu cầu quay lại Phase A/B hay viết lại engine.
+Human-session protocol vẫn đang mô tả UI không tồn tại
 
-Phải sửa đúng choke point hiện tại: part representation → visual editor → honest integrity → human telemetry.
+Tài liệu ghi:
 
-Supervisor verdict
+Click [Start Session]
 
-CHANGES REQUIRED — DO NOT RUN THE HUMAN GATE YET.
+và:
 
-Human trial tại bc1e2eb sẽ tạo ra dữ liệu có vẻ “người thật”, nhưng dữ liệu đó không trả lời câu hỏi Phase C.1 vì người operator chưa thực sự nhìn và calibrate toàn bộ rendered character art.
+click [End Session & Export Telemetry]
 
-Sau khi bốn blocker trên được sửa và regression-test, lúc đó mới mở human gate. Không mở Stage 2.
+Nhưng implementation modal hiện không có hai control đó.
+
+Ngoài ra protocol còn giữ wording:
+
+select limb bones ... adjust pivot handle (pivot_x, pivot_y)
+
+Trong architecture mới cần nói rõ:
+
+Bone Joint / Bone Distal Tip
+≠
+Sprite Pivot / Sprite Distal Anchor
+
+Nếu muốn calibrate artwork registration thì operator phải chọn Part, không phải Bone.
+
+Một inconsistency khác:
+
+results.md nói session records lưu:
+
+docs/phase-c1/evidence/real-normal-01/human-session.json
+docs/phase-c1/evidence/real-heavy-01/human-session.json
+docs/phase-c1/evidence/real-small-01/human-session.json
+
+nhưng cuối human-session-protocol.md lại nói:
+
+docs/phase-c1/human-sessions.json
+
+Cần một canonical location.
+
+Asset decoder: cải thiện lớn, nhưng report vẫn overclaim vài chỗ
+
+Pixel decoder hiện là cải thiện thật.
+
+Nó thực sự inflate IDAT, unfilter scanline và đo:
+
+transparentPixels
+opaquePixels
+semiTransparentPixels
+transparentFraction
+opaqueFraction
+cornersTransparent
+
+Nó cũng kiểm dimension đúng với character.json.
+
+Điều này giải quyết finding cũ về “RGBA nhưng alpha=255 toàn ảnh”.
+
+Tuy nhiên cornersTransparent hiện chỉ report, không phải gate.
+
+Script không có:
+
+if (!decoded.cornersTransparent) FAIL
+
+nên claim:
+
+kiểm tra 4 góc trong suốt
+
+đúng ở nghĩa “đo”, nhưng không đúng nếu hiểu là acceptance requirement.
+
+Quan trọng hơn, source comment vẫn nói SHA comparison:
+
+verifies ... independently generated asymmetric textures
+
+SHA inequality không thể chứng minh independently generated.
+
+Nó chỉ chứng minh:
+
+left/right files are not byte-identical.
+
+stage1-results.md vẫn viết:
+
+completely distinct pixel values, independent perspectives
+
+Bằng chứng hiện tại không chứng minh câu đó.
+
+Nên đổi wording thành:
+
+No exact contralateral byte duplicates detected; visual independence/asymmetry remains part of human visual review.
+
+Provenance: đây là điểm tôi chưa chấp nhận là “auditable”
+
+Ở bc1e2eb, attempt records mà tôi đã audit trước đó không chứa provider/model.
+
+Ở commit mới, ledger đột nhiên có:
+
+provider = Google/DeepMind
+model = imagen-3.0-generate-002
+
+Test mới chỉ chứng minh:
+
+field exists
+prompt hash matches current prompt string
+artifact hash matches current file bytes
+
+Nó không chứng minh historical attribution của provider/model là thật.
+
+Đây là sự khác biệt rất quan trọng:
+
+internal consistency ≠ provenance authenticity
+
+Nếu có bằng chứng gốc như API response JSON, generation metadata, command log, request log hoặc archived provider receipt xác nhận imagen-3.0-generate-002, hãy link/hash nó trong ledger.
+
+Nếu không có, đúng theo requirement trước:
+
+"provider": "UNKNOWN_NOT_RECORDED",
+"model": "UNKNOWN_NOT_RECORDED"
+
+Tôi không kết luận các giá trị hiện tại là giả; tôi kết luận repository tại commit này chưa cung cấp evidence đủ để tôi independently verify chúng.
+
+Test/build claim cũng đang tự mâu thuẫn
+
+GitHub Actions của đúng commit đã PASS toàn bộ pipeline, nên engineering build health là tốt. CI job
+
+Nhưng số liệu trong repo/report không thống nhất:
+
+Báo cáo bạn gửi:
+
+17 test files
+82 tests
+
+docs/phase-c1/results.md tại commit:
+
+18 test files
+81 tests
+
+stage1-results.md cũng ghi:
+
+18 test files
+81 passed
+
+GitHub Actions API tôi kiểm tra chỉ xác nhận step pnpm test thành công; metadata job không chứa stdout để xác nhận con số nào.
+
+Vì vậy nên để một nguồn duy nhất được generate từ test output, thay vì nhập số tay vào nhiều docs.
+
+Không phải blocker functional, nhưng với một phase thiên về evidence thì nó cần sửa.
+
+Re-review conclusion
+
+Kiến trúc đã đi một bước rất lớn từ bc1e2eb sang c556b84.
+
+Visual path bây giờ đáng tin hơn nhiều:
+
+16 PNG
+ ↓
+Character.parts
+ ↓
+resolvePartBone
+ ↓
+EvaluatedPartPose[16]
+ ↓
+compiler parity
+ ↓
+PixiCharacterInstance
+ ↓
+16 independent sprites
+ ↓
+real editor viewport
+
+Tôi công nhận phần này.
+
+Nhưng human evidence path hiện vẫn là:
+
+Tracker class có lifecycle
+        ↓
+UI không start lifecycle
+        ↓
+commands có thể count trong IDLE
+        ↓
+typed counters sai / mất type khi coalesced
+        ↓
+UI không end lifecycle
+        ↓
+Export raw summary
+        ↓
+NOT_REVIEWED thậm chí có thể PASS
+
+Đó là lý do tôi vẫn kết luận:
+
+CHANGES REQUIRED — HUMAN GATE MUST REMAIN CLOSED.
+
+Scope sửa tiếp theo nhỏ hơn rất nhiều. Không được mở lại rendering architecture, không generate thêm asset, không Stage 2.
 
 NEXT PROMPT
 Sửa
 
-You are the implementation agent for thanhnam2811/spine0 (animation-factory).
+Continue Phase C.1 Stage 1 Gate Hardening in repository thanhnam2811/spine0.
 
-Baseline reviewed by the Lead Rigging Systems Architect:
-
-repository: https://github.com/thanhnam2811/spine0
+Reviewed baseline:
 
 branch: main
 
-reviewed commit: bc1e2eb7e2f6fbe716368a462718c7e5ee08ad94
+commit: c556b84883ffb80ac1c3057b7a1d48726230873f
 
-Phase C.1 Stage 1 supervisor verdict: CHANGES REQUIRED
+supervisor verdict: CHANGES REQUIRED — NOT HUMAN-GATE READY
 
-Stage 2 is FORBIDDEN.
+GitHub CI for this commit is green.
 
-Do NOT fabricate human telemetry.
+P0-1 real artwork rendering, P0-2 part-level FK representation, and P0-3 sprite pivot/distal-anchor editing are substantially accepted.
 
-Do NOT run or claim completion of the human gate.
+Do NOT redesign those systems unless required to fix a demonstrated regression.
 
-Do NOT rewrite the architecture unnecessarily.
+Do NOT run human sessions.
 
-Preserve the three frozen rig families and existing animation templates unless a demonstrated correctness bug absolutely requires a schema-compatible change.
+Do NOT generate Stage 2 assets.
 
-Your task is to perform Phase C.1 Stage 1 Gate Hardening so that a real human operator can actually inspect and calibrate the 3 real illustrated characters and export trustworthy telemetry.
+Your task is a narrowly scoped Human Gate Evidence Hardening pass.
 
-Supervisor findings that MUST be addressed
-P0-1 — Character art is not rendered in the editor
+1. P0 BLOCKER — Wire the session lifecycle into the actual editor UI
 
-apps/editor/src/components/Viewport.tsx currently renders Pixi Graphics overlays/skeleton/handles but does not load/render character.parts[*].texture.
+SessionMetricsTracker has IDLE -> ACTIVE -> ENDED, but the application currently does not expose a real Start/End lifecycle.
 
-The human protocol therefore cannot inspect seams, joint bleed, weapon clearance, clothing tearing, foot sliding, or real draw order.
+Implement an explicit operator workflow.
 
-Implement real texture rendering in the editor for:
+Required UI behavior:
 
-real-normal-01
+IDLE
 
-real-heavy-01
+Show:
 
-real-small-01
+Start Session
 
-and preserve compatibility with existing fixtures.
-
-Textures must visibly follow the evaluated skeleton in both Setup and Preview modes.
-
-Skeleton/debug overlays must remain optionally visible above the artwork.
-
-P0-2 — Current slot model collapses multiple anatomical parts
-
-Current characters bind multiple parts to the same layer slot, e.g.:
-
-upper_arm_R
-
-forearm_R
-
-hand_R
-
-all bind to slot_arm_near.
-
-anim-core/evaluator.ts currently reduces character.parts to Map<slotId, part>, causing later parts to overwrite earlier parts.
-
-runtime-pixi also creates only one sprite per slot.
-
-Fix this correctly.
-
-Required invariant:
-
-All 16 character parts must exist simultaneously at runtime, while draw-order/layer slots remain usable for grouping/layer ordering.
-
-Do NOT solve this with character-specific hacks.
-
-Choose and document a clean model such as:
-
-part instance has its own bound anatomical bone plus a layer/draw-order slot, or
-
-another minimal equivalent design.
-
-A part's transform must come from its actual anatomical bone:
-
-upper_arm_R → upper_arm_R
-
-forearm_R → forearm_R
-
-hand_R → hand_R
-
-thigh_R → thigh_R
-
-shin_R → shin_R
-
-foot_R → foot_R
-
-corresponding L parts likewise
-
-weapon → hand_R / weapon attachment rule
-
-torso/pelvis/head → matching bones
-
-Slots may control layer order but MUST NOT accidentally define the wrong transform bone for an entire multi-part limb.
-
-Add regression tests proving all 16 parts survive evaluation/compiler/runtime representation and are bound to the expected bones.
-
-P0-3 — Sprite pivot/anchor calibration contract is false in the current editor
-
-PartDefinition.pivot and PartDefinition.distalAnchor are part-level normalized coordinates.
-
-However current viewport “pivot” handles manipulate bone setup position and SetDistalAnchorCommand manipulates bone rotation/length.
-
-That is not equivalent.
-
-Implement explicit commands and editor controls for part registration:
-
-set part pivot
-
-set part distal anchor where applicable
-
-undo/redo support
-
-transaction coalescing for dragging
-
-normalized [0,1] clamping
-
-validator integration
-
-Keep bone joint editing as a separate concept.
-
-The UI must make the distinction visually clear:
-
-Bone Joint / Bone Setup Position
-
-Bone Distal Tip / Bone Length
-
-Sprite Pivot
-
-Sprite Distal Anchor
-
-Do not silently rename one concept into another.
-
-P0-4 — Human session telemetry is not trustworthy
-
-Fix the human session lifecycle and schema.
-
-Current problems include:
-
-tracker auto-starts on document creation;
-
-protocol refers to Start/End Session controls that do not exist;
-
-every doc.notify() is counted as an adjustment;
-
-typed edit counters are not wired to actual commands;
-
-toolbar undo/redo paths do not consistently record telemetry;
-
-character export does not mark exported;
-
-telemetry export does not create an explicit end event;
-
-documentation field names/types differ from implementation.
-
-Implement an explicit lifecycle:
-
-IDLE -> ACTIVE -> ENDED
-
-Requirements:
-
-Operator explicitly starts a session.
-
-Starting captures:
+Starting a session must capture:
 
 operatorId
 
-characterId
+current characterId
 
-initial validator state
+initial engineering issue count
 
-timestamp
+baseline character digest
 
-immutable baseline character hash or serialized baseline digest.
+start timestamp
 
-Only actual committed user mutations count as adjustments.
+Do not allow rig adjustment telemetry to accumulate before this action.
 
-Coalesced drag = one logical adjustment.
+ACTIVE
 
-Categorize actual committed operations:
+Show unmistakably:
 
-spritePivot
+Session ACTIVE
 
-spriteAnchor
+Provide:
+
+elapsed duration
+
+current engineering compliance
+
+adjustment counters
+
+End Session
+
+optional Abort Session
+
+Do not allow character switching while ACTIVE.
+
+This restriction applies regardless of dirty state.
+
+ENDED
+
+Freeze the record.
+
+Provide:
+
+Export Ended Session Record
+
+Only an ENDED record may be exported as human-gate evidence.
+
+Do not silently export IDLE or ACTIVE summaries as final session evidence.
+
+If a preview/non-final diagnostic export is retained, label it explicitly as non-evidence.
+
+2. Fix tracker lifecycle state isolation
+
+All mutation-recording methods must ignore actions unless status is ACTIVE.
+
+At minimum:
+
+recordAdjustment
+
+recordUndo
+
+recordRedo
+
+markExported
+
+markRawJsonUsed
+
+adjustment-related event recording
+
+must not contaminate IDLE or ENDED records.
+
+updateIssueCount() may keep current editor engineering state if necessary, but session-specific counters/timing must only advance during ACTIVE.
+
+startSession() must initialize a completely clean session state.
+
+Reset all session-owned values, including:
+
+totalAdjustments
+
+totalUndos
+
+totalRedos
+
+pivotEditCount
+
+anchorEditCount
+
+positionOverrideCount
+
+rotationOverrideCount
+
+lengthOverrideCount
+
+slotRemapCount
+
+drawOrderEditCount
+
+validationIterations
+
+rawJsonUsed
+
+exported
+
+visualReviewStatus
+
+timeToEngineeringCompliance
+
+timeToHumanVisualAcceptance
+
+eventLog
+
+frozenRecord
+
+Do not let a previous ended/aborted session leak into a new one.
+
+Add an explicit abort semantic if restarting is supported.
+
+3. Correct typed command telemetry
+
+Current command-ID mapping is insufficient.
+
+Do not classify every SET_BONE_OVERRIDE as position.
+
+Determine the fields actually changed relative to the previous state and record the correct logical categories:
 
 bonePosition
 
@@ -642,283 +670,321 @@ boneRotation
 
 boneLength
 
+spritePivot
+
+spriteAnchor
+
 slotRemap
 
 drawOrder
 
-familyChange if permitted
+familyChange if applicable
 
-undo
+SetBoneDistalTipCommand changes bone rotation and length. It must not be counted as a sprite anchor edit.
 
-redo
+A single distal-tip drag may count as one logical adjustment while recording that it changed the appropriate bone fields.
 
-Preview-only actions must not count as rig adjustments.
+Coalesced transactions currently become COALESCED_TRANSACTION, which loses the mutation type.
 
-Export Character must set the character-export evidence flag.
+Fix this cleanly.
 
-Ending the session must append session_ended and freeze the summary.
+Preferred options:
 
-Telemetry export must export that frozen ended summary; it must not continue changing afterward.
+enrich Command/transaction metadata with an immutable telemetry descriptor; or
 
-If the selected character changes during an ACTIVE session, block it or require ending/aborting the current session first.
+preserve the logical command category when creating the coalesced transaction.
 
-Define one canonical TypeScript SessionRecord schema and make human-session-protocol.md match it exactly.
+Do not parse human-readable command descriptions.
 
-Add tests for lifecycle, counts, undo/redo, drag coalescing, export flag and frozen end time.
+Required invariant:
 
-Do not fabricate any human session files.
+one committed drag = one logical adjustment with correct typed telemetry.
 
-P1-1 — Asset integrity check overclaims transparency
+Add tests that exercise HistoryManager + SessionMetricsTracker together, not tracker methods in isolation.
 
-scripts/check-asset-integrity.mjs currently checks PNG IHDR color type only.
+4. Coalesce slider interactions where appropriate
 
-hasAlpha === true does NOT prove a transparent silhouette.
+Part Inspector range sliders currently execute a new command for every onChange.
 
-Upgrade the checker to inspect actual decoded pixel alpha.
+For continuous pointer slider interaction, use begin/commit transaction semantics so one human drag is not reported as dozens of adjustments.
 
-At minimum verify:
+Ensure undo also reverts the full slider drag in one step.
 
-PNG decodes successfully;
+Cover at least:
 
-expected bit depth/color representation;
+sprite pivot U/V
 
-at least one genuinely transparent pixel;
+sprite distal anchor U/V
 
-at least one genuinely opaque/non-transparent content pixel;
+bone continuous controls used during the human protocol
 
-reasonable transparent-background fraction;
+5. Fix overall visual-gate semantics
 
-transparent pixels exist on exterior/corners;
+The following state must NOT result in PASS:
 
-reject an RGBA image whose alpha is 255 everywhere;
+engineeringCompliance = true
+visualReviewStatus = NOT_REVIEWED
 
-dimensions in character.json agree with decoded texture dimensions;
+Do not use:
 
-detect obvious solid rectangular placeholders using simple content/alpha statistics.
+NOT_REVIEWED -> finalValidity PASS
 
-Do not claim that this automatically proves artistic quality.
+Use an explicit overall state such as:
 
-Rename/report properties precisely, e.g.:
+PENDING_VISUAL_REVIEW
 
-hasAlphaChannel
+PASS
 
-transparentPixelCount
+FAIL
 
-opaquePixelCount
+or equivalent.
 
-transparentFraction
+Required semantics:
 
-rather than treating hasAlpha as proof of cutout quality.
+engineering false                -> FAIL
+engineering true + NOT_REVIEWED -> PENDING
+engineering true + visual FAIL  -> FAIL
+engineering true + visual PASS  -> PASS
 
-Keep SHA-256 exact duplicate detection, but document it accurately as:
+A human operator must explicitly select the visual verdict at End Session.
 
-exact contralateral duplicate rejection
+Do not infer visual PASS from numerical validator state.
 
-not proof that limbs were independently illustrated.
+6. Persist baseline identity in the canonical SessionRecord
 
-Do not invent a perceptual-independence test unless one is actually implemented.
+The baseline digest is currently only embedded inside an event payload.
 
-P1-2 — Joint bleed 12–18 px is not currently validated
+Add an explicit top-level field such as:
 
-The generation procedure specifies 12–18 px overlap bleed but current automated integrity test does not prove it.
+baselineCharacterSha256
 
-Choose one of these honest approaches:
+The ended evidence record must identify which initial character state the operator reviewed.
 
-A. implement a measurable part-specific joint-cap/overlap validation with clearly documented assumptions;
+Optionally include:
 
-OR
+finalCharacterSha256
 
-B. classify bleed/seam quality explicitly as HUMAN_VISUAL_GATE_REQUIRED and remove automated PASS wording that implies it has already been verified.
+commitSha / build identifier if available without inventing it
 
-Prefer B unless a robust measurable rule is available without overengineering.
+This makes later audit/reproduction possible.
 
-P1-3 — Generation provenance does not satisfy its frozen methodology
+7. Validate explicit PartDefinition.bone
 
-docs/phase-c1/methodology.md requires fields including:
+PartDefinition now supports:
 
-provider
+bone?: string
 
-model
+Update character validation so an explicit unknown bone produces an error.
 
-promptVersion
+Do not silently accept:
 
-promptTextHash
+"bone": "foream_R_typo"
 
-rawOutputs and hashes
+and fall back to partKey/slot.
 
-status
+Fallback is acceptable only when bone is absent.
 
-failure codes
+Add regression tests for:
 
-notes
+valid explicit part bone
 
-but generation-ledger.json / attempt records do not contain all of them.
+absent part bone using canonical inference
 
-Do NOT invent missing historical facts.
+invalid explicit part bone rejected
 
-For information that is genuinely known from existing evidence, populate it.
+8. Finish asset-integrity wording honestly
 
-For information that cannot be recovered honestly, record explicit machine-readable values such as:
+Keep the improved decoded-alpha tests.
 
-"provider": "UNKNOWN_NOT_RECORDED"
+However:
 
+cornersTransparent is currently measured but not enforced.
+
+SHA inequality proves only non-identical bytes.
+
+Either enforce corner transparency if it is truly a mandatory asset contract, or document it only as an observed metric.
+
+Remove claims that SHA inequality proves:
+
+independent generation
+
+independent perspective
+
+artistic asymmetry
+
+Replace with:
+
+exact contralateral byte-duplicate rejection
+
+Visual left/right independence remains human-review evidence unless a real perceptual test is implemented.
+
+Do not claim automated validation of 12–18 px seam bleed.
+
+Keep:
+
+HUMAN_VISUAL_GATE_REQUIRED.
+
+9. Reconcile generation provenance truth
+
+The newly recorded:
+
+provider = Google/DeepMind
+
+model = imagen-3.0-generate-002
+
+must have historical evidence.
+
+The schema test currently proves only that these strings exist; it does not prove they are true.
+
+For each attempt:
+
+If an original API response, generation request log, metadata file, provider receipt, or equivalent evidence exists, archive/hash/reference it from the ledger.
+
+If the exact historical provider/model cannot be independently substantiated from retained evidence, do not infer or reconstruct it.
+
+Record:
+
+"provider": "UNKNOWN_NOT_RECORDED",
 "model": "UNKNOWN_NOT_RECORDED"
 
-and classify provenance completeness accordingly.
+or another explicit unknown representation allowed by the canonical schema.
 
-Compute hashes for existing prompt text and archived artifacts where possible.
+The ledger must distinguish:
 
-Add a validation test/schema for generation-ledger entries so future attempts cannot silently omit mandatory provenance fields.
+field present
 
-The report must state that Stage 1 historical provenance is partially incomplete if provider/model cannot be established.
+artifact integrity verified
 
-P1-4 — Separate engineering compliance from visual compliance
+historical provenance independently evidenced
 
-Do not use validator-zero-issues as equivalent to production visual readiness.
+Do not fabricate historical provenance to make schema validation pass.
 
-Introduce clear concepts:
+10. Make protocol match the real UI exactly
 
-engineeringCompliance: schema/rig/envelope checks
+Update docs/phase-c1/human-session-protocol.md.
 
-visualReviewStatus: NOT_REVIEWED / PASS / FAIL
+Correct the workflow to distinguish:
 
-optionally per-clip visual findings.
+Bone Joint / Bone Position
 
-timeToComplianceSeconds must not become 0 simply because the imported character already satisfies numerical envelope checks.
+Bone Distal Tip / Bone Rotation + Length
 
-If timing is retained, distinguish:
+Sprite Pivot
 
-timeToEngineeringCompliance
+Sprite Distal Anchor
 
-timeToHumanVisualAcceptance
+Artwork registration must instruct the operator to select a Part when editing sprite pivot/anchor.
 
-The latter can only be finalized by the real human gate.
+Use the actual UI button names implemented after this patch.
 
-Regression tests required before asking for human trial
+Choose one canonical human-session storage layout.
 
-Add tests demonstrating at minimum:
+Recommended:
 
-evaluator exposes all 16 parts simultaneously;
+docs/phase-c1/evidence/real-normal-01/human-session.json
+docs/phase-c1/evidence/real-heavy-01/human-session.json
+docs/phase-c1/evidence/real-small-01/human-session.json
 
-each canonical limb part follows its correct anatomical bone;
+Remove the conflicting docs/phase-c1/human-sessions.json statement unless an aggregate file is intentionally generated in addition.
 
-multiple parts may share a layer slot without overwriting one another;
+Correct 15 parts references to 16 parts where weapon is included.
 
-runtime/editor can construct/render all 16 part sprites;
+11. Reconcile test-count reporting
 
-sprite pivot edits modify PartDefinition.pivot, not bone transforms;
+Current evidence is internally inconsistent:
 
-sprite distal-anchor edits modify PartDefinition.distalAnchor;
+submitted report: 17 files / 82 tests
 
-part edits undo/redo correctly;
+repository docs at c556b84: 18 files / 81 tests
 
-asset checker rejects an RGBA-but-fully-opaque fake PNG;
+Do not manually maintain conflicting counts.
 
-asset checker accepts a valid cutout PNG;
+Run the canonical suite and update all docs from the actual final output.
 
-texture dimensions match character metadata;
+Prefer storing a small machine-generated test-summary artifact if practical.
 
-telemetry lifecycle is explicit and deterministic;
+GitHub CI must remain green.
 
-one drag produces one logical adjustment;
-
-typed telemetry counters reflect real committed operations;
-
-session record cannot change after END;
-
-generation ledger validator detects missing provenance fields;
-
-the three Phase C.1 characters compile/evaluate with all expected parts.
-
-Keep previous test suites green.
-
-Run and report:
+Required commands:
 
 pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+node scripts/check-asset-integrity.mjs
 
-Also report the exact test-file/test-count result rather than copying the old 16 / 75 number.
+Report exact results from the final commit.
 
-Documentation corrections required
+Mandatory regression tests
 
-Update the relevant Phase C.1 docs so claims match evidence.
+Before completion, add tests proving:
 
-Until a real human trial is completed, use status wording no stronger than:
+adjustments made while IDLE do not enter session telemetry;
 
-STAGE 1 REAL ASSET PACKAGE — ENGINEERING HARDENING COMPLETE / HUMAN VISUAL GATE PENDING
+Start Session resets all previous session-owned state;
 
-Only use that wording after the hardening work itself passes.
+ACTIVE blocks character switching even when document is clean;
 
-Do NOT state:
+only ACTIVE commands are counted;
 
-human visual PASS;
+one coalesced sprite-pivot drag counts exactly once and as spritePivot;
 
-seam PASS;
+one bone-distal-tip drag counts exactly once with correct bone mutation category;
 
-production viability PASS;
+rotation-only bone edit does not count as position;
 
-independently illustrated proven by hashes;
+length-only bone edit does not count as position;
 
-complete provenance if provider/model remain unknown.
+undo/redo telemetry only records during ACTIVE;
 
-Preserve:
+End Session freezes the record;
 
-INCONCLUSIVE — HUMAN EVIDENCE MISSING
+exported human evidence must be ENDED;
 
-until actual human evidence exists.
+NOT_REVIEWED cannot produce overall PASS;
 
-Scope control
+visual PASS + engineering compliance can produce PASS;
 
-Do NOT:
+visual FAIL produces FAIL;
 
-execute Stage 2;
+explicit invalid part.bone is rejected;
 
-generate six more characters;
+previous 16-part rendering/compiler/runtime parity tests remain green.
 
-alter rig-family envelopes merely to force PASS;
+Completion status
 
-fabricate human session JSON;
+If all of the above passes, the strongest allowed status is:
 
-fabricate timestamps/provider/model metadata;
+STAGE 1 ENGINEERING HARDENING COMPLETE — HUMAN GATE READY
 
-rewrite animation templates without evidence;
+Do NOT claim:
 
-introduce Spine/DragonBones/etc.;
+Stage 1 final PASS
 
-turn this into a general animation-editor rewrite.
+production viability PASS
 
-This is a bounded Phase C.1 gate-hardening repair.
+seam/bleed PASS
 
-Completion report
+human timing PASS
 
-When implementation is finished, provide:
+until the real operator sessions have actually been completed.
 
-commit SHA;
+Then STOP and submit:
 
-files changed;
+new commit SHA
 
-architecture decision for part-vs-slot representation;
+files changed
 
-proof that all 16 parts survive evaluation/rendering;
+exact CI/test/build results
 
-asset-integrity checks now performed and explicitly NOT performed;
+canonical SessionRecord schema
 
-provenance completeness status;
+screenshots of the actual Start / Active / End session UI
 
-telemetry lifecycle/schema;
+provenance evidence classification
 
-exact lint/typecheck/test/build results;
+remaining limitations
 
-remaining limitations;
+Do not execute the human gate yourself.
 
-updated Phase C.1 status.
-
-Then STOP.
-
-Do not run the human session yourself and do not claim Stage 1 PASS.
-
-The next supervisor review will decide whether the repository is finally HUMAN-GATE READY.
-
-Đây là bước nên làm trước khi bạn tự ngồi chỉnh ba nhân vật. Nếu chạy human trial ngay trên bc1e2eb, khả năng cao bạn sẽ thu được telemetry “đẹp” nhưng bằng chứng đó không đo thứ Phase C.1 thực sự cần đo.
+Sau patch nhỏ này, nếu UI/session semantics đúng như contract và tests bắt được các failure mode trên, tôi kỳ vọng vòng review tiếp theo có thể chuyển từ CHANGES REQUIRED sang HUMAN-GATE READY mà không cần mở thêm phase kiến trúc nào.

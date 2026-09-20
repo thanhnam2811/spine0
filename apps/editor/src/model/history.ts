@@ -1,20 +1,25 @@
 import type { CharacterDefinition } from "@animation-factory/schema";
-import type { Command } from "./commands.js";
+import type { Command, CommandTelemetryCategory } from "./commands.js";
 import type { EditorDocument } from "./document.js";
 
 interface ActiveTransaction {
   description: string;
   startSnapshot: CharacterDefinition;
+  telemetryCategory?: CommandTelemetryCategory;
 }
 
 export class CoalescedTransactionCommand implements Command {
   public readonly id = "COALESCED_TRANSACTION";
+  public readonly telemetryCategory?: CommandTelemetryCategory;
 
   constructor(
     public readonly description: string,
     private readonly beforeSnapshot: CharacterDefinition,
-    private readonly afterSnapshot: CharacterDefinition
-  ) {}
+    private readonly afterSnapshot: CharacterDefinition,
+    category?: CommandTelemetryCategory
+  ) {
+    this.telemetryCategory = category;
+  }
 
   execute(doc: EditorDocument): void {
     doc.character = JSON.parse(JSON.stringify(this.afterSnapshot));
@@ -79,7 +84,9 @@ export class HistoryManager {
 
   public execute(cmd: Command): void {
     if (this.activeTransaction) {
-      // In active transaction, execute directly on document
+      if (!this.activeTransaction.telemetryCategory && cmd.telemetryCategory) {
+        this.activeTransaction.telemetryCategory = cmd.telemetryCategory;
+      }
       cmd.execute(this.doc);
       return;
     }
@@ -98,13 +105,14 @@ export class HistoryManager {
   /**
    * Begins a coalesced transaction (e.g. on pointer down for dragging a pivot handle).
    */
-  public beginTransaction(description: string): void {
+  public beginTransaction(description: string, category?: CommandTelemetryCategory): void {
     if (this.activeTransaction) {
       this.commitTransaction();
     }
     this.activeTransaction = {
       description,
-      startSnapshot: JSON.parse(JSON.stringify(this.doc.character))
+      startSnapshot: JSON.parse(JSON.stringify(this.doc.character)),
+      telemetryCategory: category
     };
   }
 
@@ -115,7 +123,7 @@ export class HistoryManager {
   public commitTransaction(): void {
     if (!this.activeTransaction) return;
 
-    const { description, startSnapshot } = this.activeTransaction;
+    const { description, startSnapshot, telemetryCategory } = this.activeTransaction;
     const endSnapshot = JSON.parse(JSON.stringify(this.doc.character));
     this.activeTransaction = null;
 
@@ -127,7 +135,8 @@ export class HistoryManager {
     const coalesced = new CoalescedTransactionCommand(
       description,
       startSnapshot,
-      endSnapshot
+      endSnapshot,
+      telemetryCategory
     );
 
     this.undoStack.push(coalesced);

@@ -190,6 +190,18 @@ export function validateCharacter(
       });
     }
 
+    if (partDef.bone !== undefined) {
+      if (!boneMap.has(partDef.bone)) {
+        issues.push({
+          code: "ANIM_UNKNOWN_BONE",
+          severity: "error",
+          category: "RIG",
+          message: `Part '${partKey}' binds to non-existent bone '${partDef.bone}'.`,
+          target: partKey
+        });
+      }
+    }
+
     if (!partDef.texture || partDef.texture.trim().length === 0) {
       issues.push({
         code: "ART_INVALID_TEXTURE",

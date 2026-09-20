@@ -12,9 +12,20 @@ import {
 } from "@animation-factory/anim-core";
 import type { EditorDocument } from "./document.js";
 
+export type CommandTelemetryCategory =
+  | "spritePivot"
+  | "spriteAnchor"
+  | "bonePosition"
+  | "boneRotation"
+  | "boneLength"
+  | "slotRemap"
+  | "drawOrder"
+  | "familyChange";
+
 export interface Command {
   readonly id: string;
   readonly description: string;
+  readonly telemetryCategory?: CommandTelemetryCategory;
   execute(doc: EditorDocument): void;
   undo(doc: EditorDocument): void;
 }
@@ -26,14 +37,29 @@ export interface Command {
 export class SetBoneOverrideCommand implements Command {
   public readonly id = "SET_BONE_OVERRIDE";
   public readonly description: string;
+  public readonly telemetryCategory: CommandTelemetryCategory;
   private prevOverride: BoneOverride | undefined;
 
   constructor(
     public readonly boneId: string,
     public readonly nextOverride: BoneOverride | undefined,
-    customDesc?: string
+    customDesc?: string,
+    category?: CommandTelemetryCategory
   ) {
     this.description = customDesc ?? `Modify override for bone '${boneId}'`;
+    if (category) {
+      this.telemetryCategory = category;
+    } else if (nextOverride) {
+      if (nextOverride.rotation !== undefined && nextOverride.x === undefined && nextOverride.y === undefined && nextOverride.length === undefined) {
+        this.telemetryCategory = "boneRotation";
+      } else if (nextOverride.length !== undefined && nextOverride.x === undefined && nextOverride.y === undefined && nextOverride.rotation === undefined) {
+        this.telemetryCategory = "boneLength";
+      } else {
+        this.telemetryCategory = "bonePosition";
+      }
+    } else {
+      this.telemetryCategory = "bonePosition";
+    }
   }
 
   execute(doc: EditorDocument): void {
@@ -77,6 +103,7 @@ export class SetBoneOverrideCommand implements Command {
 export class SetPartPivotCommand implements Command {
   public readonly id = "SET_PART_PIVOT";
   public readonly description: string;
+  public readonly telemetryCategory = "spritePivot" as const;
   private prevPivot: [number, number];
 
   constructor(
@@ -113,6 +140,7 @@ export class SetPartPivotCommand implements Command {
 export class SetPartDistalAnchorCommand implements Command {
   public readonly id = "SET_PART_DISTAL_ANCHOR";
   public readonly description: string;
+  public readonly telemetryCategory = "spriteAnchor" as const;
   private prevAnchor: [number, number] | undefined;
 
   constructor(
@@ -159,6 +187,7 @@ export class SetPartDistalAnchorCommand implements Command {
 export class SetBoneDistalTipCommand implements Command {
   public readonly id = "SET_BONE_DISTAL_TIP";
   public readonly description: string;
+  public readonly telemetryCategory = "boneRotation" as const;
   private prevOverride: BoneOverride | undefined;
 
   constructor(
@@ -243,6 +272,7 @@ export { SetBoneDistalTipCommand as SetDistalAnchorCommand };
 export class SetPartSlotBindingCommand implements Command {
   public readonly id = "SET_PART_SLOT_BINDING";
   public readonly description: string;
+  public readonly telemetryCategory = "slotRemap" as const;
   private prevSlotId: string = "";
 
   constructor(
@@ -276,6 +306,7 @@ export class SetPartSlotBindingCommand implements Command {
 export class SetSetupDrawOrderCommand implements Command {
   public readonly id = "SET_SETUP_DRAW_ORDER";
   public readonly description: string;
+  public readonly telemetryCategory = "drawOrder" as const;
   private prevOverrides: Record<string, number | undefined> = {};
 
   constructor(
@@ -320,6 +351,7 @@ export class SetSetupDrawOrderCommand implements Command {
 export class ChangeFamilyCommand implements Command {
   public readonly id = "CHANGE_FAMILY";
   public readonly description: string;
+  public readonly telemetryCategory = "familyChange" as const;
   private prevRigId: string;
 
   constructor(public readonly nextRigId: string) {

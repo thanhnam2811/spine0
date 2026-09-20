@@ -23,7 +23,7 @@ All 48 textures (16 parts $\times$ 3 characters) have been generated, segmented 
 STAGE 1 ASSET GENERATION:           PASS (100% genuine visual textures)
 CRYPTOGRAPHIC INTEGRITY:            PASS (0 contralateral hash collisions, all > 5KB)
 PIXEL-LEVEL CUTOUT VALIDATION:      PASS (all textures > 19% transparent background, > 35% opaque art)
-AUTOMATED INTEGRITY TEST SUITE:     PASS (18 test files, 81 passed)
+AUTOMATED INTEGRITY TEST SUITE:     PASS (18 test files, 94 passed)
 EDITOR VISUAL SPRITE PIPELINE:      PASS (real PixiCharacterInstance sprite rendering)
 SEAM & BLEED OVERLAP INSPECTION:    HUMAN_VISUAL_GATE_REQUIRED (Visual check in editor)
 HUMAN RIG ADJUSTER TRIAL:           PENDING HUMAN GATE (Awaiting operator sessions)
@@ -73,14 +73,13 @@ All 48 textures were evaluated by `scripts/check-asset-integrity.mjs` and `tests
    * Phase C.1 Real Assets: **11,980 bytes to 138,086 bytes** (mean: ~42 KB).
    * 100% of textures exceed the 5,120 byte threshold.
 3. **Contralateral Asymmetry (Anti-Duplication Enforcement)**:
-   * Left and right limbs (`thigh_L` vs `thigh_R`, `shin_L` vs `shin_R`, `foot_L` vs `foot_R`, `upper_arm_L` vs `upper_arm_R`, `forearm_L` vs `forearm_R`, `hand_L` vs `hand_R`) possess completely distinct pixel values, independent perspectives, and unique SHA-256 hashes.
-   * **0 contralateral hash collisions** detected across all characters.
+   * Left and right limbs (`thigh_L` vs `thigh_R`, `shin_L` vs `shin_R`, `foot_L` vs `foot_R`, `upper_arm_L` vs `upper_arm_R`, `forearm_L` vs `forearm_R`, `hand_L` vs `hand_R`) were verified to ensure no exact file-copy duplication: **0 contralateral hash collisions** detected across all characters. Visual perspective and anatomical asymmetry remain part of human visual review.
 
 ---
 
 ## 4. Mandatory Human Gate: Instructions for Operator
 
-The automated asset generation and packaging stage is complete. The system has stopped at the **Human Gate**. Automated tools MUST NOT fabricate operator session data or claim trial completion.
+The automated asset generation, pixel cutout decoding, and editor telemetry lifecycle hardening are complete. The repository has stopped at the **Human Gate**. Automated tools MUST NOT fabricate operator session data or claim trial completion.
 
 ### Operator Session Instructions:
 1. **Launch the Rig Adjuster**:
@@ -89,22 +88,24 @@ The automated asset generation and packaging stage is complete. The system has s
    ```
 2. **Calibrate Character 1 (`real-normal-01`)**:
    * In the top toolbar, select `real-normal-01` under the `Phase C.1 Real Production Trial` optgroup.
-   * Verify the default slot assignments and initial pivots.
-   * In Setup Mode, adjust bone length, pivot, and distal anchor positions to align with the painted anatomy.
+   * Click **[Start Session]** in the toolbar, enter Operator ID (e.g. `human-01`), and click **[Begin Session Tracking]**.
+   * In Setup Mode, select Part items in the Hierarchy or Viewport and adjust Part Pivot $(U, V)$ and Distal Anchor $(U, V)$ to align with illustrated joint centers. If skeletal adjustments are needed, select the Bone and tune length/rotation overrides.
    * Switch to Preview Mode (press `2` or click "Preview"): inspect `idle`, `run`, and `slash` animations. Check for joint gap tearing or sliding feet.
    * Return to Setup Mode if adjustments are needed.
-   * Click the **"Session (human-01)"** button in the top-right toolbar.
-   * In the Session Metrics modal, click **"Export Session Record (.json)"**.
+   * Click **[End Session]** in the top toolbar.
+   * In the session modal, select the **Visual Review Verdict** (`PASS`, `FAIL`, or `NOT_REVIEWED`), add visual inspection notes, and click **[End Session & Export Record]**.
    * Save the downloaded JSON to `docs/phase-c1/evidence/real-normal-01/human-session.json`.
 3. **Calibrate Character 2 (`real-heavy-01`)**:
-   * Select `real-heavy-01`.
+   * Select `real-heavy-01` in the dropdown.
+   * Click **[Start Session]** -> `[Begin Session Tracking]`.
    * Adjust heavy armor pivots (pauldrons, fauld, greataxe).
    * Preview `slash`: verify the greataxe maintains clearance outside the heavy pauldron proxy.
-   * Export session record to `docs/phase-c1/evidence/real-heavy-01/human-session.json`.
+   * Click **[End Session]**, select visual verdict, and export session record to `docs/phase-c1/evidence/real-heavy-01/human-session.json`.
 4. **Calibrate Character 3 (`real-small-01`)**:
-   * Select `real-small-01`.
+   * Select `real-small-01` in the dropdown.
+   * Click **[Start Session]** -> `[Begin Session Tracking]`.
    * Adjust compact rogue pivots and cranial dome clearance.
    * Preview `run`: verify foot contact stability on the ground line ($y = 1000$).
-   * Export session record to `docs/phase-c1/evidence/real-small-01/human-session.json`.
+   * Click **[End Session]**, select visual verdict, and export session record to `docs/phase-c1/evidence/real-small-01/human-session.json`.
 5. **Commit & Close Stage 1**:
    * Once all 3 human session records are saved, run `pnpm test` and commit the real session evidence.

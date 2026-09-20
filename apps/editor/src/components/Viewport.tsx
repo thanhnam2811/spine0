@@ -535,7 +535,7 @@ export const Viewport: React.FC<ViewportProps> = ({
         const tipY = selectedPartPose.worldY + (sin * ddx + cos * ddy);
 
         if (Math.hypot(worldPos.x - tipX, worldPos.y - tipY) < 16 / cameraRef.current.zoom) {
-          history.beginTransaction(`Drag sprite distal anchor '${selectedPartPose.partKey}'`);
+          history.beginTransaction(`Drag sprite distal anchor '${selectedPartPose.partKey}'`, "spriteAnchor");
           dragRef.current = {
             active: true,
             targetId: selectedPartPose.partKey,
@@ -549,7 +549,7 @@ export const Viewport: React.FC<ViewportProps> = ({
 
         // Check pivot handle
         if (Math.hypot(worldPos.x - selectedPartPose.worldX, worldPos.y - selectedPartPose.worldY) < 16 / cameraRef.current.zoom) {
-          history.beginTransaction(`Drag sprite pivot '${selectedPartPose.partKey}'`);
+          history.beginTransaction(`Drag sprite pivot '${selectedPartPose.partKey}'`, "spritePivot");
           dragRef.current = {
             active: true,
             targetId: selectedPartPose.partKey,
@@ -573,7 +573,7 @@ export const Viewport: React.FC<ViewportProps> = ({
           const tipX = pb.worldX - Math.sin(rad) * pb.length;
           const tipY = pb.worldY + Math.cos(rad) * pb.length;
           if (Math.hypot(worldPos.x - tipX, worldPos.y - tipY) < 15 / cameraRef.current.zoom) {
-            history.beginTransaction(`Drag distal tip '${doc.selection.id}'`);
+            history.beginTransaction(`Drag distal tip '${doc.selection.id}'`, "boneRotation");
             dragRef.current = {
               active: true,
               targetId: doc.selection.id,
@@ -594,7 +594,7 @@ export const Viewport: React.FC<ViewportProps> = ({
       if (Math.hypot(worldPos.x - pb.worldX, worldPos.y - pb.worldY) < 14 / cameraRef.current.zoom) {
         onSelectBone(boneId);
         doc.setSelection({ type: "bone", id: boneId });
-        history.beginTransaction(`Drag bone pivot '${boneId}'`);
+        history.beginTransaction(`Drag bone pivot '${boneId}'`, "bonePosition");
         const existing = doc.character.boneOverrides?.[boneId];
         const startOverride = {
           x: existing?.x ?? 0,

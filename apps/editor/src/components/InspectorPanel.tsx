@@ -56,6 +56,10 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
     const isLenValid = curLen >= envelopeRules.minLength && curLen <= envelopeRules.maxLength;
 
     const updateOverride = (patch: Record<string, number>) => {
+      let category: import("../model/commands.js").CommandTelemetryCategory = "bonePosition";
+      if (patch.rotation !== undefined) category = "boneRotation";
+      else if (patch.length !== undefined) category = "boneLength";
+
       const next = {
         x: curX,
         y: curY,
@@ -70,9 +74,9 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
         next.rotation === 0 &&
         Math.abs(next.length - canonLen) < 0.001
       ) {
-        history.execute(new SetBoneOverrideCommand(boneId, undefined, `Reset overrides for '${boneId}'`));
+        history.execute(new SetBoneOverrideCommand(boneId, undefined, `Reset overrides for '${boneId}'`, category));
       } else {
-        history.execute(new SetBoneOverrideCommand(boneId, next));
+        history.execute(new SetBoneOverrideCommand(boneId, next, undefined, category));
       }
     };
 
@@ -147,6 +151,8 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
             max={45}
             step={0.5}
             value={curX}
+            onPointerDown={() => history.beginTransaction(`Adjust Translation X for '${boneId}'`, "bonePosition")}
+            onPointerUp={() => history.commitTransaction()}
             onChange={(e) => updateOverride({ x: parseFloat(e.target.value) })}
             className="w-full accent-cyan-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
           />
@@ -195,6 +201,8 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
             max={45}
             step={0.5}
             value={curY}
+            onPointerDown={() => history.beginTransaction(`Adjust Translation Y for '${boneId}'`, "bonePosition")}
+            onPointerUp={() => history.commitTransaction()}
             onChange={(e) => updateOverride({ y: parseFloat(e.target.value) })}
             className="w-full accent-cyan-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
           />
@@ -243,6 +251,8 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
             max={45}
             step={0.5}
             value={curRot}
+            onPointerDown={() => history.beginTransaction(`Adjust Rotation for '${boneId}'`, "boneRotation")}
+            onPointerUp={() => history.commitTransaction()}
             onChange={(e) => updateOverride({ rotation: parseFloat(e.target.value) })}
             className="w-full accent-cyan-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
           />
@@ -293,6 +303,8 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
             max={300}
             step={1}
             value={curLen}
+            onPointerDown={() => history.beginTransaction(`Adjust Length for '${boneId}'`, "boneLength")}
+            onPointerUp={() => history.commitTransaction()}
             onChange={(e) => updateOverride({ length: parseFloat(e.target.value) })}
             className="w-full accent-cyan-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
           />
@@ -519,6 +531,8 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
               max={1}
               step={0.01}
               value={pivotU}
+              onPointerDown={() => history.beginTransaction(`Adjust Pivot U for '${partKey}'`, "spritePivot")}
+              onPointerUp={() => history.commitTransaction()}
               onChange={(e) => handlePivotChange(parseFloat(e.target.value), pivotV)}
               className="w-full accent-emerald-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
             />
@@ -535,6 +549,8 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
               max={1}
               step={0.01}
               value={pivotV}
+              onPointerDown={() => history.beginTransaction(`Adjust Pivot V for '${partKey}'`, "spritePivot")}
+              onPointerUp={() => history.commitTransaction()}
               onChange={(e) => handlePivotChange(pivotU, parseFloat(e.target.value))}
               className="w-full accent-emerald-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
             />
@@ -572,6 +588,8 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
                   max={1}
                   step={0.01}
                   value={anchorU}
+                  onPointerDown={() => history.beginTransaction(`Adjust Distal Anchor U for '${partKey}'`, "spriteAnchor")}
+                  onPointerUp={() => history.commitTransaction()}
                   onChange={(e) => handleAnchorChange(parseFloat(e.target.value), anchorV)}
                   className="w-full accent-cyan-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
                 />
@@ -588,6 +606,8 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ doc, history }) 
                   max={1}
                   step={0.01}
                   value={anchorV}
+                  onPointerDown={() => history.beginTransaction(`Adjust Distal Anchor V for '${partKey}'`, "spriteAnchor")}
+                  onPointerUp={() => history.commitTransaction()}
                   onChange={(e) => handleAnchorChange(anchorU, parseFloat(e.target.value))}
                   className="w-full accent-cyan-500 h-1.5 bg-gray-800 rounded appearance-none cursor-pointer"
                 />

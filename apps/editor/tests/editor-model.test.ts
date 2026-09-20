@@ -168,10 +168,15 @@ describe("Editor Document & Command History Unit Tests", () => {
     expect(summary.redoCount).toBe(1);
     expect(summary.validationIterations).toBe(2);
     expect(summary.engineeringCompliance).toBe(true);
-    expect(summary.finalValidity).toBe("PASS");
+    expect(summary.finalValidity).toBe("PENDING_VISUAL_REVIEW");
+    expect(summary.gateStatus).toBe("PENDING_VISUAL_REVIEW");
     expect(summary.sessionStartTimestamp).toBeDefined();
-    expect(summary.sessionEndTimestamp).toBeDefined();
-    expect(summary.timeToEngineeringComplianceSeconds).not.toBeNull();
+
+    const ended = tracker.endSession("PASS");
+    expect(ended.finalValidity).toBe("PASS");
+    expect(ended.gateStatus).toBe("PASS");
+    expect(ended.sessionEndTimestamp).toBeDefined();
+    expect(ended.timeToEngineeringComplianceSeconds).not.toBeNull();
   });
 
   it("verifies explicit session lifecycle: IDLE -> ACTIVE -> ENDED with frozen snapshot", () => {
