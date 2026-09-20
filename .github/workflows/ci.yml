@@ -36,5 +36,5 @@ jobs:
       - name: Run Tests (Anim-Core, Validator, Compiler, Golden, Parity)
         run: pnpm test
 
-      - name: Build Packages & Preview
+      - name: Build Packages, Preview & Editor
         run: pnpm build

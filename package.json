@@ -5,7 +5,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "pnpm -r --filter \"./packages/*\" build",
+    "build:packages": "pnpm -r --filter \"./packages/*\" build",
+    "build:preview": "pnpm --filter preview build",
+    "build:editor": "pnpm --filter editor build",
+    "build": "pnpm run build:packages && pnpm run build:preview && pnpm run build:editor",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -b",
