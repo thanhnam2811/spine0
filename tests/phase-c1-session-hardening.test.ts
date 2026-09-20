@@ -296,4 +296,95 @@ describe("Phase C.1 Session Hardening & Gate Readiness Tests", () => {
     expect(unknownBoneIssue).toBeDefined();
     expect(unknownBoneIssue?.message).toContain("non_existent_ghost_bone");
   });
+
+  it("P0-1: computeStringSha256 matches FIPS 180-4 known vectors and Unicode standard", () => {
+    // 1. Empty string known vector
+    expect(computeStringSha256("")).toBe("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
+    // 2. "abc" standard NIST vector
+    expect(computeStringSha256("abc")).toBe("ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
+    // 3. Unicode UTF-8 string
+    const unicodeText = "Xin chào thế giới 🐉";
+    expect(computeStringSha256(unicodeText)).toBe("dd7ba9568c95b813dc519d462d7f917bc1aa03adfdd64f67def099dee862b06b");
+    // 4. Standard fox test string
+    const fox = "The quick brown fox jumps over the lazy dog";
+    expect(computeStringSha256(fox)).toBe("d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592");
+  });
+
+  it("P0-1: baseline and final character hashes in session telemetry are genuine SHA-256", () => {
+    const tracker = new SessionMetricsTracker(0, "real-normal-01");
+    const char = PRESET_CHARACTERS["real-normal-01"];
+    const charJson = JSON.stringify(char);
+    const expectedBaselineSha = computeStringSha256(charJson);
+
+    tracker.startSession({
+      characterId: "real-normal-01",
+      baselineCharacterJson: charJson
+    });
+    expect(tracker.getSummary().baselineCharacterSha256).toBe(expectedBaselineSha);
+
+    const updatedChar = { ...char, name: "real-normal-01-modified" };
+    const updatedJson = JSON.stringify(updatedChar);
+    const expectedFinalSha = computeStringSha256(updatedJson);
+
+    const record = tracker.endSession("PASS", "all verified", updatedJson);
+    expect(record.finalCharacterSha256).toBe(expectedFinalSha);
+    expect(record.baselineCharacterSha256).toBe(expectedBaselineSha);
+  });
+
+  it("P1-2: disallow endSession() outside ACTIVE lifecycle (cannot end from IDLE)", () => {
+    const idleTracker = new SessionMetricsTracker(0, "real-normal-01");
+    expect(idleTracker.getStatus()).toBe("IDLE");
+
+    // Attempting to endSession directly from IDLE must throw
+    expect(() => {
+      idleTracker.endSession("PASS");
+    }).toThrow(/must be "ACTIVE"/);
+
+    expect(idleTracker.getStatus()).toBe("IDLE");
+    expect(idleTracker.exportEndedRecord()).toBeNull();
+  });
+
+  it("P1-1: ended SessionRecord is deeply frozen and cannot be externally mutated", () => {
+    const tracker = new SessionMetricsTracker(0, "real-normal-01");
+    tracker.startSession({ characterId: "real-normal-01" });
+    tracker.recordAdjustment("pivot", "torso", { u: 0.5, v: 0.5 });
+    const record = tracker.endSession("PASS", "Inspection note");
+
+    // Verify record itself is frozen
+    expect(Object.isFrozen(record)).toBe(true);
+    expect(Object.isFrozen(record.eventLog)).toBe(true);
+    expect(Object.isFrozen(record.eventLog[0])).toBe(true);
+    if (record.eventLog[0].value && typeof record.eventLog[0].value === "object") {
+      expect(Object.isFrozen(record.eventLog[0].value)).toBe(true);
+    }
+
+    // Attempt mutation on array: should throw in strict mode
+    expect(() => {
+      (record.eventLog as any).push({ ts: "now", type: "fabricated_event" });
+    }).toThrow();
+
+    // Attempt mutation on nested property: should throw in strict mode
+    if (record.eventLog[0].value && typeof record.eventLog[0].value === "object") {
+      expect(() => {
+        (record.eventLog[0].value as any).tampered = true;
+      }).toThrow();
+    }
+
+    // Defensive copy guarantee: exportEndedRecord() returns pristine deep copy
+    const exportCopy = tracker.exportEndedRecord()!;
+    expect(exportCopy.eventLog.filter(e => e.type === "fabricated_event")).toHaveLength(0);
+  });
+
+  it("P1-2: repeated endSession() on already ENDED tracker is idempotent", () => {
+    const tracker = new SessionMetricsTracker(0, "real-normal-01");
+    tracker.startSession({ characterId: "real-normal-01" });
+    const rec1 = tracker.endSession("PASS", "first end");
+    expect(rec1.status).toBe("ENDED");
+
+    // Repeated call returns frozen record without throwing or re-ending
+    const rec2 = tracker.endSession("PASS", "second end");
+    expect(rec2.status).toBe("ENDED");
+    expect(rec2.sessionEndTimestamp).toBe(rec1.sessionEndTimestamp);
+    expect(rec2.visualNotes).toBe("first end");
+  });
 });

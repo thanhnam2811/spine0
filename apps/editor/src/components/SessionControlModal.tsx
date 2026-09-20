@@ -25,7 +25,7 @@ export const SessionControlModal: React.FC<SessionControlModalProps> = ({
   onExportEndedRecord
 }) => {
   const [operatorId, setOperatorId] = useState<string>(summary.operatorId || "operator_01");
-  const [visualVerdict, setVisualVerdict] = useState<VisualReviewStatus>("PASS");
+  const [visualVerdict, setVisualVerdict] = useState<VisualReviewStatus | null>(null);
   const [visualNotes, setVisualNotes] = useState<string>("");
 
   const isCompliant = currentIssues === 0;
@@ -34,6 +34,8 @@ export const SessionControlModal: React.FC<SessionControlModalProps> = ({
   let projectedGateStatus: string;
   if (!isCompliant) {
     projectedGateStatus = "FAIL (Engineering violations present)";
+  } else if (visualVerdict === null) {
+    projectedGateStatus = "AWAITING_SELECTION (Select PASS, FAIL, or NOT_REVIEWED below to proceed)";
   } else if (visualVerdict === "NOT_REVIEWED") {
     projectedGateStatus = "PENDING_VISUAL_REVIEW (Engineering compliant, visual review pending)";
   } else if (visualVerdict === "FAIL") {
@@ -220,7 +222,9 @@ export const SessionControlModal: React.FC<SessionControlModalProps> = ({
             <div className="p-2.5 rounded bg-gray-950 border border-gray-800 text-[11px] font-mono">
               <span className="text-gray-400 block text-[10px]">Projected Gate Verdict:</span>
               <span className={
-                isCompliant && visualVerdict === "PASS"
+                visualVerdict === null
+                  ? "text-gray-400 italic"
+                  : isCompliant && visualVerdict === "PASS"
                   ? "text-emerald-400 font-bold"
                   : visualVerdict === "NOT_REVIEWED"
                   ? "text-amber-400 font-bold"
@@ -238,11 +242,19 @@ export const SessionControlModal: React.FC<SessionControlModalProps> = ({
                 Cancel
               </button>
               <button
+                disabled={visualVerdict === null}
                 onClick={() => {
-                  if (onEndSession) onEndSession(visualVerdict, visualNotes);
-                  onClose();
+                  if (visualVerdict && onEndSession) {
+                    onEndSession(visualVerdict, visualNotes);
+                    onClose();
+                  }
                 }}
-                className="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-semibold shadow-md transition flex items-center gap-1.5"
+                className={`px-5 py-2 rounded font-semibold shadow-md transition flex items-center gap-1.5 ${
+                  visualVerdict === null
+                    ? "bg-gray-800 text-gray-500 border border-gray-700 cursor-not-allowed"
+                    : "bg-emerald-600 hover:bg-emerald-500 text-white"
+                }`}
+                title={visualVerdict === null ? "Please explicitly select a Human Visual Review Verdict first." : undefined}
               >
                 <span>End Session & Export Record</span>
               </button>

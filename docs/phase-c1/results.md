@@ -20,7 +20,7 @@
 | **Pixel-Level Cutout & Transparency Validation** | **PASS** | Decoded RGBA stream: > 19% transparent background, > 35% opaque art |
 | **Generation Yield & Provenance Ledger** | **PASS** | Typed schema with providers, models, hashes in [`docs/phase-c1/generation-ledger.json`](file:///G:/PERSONAL/spine0/docs/phase-c1/generation-ledger.json) |
 | **Editor Registration & Visual Sprite Pipeline** | **PASS** | Selectable presets, PixiCharacterInstance texture rendering, part pivot/distal handles |
-| **Automated Test Parity** | **PASS** | 18 test files, 94 tests passing in `pnpm test` |
+| **Automated Test Parity** | **PASS** | 18 test files, 99 tests passing in `pnpm test` |
 | **Visual Seam & Bleed Inspection** | **GATE REQUIRED** | **HUMAN_VISUAL_GATE_REQUIRED** (Operator visual check in editor) |
 | **Human Operator Sessions** | **PENDING** | **STOPPED AT HUMAN GATE** |
 | **Time to Compliance & Override Yield** | **NOT MEASURED** | Awaiting real human session telemetry |
